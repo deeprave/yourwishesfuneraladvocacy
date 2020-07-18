@@ -229,6 +229,14 @@ action create wagtail project
 mkdir -p ${APP_DIR}
 wagtail start ${APP_NAME} ${APP_DIR}
 
+git_ignore=${APP_DIR}/.gitignore
+echo '# no version control in these dirs' > ${git_ignore}
+for content in documents media static
+do
+  mkdir -p ${APP_DIR}/${content}
+  echo ${content}/ >> ${git_ignore}
+done
+
 # tidy & additions
 action adjust wagtail settings
 rm -f ${APP_DIR}/requirements.txt ${APP_DIR}/Dockerfile
