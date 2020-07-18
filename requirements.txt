@@ -1,0 +1,6 @@
+wagtail
+dj-database-url
+psycopg2-binary
+django-redis
+python-dotenv
+django-npm

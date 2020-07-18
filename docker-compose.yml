@@ -1,0 +1,38 @@
+version: '3.7'
+
+services:
+
+  app:
+    image: ${COMPOSE_PROJECT_NAME}/${APP_NAME}:latest
+    build:
+      context: .
+      args:
+        APP_NAME: ${APP_NAME}
+        APP_DIR: ${APP_DIR}
+        APP_ROOT: ${APP_ROOT}
+        DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+        DJANGO_MODE: ${DJANGO_MODE}
+        REDIS_CACHE: ${REDIS_CACHE}
+        REDIS_SESSION: ${REDIS_SESSION}
+        DATABASE_URL: ${DATABASE_URL}
+    volumes:
+      - ${PWD}/${APP_NAME}:${APP_ROOT}/${APP_NAME}
+      - ${PWD}/${APP_NAME}/static:${APP_ROOT}/${APP_NAME}/static
+      - ${PWD}/${APP_NAME}/media:${APP_ROOT}/${APP_NAME}/media
+    expose:
+      - "8000"
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      - db
+      - redis
+    restart: always
+    networks:
+        - internal_net
+
+volumes:
+  data-static:
+  data-media:
+
+networks:
+  internal_net:
