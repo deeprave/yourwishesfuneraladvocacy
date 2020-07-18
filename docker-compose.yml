@@ -1,9 +1,9 @@
-version: '3.7'
+version: '3'
 
 services:
 
   app:
-    image: ${COMPOSE_PROJECT_NAME}/${APP_NAME}:latest
+    image: ${APP_NAME}:latest
     build:
       context: .
       args:
@@ -19,6 +19,7 @@ services:
       - ${PWD}/${APP_NAME}:${APP_ROOT}/${APP_NAME}
       - ${PWD}/${APP_NAME}/static:${APP_ROOT}/${APP_NAME}/static
       - ${PWD}/${APP_NAME}/media:${APP_ROOT}/${APP_NAME}/media
+      - ${PWD}/${APP_NAME}/documents:${APP_ROOT}/${APP_NAME}/documents
     expose:
       - "8000"
     ports:
@@ -33,6 +34,7 @@ services:
 volumes:
   data-static:
   data-media:
+  data-documents:
 
 networks:
   internal_net:
