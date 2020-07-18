@@ -35,7 +35,7 @@ function usage {
   cat <<USAGE
 `basename "$0"`: [options] [appname]
 General Options:
- -p <name>      set project name     | -S             random SECRET_KEY
+ -P <name>      set project name     | -S             random SECRET_KEY
  -a <name>      set app name         | -d <directory> set app subdir
  -U <url>       set site base url    | -R             generate passwords
  -h             this help message
@@ -52,15 +52,15 @@ USAGE
 }
 
 function secretkey {
-	LC_ALL=C openssl rand 50 | base64
+  LC_ALL=C openssl rand 50 | base64
 }
 
 function random_password {
-	LC_ALL=C tr -dc '[:alnum:]' </dev/urandom | dd bs=16 count=1 2>/dev/null
+  LC_ALL=C tr -dc '[:alnum:]' </dev/urandom | dd bs=16 count=1 2>/dev/null
 }
 
 function lowercase {
-	echo "$1" | tr '[:upper:]' '[:lower:]'
+  echo "$1" | tr '[:upper:]' '[:lower:]'
 }
 
 # working variables
@@ -77,97 +77,97 @@ args=`getopt hpSe:E:a:d:i:p:u:w:g:rRI:P:c:s:E:U: $*` || { usage && exit 2; }
 set -- $args
 for opt
 do
-	case "$opt" in
-		-h)
-			usage
-			exit 1
-			;;
-		-p)
-			COMPOSE_PROJECT_NAME=${2}
-			shift; shift
-			;;
-		-a)
-			APP_NAME=`lowercase ${2}` && { [ ${dir_set} == 0 ] && APP_DIR="${2}" && dir_set=1; }
-			shift; shift
-			;;
-		-U)
-			BASE_URL=${2}
-			shift; shift
-			;;
-		-S)
-			DJANGO_SECRET_KEY=`secretkey`
-			shift
-			;;
-		-d)
-			APP_DIR=${2} && dir_set=1
-			shift; shift
-			;;
-		-n)
-			DBNAME=${2} && name_set=1
-			shift; shift
-			;;
-		-i)
-			DBHOST=${2}
-			shift; shift
-			;;
-		-p)
-			DBPORT=${2}
-			shift; shift
-			;;
-		-g)
-			DBROLE=${2} && role_set=1
-			[ ${user_name} == 0 ] && DBUSER=${2}user && user_name=1
-			[ ${name_set} == 0 ] && DBNAME=${2} && name_set=1
-			shift; shift
-			;;
-		-u)
-			DBUSER=${2} && user_name=1
-			[ ${name_set} == 0 ] && DBNAME=${2} && name_set=1
-			shift; shift
-			;;
-		-w)
-			DBPASS=${2} && user_pass=1
-			shift; shift
-			;;
-		-r)
-			DBPASS="`random_password`" && user_pass=1
-			shift
-			;;
-		-G)
-			POSTGRES_PASSWORD="${2}" && psql_pass=1
-			shift; shift
-			;;
-		-R)
-			POSTGRES_PASSWORD="`random_password`" && psql_pass=1
-			[ ${user_pass} == 0 ] && DBPASS="`random_password`" && user_pass=1
-			shift
-			;;
-		-I)
-			RDHOST=${2} 
-			shift; shift
-			;;
-		-P)
-			RDPORT=${2} 
-			shift; shift
-			;;
-		-E)
-			DBPORT=${2}5432
-			RDPORT=${2}6379
-			shift; shift
-			;;
-		-c)
-			RD0=${2} 
-			shift; shift
-			;;
-		-s)
-			RD1=${2} 
-			shift; shift
-			;;
-		--)
-			shift
-			break
-			;;
-	esac
+  case "$opt" in
+    -h)
+      usage
+      exit 1
+      ;;
+    -P)
+      COMPOSE_PROJECT_NAME=${2}
+      shift; shift
+      ;;
+    -a)
+      APP_NAME=`lowercase ${2}` && { [ ${dir_set} == 0 ] && APP_DIR="${2}" && dir_set=1; }
+      shift; shift
+      ;;
+    -U)
+      BASE_URL=${2}
+      shift; shift
+      ;;
+    -S)
+      DJANGO_SECRET_KEY=`secretkey`
+      shift
+      ;;
+    -d)
+      APP_DIR=${2} && dir_set=1
+      shift; shift
+      ;;
+    -n)
+      DBNAME=${2} && name_set=1
+      shift; shift
+      ;;
+    -i)
+      DBHOST=${2}
+      shift; shift
+      ;;
+    -p)
+      DBPORT=${2}
+      shift; shift
+      ;;
+    -g)
+      DBROLE=${2} && role_set=1
+      [ ${user_name} == 0 ] && DBUSER=${2}user && user_name=1
+      [ ${name_set} == 0 ] && DBNAME=${2} && name_set=1
+      shift; shift
+      ;;
+    -u)
+      DBUSER=${2} && user_name=1
+      [ ${name_set} == 0 ] && DBNAME=${2} && name_set=1
+      shift; shift
+      ;;
+    -w)
+      DBPASS=${2} && user_pass=1
+      shift; shift
+      ;;
+    -r)
+      DBPASS="`random_password`" && user_pass=1
+      shift
+      ;;
+    -G)
+      POSTGRES_PASSWORD="${2}" && psql_pass=1
+      shift; shift
+      ;;
+    -R)
+      POSTGRES_PASSWORD="`random_password`" && psql_pass=1
+      [ ${user_pass} == 0 ] && DBPASS="`random_password`" && user_pass=1
+      shift
+      ;;
+    -I)
+      RDHOST=${2} 
+      shift; shift
+      ;;
+    -P)
+      RDPORT=${2} 
+      shift; shift
+      ;;
+    -E)
+      DBPORT=${2}5432
+      RDPORT=${2}6379
+      shift; shift
+      ;;
+    -c)
+      RD0=${2} 
+      shift; shift
+      ;;
+    -s)
+      RD1=${2} 
+      shift; shift
+      ;;
+    --)
+      shift
+      break
+      ;;
+  esac
 done
 
 rest=${*}
@@ -202,7 +202,7 @@ RDHOST=${RDHOST}
 RDPORT=${RDPORT}
 RD0=${RD0}
 RD1=${RD1}
-DLANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
 DJANGO_MODE=${DJANGO_MODE}
 REDIS_CACHE=redis://${RDHOST}:${RDPORT}/${RD0}
 REDIS_SESSION=redis://${RDHOST}:${RDPORT}/${RD1}

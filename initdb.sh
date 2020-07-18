@@ -11,7 +11,7 @@ Options:
   -r    reset postgres docker data volume for this project
   -R    reset all docker data volumes for this project
   -b    (re)build the app docker container
-  -g    initialise and update a local git repository
+  -g    update a local git repository (initialise if nencessary)
 
 ** note: to set the postgres admin password a postgres data reset is required
 USAGE
@@ -26,22 +26,22 @@ args=`getopt hgbrR $*` || { usage && exit 2; }
 set -- $args
 for opt
 do
-	case "$opt" in
-		-h)
-			usage
-			exit 1
-			;;
+  case "$opt" in
+    -h)
+      usage
+      exit 1
+      ;;
     -b)
       dc_build_app=1
       shift
       ;;
-	  -R)
-	    dc_reset_all=1
-	    dc_reset=1
-	    shift
-	    ;;
-	  -r)
-	    dc_reset=1
+    -R)
+      dc_reset_all=1
+      dc_reset=1
+      shift
+      ;;
+    -r)
+      dc_reset=1
       shift
       ;;
     -g)
@@ -91,7 +91,7 @@ SQL
 for db_name in ${DBNAME}
 do
   echo "Creating database: ${db_name}"
-	PGPASSWORD="${POSTGRES_PASSWORD}" psql -h ${DBHOST} -p ${DBPORT} postgres postgres <<SQL
+  PGPASSWORD="${POSTGRES_PASSWORD}" psql -h ${DBHOST} -p ${DBPORT} postgres postgres <<SQL
 create database ${db_name} with owner ${DBROLE};
 grant all privileges on database ${db_name} to ${DBROLE};
 SQL
@@ -117,12 +117,12 @@ if [ ${git_init} != 0 ]; then
   # Initialise a git repo
   # Remove /.env exclusion - the project needs it
   while read -r line
-    [[ ${line} != '/.env' ]] echo "${line}"
   do
+    [[ ${line} != '/.env' ]] && echo "${line}"
   done < .gitignore > .gitignore.new
   mv .gitignore.new .gitignore
 
-  git init .
+  [ ! -d .git ] && git init .
   git add -A
   git commit -m 'Initial commit'
 
