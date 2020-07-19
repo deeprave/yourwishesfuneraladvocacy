@@ -234,7 +234,7 @@ echo '# no version control in these dirs' > ${git_ignore}
 for content in documents media static
 do
   mkdir -p ${APP_DIR}/${content}
-  echo ${content}/ >> ${git_ignore}
+  echo /${content}/ >> ${git_ignore}
 done
 
 # tidy & additions
