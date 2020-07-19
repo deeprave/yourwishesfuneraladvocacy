@@ -4,24 +4,22 @@
 {% block title %}Your Wishes Funeral Advocacy{% endblock %}
 
 {% block metas %}
-  <meta name="description" content="Solid advice when you need it the most">
-  <meta name="keywords" content="funeral advocacy advise">
-  <meta name="author" content="davidn@uniquode.io">
+    <meta name="description" content="Solid advice when you need it the most">
+    <meta name="keywords" content="funeral advocacy advise">
+    <meta name="author" content="davidn@uniquode.io">
 {% endblock metas %}
-
-{% block global_stylesheets %}
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" crossorigin="anonymous" />
-{% endblock global_stylesheets %}
 
 {% block site_stylesheets %}
   <link rel="stylesheet" type="text/css" href="{% static 'css/site.css' %}">
 {% endblock site_stylesheets %}
 
 {% block content %}
-  <header>
+{% spaceless %}
+  <header class="container-fluid">
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
       <b><a class="navbar-brand" href="#">Your Wishes Funeral Advocacy</a></b>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+              aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -36,32 +34,32 @@
 
   <!-- Begin page content -->
   <main role="main" class="container-fluid main-content">
-    <div class="container-fluid">
-      <div class="row">
-        <img src="{% static 'images/website logo wall.jpeg' %}" alt="Your Wishes Funeral Advocacy" class="fit">
-    </div>
+    <div class="row">
+      <img src="{% static 'images/website logo wall.jpeg' %}" alt="Your Wishes Funeral Advocacy" class="fit">
     </div>
   </main>
 
-  <footer class="footer">
-    <div class="container-fluid">
-      <div class="row">
-        <ul class="social-icons">
-          <li>
-            <strong>Find us on:</strong>
-          </li>
-          <li>&nbsp;
-            <a href="http://facebook.com/YourWishesFuneralAdvocacy" target="_blank">
-                <img src="{% static 'images/social/facebook.png' %}" class="social-icon fit" alt="facebook">
-            </a>
-          </li>
-          <li>&nbsp;
-            <a href="http://linkedin.com/company/yourwishesfuneraladvocacy" target="_blank">
-              <img src="{% static 'images/social/linkedin.png' %}" class="social-icon fit" alt="linkedin">
-            </a>
-          </li>
+  <footer class="container-fluid">
+    <div class="row">
+      <ul class="social-icons">
+        <li>
+          <strong>Find us on </strong>
+        </li>
+        <li>
+          <a href="http://facebook.com/YourWishesFuneralAdvocacy" target="_blank">
+            <img src="{% static 'images/social/facebook.png' %}" class="social-icon" alt="facebook">
+          </a>
+        </li>
+        <li>
+          <a href="http://linkedin.com/company/yourwishesfuneraladvocacy" target="_blank">
+            <img src="{% static 'images/social/linkedin.png' %}" class="social-icon" alt="linkedin">
+          </a>
+        </li>
       </ul>
-      </div>
     </div>
   </footer>
+
+  {% block global_scripts %}
+  {% endblock global_scripts %}
+{% endspaceless %}
 {% endblock %}
