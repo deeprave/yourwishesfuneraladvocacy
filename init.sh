@@ -38,7 +38,7 @@ General Options:
  -P <name>      set project name     | -S             random SECRET_KEY
  -a <name>      set app name         | -d <directory> set app subdir
  -U <url>       set site base url    | -R             generate passwords
- -h             this help message
+ -h             this help message    | -D             assume dokcer services
 PostgreSQL Options:                  | Redis Options:
  -i <hostname>  hostname (use IP)    |  -I <hostname>  hostname (use IP)
  -p <port>      port                 |  -P <port>      port
@@ -71,9 +71,10 @@ user_name=0
 user_pass=0
 psql_pass=0
 sleep_interval=5.0
+dc_services=0
 
 # parse the command line
-args=`getopt hpSe:E:a:d:i:p:u:w:g:rRI:P:c:s:E:U: $*` || { usage && exit 2; }
+args=`getopt hpDSe:E:a:d:i:p:u:w:g:rRI:P:c:s:E:U: $*` || { usage && exit 2; }
 set -- $args
 for opt
 do
@@ -81,6 +82,10 @@ do
     -h)
       usage
       exit 1
+      ;;
+    -D)
+      dc_services=1
+      shift
       ;;
     -P)
       COMPOSE_PROJECT_NAME=${2}
