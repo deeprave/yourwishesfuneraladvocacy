@@ -23,7 +23,7 @@ services:
     expose:
       - "8000"
     ports:
-      - "127.0.0.1:8000:8000"
+      - "127.0.0.1:8800:8000"
     depends_on:
       - db
       - redis

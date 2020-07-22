@@ -27,7 +27,7 @@ DJANGO_MODE=dev
 BASE_URL='http://example.com'
 
 # if there i an existing .env, source it to retain values as defaults across sessions
-[ -f .env ] && source .env
+[ -f ./.env ] && source ./.env
 
 function usage {
   msg="$*"
