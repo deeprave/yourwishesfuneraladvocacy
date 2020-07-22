@@ -38,7 +38,7 @@ General Options:
  -P <name>      set project name     | -S             random SECRET_KEY
  -a <name>      set app name         | -d <directory> set app subdir
  -U <url>       set site base url    | -R             generate passwords
- -h             this help message    | -D             assume dokcer services
+ -h             this help message    | -D             assume services in docker
 PostgreSQL Options:                  | Redis Options:
  -i <hostname>  hostname (use IP)    |  -I <hostname>  hostname (use IP)
  -p <port>      port                 |  -P <port>      port
@@ -189,6 +189,12 @@ if [ ! -z "${rest}" ]; then
 fi
 
 [ -z "${VIRTUAL_ENV}" ] && { echo "this script requires an active virtualenv"; exit 3; }
+
+if [ ${dc_docker} != 0 ]; then
+  COMPOSE_FILE=docker-compose.yml
+else
+  COMPOSE_FILE=docker-compose-services.yml:docker-compose.yml
+fi
 
 cat <<ENV | tee .env
 COMPOSE_PROJECT_NAME=${COMPOSE_PROJECT_NAME}
