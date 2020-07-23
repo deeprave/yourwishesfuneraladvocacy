@@ -1,4 +1,4 @@
-FROM python:3.8 as python3-wagtail
+FROM alpine:latest
 LABEL maintainer="davidn@uniquode.io"
 
 ARG APP_DIR=app
@@ -16,21 +16,28 @@ ENV DJANGO_MODE=${DJANGO_MODE} DJANGO_ROOT=${APP_ROOT}/${APP_NAME} DJANGO_USER=$
 ENV REDIS_CACHE=${REDIS_CACHE} REDIS_SESSION=${REDIS_SESSION} DATABASE_URL=${DATABASE_URL}
 ENV PYTHONUNBUFFERED 1
 
-RUN mkdir -p ${DJANGO_ROOT} ${DJANGO_ROOT}/static ${DJANGO_ROOT}/media
+COPY ./requirements.txt /tmp/requirements.txt
+
+RUN apk --update add python3 py3-pip py3-wheel nodejs npm && \
+	npm install -g yarn && \
+    cd /usr/bin && ln -sf python3 python && ln -sf pip3 pip
+
+RUN apk add libpq \
+	build-base python3-dev postgresql-dev zlib-dev jpeg-dev openjpeg-dev tiff-dev freetype-dev libffi-dev pcre-dev libressl-dev && \
+    pip install -q -U pip setuptools pip && \
+	pip install -r /tmp/requirements.txt && \
+	pip install uvicorn && \
+	apk del \
+	build-base python3-dev postgresql-dev zlib-dev jpeg-dev openjpeg-dev tiff-dev freetype-dev libffi-dev pcre-dev libressl-dev && \
+	rm -rf /root/.cache /var/cache/apk/* && \
+    adduser --disabled-password --home ${DJANGO_ROOT} ${DJANGO_USER} && \
+	mkdir -p ${DJANGO_ROOT}/static ${DJANGO_ROOT}/media && \
+	chown -R ${DJANGO_USER} ${DJANGO_ROOT}
 
 WORKDIR ${DJANGO_ROOT}/
-
-COPY ./requirements.txt ${DJANGO_ROOT}/requirements.txt
-
-RUN pip install -q -U pip && \
-	pip install -r ${DJANGO_ROOT}/requirements.txt && \
-	pip install uvicorn && \
-    useradd ${DJANGO_USER} && \
-	chown -R ${DJANGO_USER} ${DJANGO_ROOT}
 
 COPY ${APP_DIR}/ ${DJANGO_ROOT}/
 
-WORKDIR ${DJANGO_ROOT}/
 USER ${DJANGO_USER}
 VOLUME ["${DJANGO_ROOT}", "${DJANGO_ROOT}/media", "${DJANGO_ROOT}/static"]
 
