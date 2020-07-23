@@ -20,7 +20,7 @@ USAGE
 
 dc_reset=0
 dc_reset_all=0
-dc_build_app=1
+dc_build_app=0
 dc_docker=0
 git_init=0
 
@@ -77,7 +77,7 @@ if [ ${dc_reset} != 0 ]; then
       docker volume rm ${volumes}
     fi
   else
-    PGPASSWORD="${POSTGRES_PASSWORD}" psql -h ${DBHOST} -p ${DBPORT} postgres postgres <<SQL
+    PGPASSWORD="${POSTGRES_PASSWORD}" psql -p ${DBPORT} postgres postgres <<SQL
 drop database ${DBNAME};
 drop user ${DBUSER};
 drop role ${DBROLE};
@@ -96,7 +96,7 @@ fi
 
 # create a role with a user, use permission inheritance for convenience
 echo "Setting up database roles"
-PGPASSWORD="${POSTGRES_PASSWORD}" psql -h ${DBHOST} -p ${DBPORT} postgres postgres <<SQL
+PGPASSWORD="${POSTGRES_PASSWORD}" psql -p ${DBPORT} postgres postgres <<SQL
 create role ${DBROLE} createdb;
 create user ${DBUSER} createrole inherit password '${DBPASS}';
 grant ${DBROLE} to ${DBUSER};
@@ -107,25 +107,21 @@ SQL
 
 # create the database(es)
 echo "Creating database: ${DBNAME}"
-PGPASSWORD="${POSTGRES_PASSWORD}" psql -h ${DBHOST} -p ${DBPORT} postgres postgres <<SQL
+PGPASSWORD="${POSTGRES_PASSWORD}" psql -p ${DBPORT} postgres postgres <<SQL
 create database ${DBNAME} with owner ${DBROLE};
 grant all privileges on database ${DBNAME} to ${DBROLE};
 SQL
-
-# do intialisation in sub-shell
-(
-  cd ${APP_DIR}
-  # do the initial migration
-  ./manage.py migrate
-  # add the superuser
-  ./manage.py createsuperuser
-)
 
 if [ ${dc_build_app} != 0 ]; then
 
   docker-compose build app
 
 fi
+
+# do intialisation if required
+docker-compose run app ./manage.py migrate
+docker-compose run app ./manage.py createuseruser
+docker-compose run app ./manage.py collectstatic --no-input
 
 if [ ${git_init} != 0 ]; then
 
