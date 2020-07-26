@@ -1,16 +1,15 @@
 {% load static wagtailuserbar %}
-
+{% spaceless %}
 <!DOCTYPE html>
 <html lang="en">
 
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-  {% block metas %}
-  {% endblock metas %}
+  {% block metas %}{% endblock metas %}
   {% block favicon %}
-    <link rel="icon" href="../static/images/favicon.png" />
-  {% endblock %}
+    <link rel="icon" type="image/png" sizes="120x120" href="{% static 'images/favicon.png' %}" />
+  {% endblock favicon %}
     <title>
     {% block title %}
       {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}
@@ -19,29 +18,29 @@
       {% with self.get_site.site_name as site_name %}{% if site_name %}- {{ site_name }}{% endif %}{% endwith %}
     {% endblock title_suffix %}
     </title>
+  {% block fonts %}
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Nunito+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap">
+  {% endblock fonts %}
   {% block global_stylesheets %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" crossorigin="anonymous" />
   {% endblock global_stylesheets %}
-  {% block extra_css %}
-  {% endblock extra_css %}
-  {% block site_stylesheets %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/ywfa.css' %}">
-  {% endblock site_stylesheets %}
+  {% block extra_css %}{% endblock extra_css %}
+  {% block site_stylesheets %}{% endblock site_stylesheets %}
   </head>
 
-  <body class="{% block body_class %}{% endblock %}">
-  {% wagtailuserbar %}
-  {% block content %}
-  {% endblock content %}
+  <body class="{% block body_class %}{% endblock body_class %}" {% block body_attrs %}{% endblock body_attrs %}>
+  {% wagtailuserbar %}{% block body_top %}{% endblock body_top %}
+  {% block navigation %}{% endblock navigation %}
+  {% block content %}{% endblock content %}
   {% block global_scripts %}
     <script src="https://unpkg.com/@popperjs/core@2.4.0/dist/umd/popper.min.js" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js" crossorigin="anonymous"></script>
   {% endblock global_scripts %}
   {% block scripts %}
     <script type="text/javascript" src="{% static 'js/ywfa.js' %}"></script>
-  {% block extra_scripts %}
-  {% endblock extra_scripts %}
+    {% block extra_scripts %}{% endblock extra_scripts %}
   {% endblock scripts %}
   </body>
 
 </html>
+{% endspaceless %}
