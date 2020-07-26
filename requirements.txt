@@ -1,6 +1,10 @@
 wagtail
+wagtailmenus
 dj-database-url
 psycopg2-binary
 django-redis
 python-dotenv
-django-yarn
+django-npm
+libsass
+django-compressor
+django-sass-processor
