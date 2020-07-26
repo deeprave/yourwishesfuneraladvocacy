@@ -1,4 +1,4 @@
 # no version control in these dirs
-/documents/
 /media/
 /static/
+/node_modules/
