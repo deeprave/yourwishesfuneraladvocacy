@@ -25,6 +25,10 @@ DATABASE_URL=postgres://${DBUSER}:${DBPASS}@${DBHOST}:${DBPORT}/${DBNAME}
 DJANGO_SECRET_KEY=
 DJANGO_MODE=dev
 BASE_URL='http://example.com'
+EXT_ROOT=
+EXT_STATIC=
+EXT_MEDIA=
+EXT_DOCUMENTS=
 
 # if there i an existing .env, source it to retain values as defaults across sessions
 [ -f ./.env ] && source ./.env
@@ -38,7 +42,7 @@ General Options:
  -P <name>      set project name     | -S             random SECRET_KEY
  -a <name>      set app name         | -d <directory> set app subdir
  -U <url>       set site base url    | -R             generate passwords
- -h             this help message    | -D             assume services in docker
+ -h             this help message    | -D             run services in docker
 PostgreSQL Options:                  | Redis Options:
  -i <hostname>  hostname (use IP)    |  -I <hostname>  hostname (use IP)
  -p <port>      port                 |  -P <port>      port
@@ -188,6 +192,11 @@ if [ ! -z "${rest}" ]; then
   DJANGO_SECRET_KEY=`secretkey`
 fi
 
+[ -z ${EXT_ROOT} ]      && EXT_ROOT=${PWD}
+[ -z ${EXT_STATIC} ]    && EXT_STATIC=${EXT_ROOT}/${APP_DIR}/static
+[ -z ${EXT_MEDIA} ]     && EXT_MEDIA=${EXT_ROOT}/${APP_DIR}/media
+[ -z ${EXT_DOCUMENTS} ] && EXT_DOCUMENTS=${EXT_ROOT}/${APP_DIR}/documents
+
 [ -z "${VIRTUAL_ENV}" ] && { echo "this script requires an active virtualenv"; exit 3; }
 
 if [ ${dc_docker} != 0 ]; then
@@ -219,6 +228,9 @@ REDIS_CACHE=redis://${RDHOST}:${RDPORT}/${RD0}
 REDIS_SESSION=redis://${RDHOST}:${RDPORT}/${RD1}
 DATABASE_URL=postgres://${DBUSER}:${DBPASS}@${DBHOST}:${DBPORT}/${DBNAME}
 BASE_URL=${BASE_URL}
+EXT_ROOT=${EXT_ROOT}
+EXT_STATIC=${EXT_STATIC}
+EXT_MEDIA=${EXT_MEDIA}
 ENV
 
 echo ""
@@ -242,7 +254,7 @@ wagtail start ${APP_NAME} ${APP_DIR}
 
 git_ignore=${APP_DIR}/.gitignore
 echo '# no version control in these dirs' > ${git_ignore}
-for content in documents media static
+for content in media static
 do
   mkdir -p ${APP_DIR}/${content}
   echo /${content}/ >> ${git_ignore}
@@ -253,6 +265,8 @@ action adjust wagtail settings
 rm -f ${APP_DIR}/requirements.txt ${APP_DIR}/Dockerfile
 python wagtail_settings.py ${APP_DIR}
 
+if [ ${dc_services} != 0 ]; then
 # start the database and cache
-action start services
-docker-compose -f docker-compose-services.yml up -d
+  action start services
+  docker-compose -f docker-compose-services.yml up -d
+fi

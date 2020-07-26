@@ -8,7 +8,7 @@ function usage {
 `basename "$0"`: [options]
 Options:
   -h    this help message
-  -D    run services in docker (docker-compose-services)
+  -D    services run in docker (docker-compose-services)
   -r    reset postgres data
   -R    reset all docker data volumes for this project
   -b    (re)build the app docker container
@@ -24,7 +24,9 @@ dc_build_app=0
 dc_docker=0
 git_init=0
 
-args=`getopt hgdbrR $*` || { usage && exit 2; }
+SELECT_DATABASE=
+
+args=`getopt hDbRrg $*` || { usage && exit 2; }
 set -- $args
 for opt
 do
@@ -35,6 +37,7 @@ do
       ;;
     -D)
       dc_docker=1
+      SELECT_DATABASE="-h ${DBHOST}"
       shift
       ;;
     -b)
@@ -96,7 +99,7 @@ fi
 
 # create a role with a user, use permission inheritance for convenience
 echo "Setting up database roles"
-PGPASSWORD="${POSTGRES_PASSWORD}" psql -p ${DBPORT} postgres postgres <<SQL
+PGPASSWORD="${POSTGRES_PASSWORD}" psql ${SELECT_DATABASE} -p ${DBPORT} postgres postgres <<SQL
 create role ${DBROLE} createdb;
 create user ${DBUSER} createrole inherit password '${DBPASS}';
 grant ${DBROLE} to ${DBUSER};
@@ -107,7 +110,7 @@ SQL
 
 # create the database(es)
 echo "Creating database: ${DBNAME}"
-PGPASSWORD="${POSTGRES_PASSWORD}" psql -p ${DBPORT} postgres postgres <<SQL
+PGPASSWORD="${POSTGRES_PASSWORD}" psql ${SELECT_DATABASE} -p ${DBPORT} postgres postgres <<SQL
 create database ${DBNAME} with owner ${DBROLE};
 grant all privileges on database ${DBNAME} to ${DBROLE};
 SQL
@@ -119,20 +122,13 @@ if [ ${dc_build_app} != 0 ]; then
 fi
 
 # do intialisation if required
-docker-compose run app ./manage.py migrate
-docker-compose run app ./manage.py createuseruser
-docker-compose run app ./manage.py collectstatic --no-input
+docker-compose run --rm app ./manage.py migrate
+docker-compose run --rm app ./manage.py createsuperuser
+docker-compose run --rm app ./manage.py collectstatic --no-input
 
 if [ ${git_init} != 0 ]; then
 
   # Initialise a git repo
-  # Remove /.env exclusion - the project needs it
-  while read -r line
-  do
-    [[ ${line} != '/.env' ]] && echo "${line}"
-  done < .gitignore > .gitignore.new
-  mv .gitignore.new .gitignore
-
   [ ! -d .git ] && git init .
   git add -A
   git commit -m 'Initial commit'
