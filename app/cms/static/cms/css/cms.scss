@@ -1,0 +1,56 @@
+@import 'partials/vars';
+
+body {
+  background: url("../images/stars.jpg") no-repeat top right;
+  background-attachment: fixed;
+  font-family: $font-family-default;
+  font-size: $font-size-base;
+}
+
+.heading {
+  font-family: $font-family-heading;
+  font-weight: bold;
+}
+
+#ywfa-header {
+  height: 50px;
+  display: flex;
+  padding: 0;
+  flex-direction: column;
+}
+
+#ywfa-logo {
+  height: 32px;
+  margin: 0;
+}
+
+.ywfa-title {
+  color: white;
+  font-weight: bold;
+  padding: 5px;
+  width: 100%;
+  font-size: 36px;
+  text-align: center;
+}
+
+.navbar {
+  .navbar-light, .navigation-clean {
+    color: $color-dark;
+    background-color: $color-background-nav-light;
+  }
+  .navbar-light.navbar-expand-md {
+    padding: 0;
+  }
+}
+
+
+@media only screen and (max-width: $width-md) {
+  .ywfa-title {
+    font-size: 32px;
+  }
+}
+@media only screen and (max-width: $width-sm) {
+  .ywfa-title {
+    font-size: 26px;
+  }
+}
