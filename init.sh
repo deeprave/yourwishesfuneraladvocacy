@@ -28,7 +28,6 @@ BASE_URL='http://example.com'
 EXT_ROOT=
 EXT_STATIC=
 EXT_MEDIA=
-EXT_DOCUMENTS=
 
 # if there i an existing .env, source it to retain values as defaults across sessions
 [ -f ./.env ] && source ./.env
@@ -39,10 +38,11 @@ function usage {
   cat <<USAGE
 `basename "$0"`: [options] [appname]
 General Options:
- -P <name>      set project name     | -S             random SECRET_KEY
+ -P <name>      set project name     | -K             random SECRET_KEY
  -a <name>      set app name         | -d <directory> set app subdir
  -U <url>       set site base url    | -R             generate passwords
- -h             this help message    | -D             run services in docker
+ -D key=val     set env key to value | -S             run services in docker
+ -h             this help message
 PostgreSQL Options:                  | Redis Options:
  -i <hostname>  hostname (use IP)    |  -I <hostname>  hostname (use IP)
  -p <port>      port                 |  -P <port>      port
@@ -78,7 +78,7 @@ sleep_interval=5.0
 dc_services=0
 
 # parse the command line
-args=`getopt hpDSe:E:a:d:i:p:u:w:g:rRI:P:c:s:E:U: $*` || { usage && exit 2; }
+args=`getopt hpSKD:e:E:a:d:i:p:u:w:g:rRI:P:c:s:E:U: $*` || { usage && exit 2; }
 set -- $args
 for opt
 do
@@ -88,6 +88,11 @@ do
       exit 1
       ;;
     -D)
+      var=$(echo "${2}" | cut -d'=' -f1)
+      val=$(echo "${2}" | cut -d'=' -f2)
+      printf -v ${var} "${val}"
+      shift; shift
+    -S)
       dc_services=1
       shift
       ;;
@@ -103,7 +108,7 @@ do
       BASE_URL=${2}
       shift; shift
       ;;
-    -S)
+    -K)
       DJANGO_SECRET_KEY=`secretkey`
       shift
       ;;
@@ -195,7 +200,6 @@ fi
 [ -z ${EXT_ROOT} ]      && EXT_ROOT=${PWD}
 [ -z ${EXT_STATIC} ]    && EXT_STATIC=${EXT_ROOT}/${APP_DIR}/static
 [ -z ${EXT_MEDIA} ]     && EXT_MEDIA=${EXT_ROOT}/${APP_DIR}/media
-[ -z ${EXT_DOCUMENTS} ] && EXT_DOCUMENTS=${EXT_ROOT}/${APP_DIR}/documents
 
 [ -z "${VIRTUAL_ENV}" ] && { echo "this script requires an active virtualenv"; exit 3; }
 
