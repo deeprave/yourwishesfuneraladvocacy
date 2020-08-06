@@ -8,3 +8,4 @@ node_modules
 .*_history
 .cache/
 .env
+/studio/
