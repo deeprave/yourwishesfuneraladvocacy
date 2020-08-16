@@ -4,4 +4,5 @@ from .cms import *
 
 __all__ = (
     'CMSPage',
+    'ArticlePage'
 )
