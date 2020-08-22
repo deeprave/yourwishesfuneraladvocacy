@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
-{% load static %}
+
+{% load static sass_tags %}
 
 {% block metas %}
     <meta name="twitter:image" content="{% static 'cms/images/ywfa_logo.png' %}">
@@ -18,8 +19,8 @@
 {% endblock global_scripts %}
 
 {% block site_stylesheets %}
-  <link rel="stylesheet" type="text/css" href="{% static 'cms/css/nav-clean.scss' %}">
-  <link rel="stylesheet" type="text/css" href="{% static 'cms/css/cms.scss' %}">
+  <link rel="stylesheet" type="text/css" href="{% sass_src 'cms/css/nav-clean.scss' %}">
+  <link rel="stylesheet" type="text/css" href="{% sass_src 'cms/css/cms.scss' %}">
 {% endblock site_stylesheets %}
 
 {% block navigation %}
