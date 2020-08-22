@@ -17,8 +17,8 @@ services:
         DATABASE_URL: ${DATABASE_URL}
     volumes:
       - ${EXT_ROOT}:${APP_ROOT}/${APP_NAME}
-      - ${EXT_STATIC}:${APP_ROOT}/${APP_NAME}/static
-      - ${EXT_MEDIA}:${APP_ROOT}/${APP_NAME}/media
+      - ${EXT_STATIC}:${APP_ROOT}/static
+      - ${EXT_MEDIA}:${APP_ROOT}/media
     expose:
       - "8000"
     ports:
@@ -30,7 +30,6 @@ services:
 volumes:
   data-static:
   data-media:
-  data-documents:
 
 networks:
   internal_net:

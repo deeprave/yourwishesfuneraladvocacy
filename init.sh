@@ -38,11 +38,11 @@ function usage {
   cat <<USAGE
 `basename "$0"`: [options] [appname]
 General Options:
- -P <name>      set project name     | -K             random SECRET_KEY
+ -P <name>      set project name     | -K             generate random SECRET_KEY
  -a <name>      set app name         | -d <directory> set app subdir
  -U <url>       set site base url    | -R             generate passwords
- -D key=val     set env key to value | -S             run services in docker
- -h             this help message
+ -S             run docker services  | -e             use data volumes for app
+ -D key=val     set env key to value | -h             this help message
 PostgreSQL Options:                  | Redis Options:
  -i <hostname>  hostname (use IP)    |  -I <hostname>  hostname (use IP)
  -p <port>      port                 |  -P <port>      port
@@ -52,7 +52,7 @@ PostgreSQL Options:                  | Redis Options:
  -w <password>  app password         |  -E <n>         prefix default database
  -G <password>  sa postgres password |                 and redis ports [1-6]
 USAGE
-[ -z "${VIRTUAL_ENV}" ] && echo; echo "** WARNING: no virtualenv detected **"
+  [ -z "${VIRTUAL_ENV}" ] && echo; echo "** WARNING: no virtualenv detected **"
 }
 
 function secretkey {
@@ -60,7 +60,7 @@ function secretkey {
 }
 
 function random_password {
-  LC_ALL=C tr -dc '[:alnum:]' </dev/urandom | dd bs=16 count=1 2>/dev/null
+  LC_ALL=C tr -dc '[:alnum:]' < /dev/urandom | dd bs=16 count=1 2>/dev/null
 }
 
 function lowercase {
@@ -76,9 +76,10 @@ user_pass=0
 psql_pass=0
 sleep_interval=5.0
 dc_services=0
+dc_data=0
 
 # parse the command line
-args=`getopt hpSKD:e:E:a:d:i:p:u:w:g:rRI:P:c:s:E:U: $*` || { usage && exit 2; }
+args=`getopt hpSKD:eE:a:d:i:p:u:w:g:rRI:P:c:s:E:U: $*` || { usage && exit 2; }
 set -- $args
 for opt
 do
@@ -92,8 +93,13 @@ do
       val=$(echo "${2}" | cut -d'=' -f2)
       printf -v ${var} "${val}"
       shift; shift
+      ;;
     -S)
       dc_services=1
+      shift
+      ;;
+    -e)
+      dc_data=1
       shift
       ;;
     -P)
@@ -197,9 +203,9 @@ if [ ! -z "${rest}" ]; then
   DJANGO_SECRET_KEY=`secretkey`
 fi
 
-[ -z ${EXT_ROOT} ]      && EXT_ROOT=${PWD}
-[ -z ${EXT_STATIC} ]    && EXT_STATIC=${EXT_ROOT}/static
-[ -z ${EXT_MEDIA} ]     && EXT_MEDIA=${EXT_ROOT}/media
+[ -z ${EXT_ROOT} ]   && { [ ${dc_data} != 0] && EXT_ROOT=${APP_ROOT} || EXT_ROOT=${PWD}; }
+[ -z ${EXT_STATIC} ] && { [ ${dc_data} != 0] && EXT_STATIC=data-static || EXT_STATIC=${EXT_ROOT}/static; }
+[ -z ${EXT_MEDIA} ]  && { [ ${dc_data} != 0] && EXT_MEDIA=data-media || EXT_MEDIA=${EXT_ROOT}/media; }
 
 [ -z "${VIRTUAL_ENV}" ] && { echo "this script requires an active virtualenv"; exit 3; }
 
@@ -255,14 +261,6 @@ pip install -q -r requirements-dev.txt
 action create wagtail project
 mkdir -p ${APP_DIR}
 wagtail start ${APP_NAME} ${APP_DIR}
-
-git_ignore=${APP_DIR}/.gitignore
-echo '# no version control in these dirs' > ${git_ignore}
-for content in media static
-do
-  mkdir -p ${APP_DIR}/${content}
-  echo /${content}/ >> ${git_ignore}
-done
 
 # tidy & additions
 action adjust wagtail settings
