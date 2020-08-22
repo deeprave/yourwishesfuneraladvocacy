@@ -13,6 +13,7 @@ Options:
   -R    reset all docker data volumes for this project
   -b    (re)build the app docker container
   -g    update a local git repository (initialise if nencessary)
+  -m    run database migrations
 
 ** note: to set the postgres admin password a postgres data reset is required
 USAGE
@@ -22,11 +23,12 @@ dc_reset=0
 dc_reset_all=0
 dc_build_app=0
 dc_docker=0
+dc_migrate=0
 git_init=0
 
 SELECT_DATABASE=
 
-args=`getopt hDbRrg $*` || { usage && exit 2; }
+args=`getopt hDbRrgm $*` || { usage && exit 2; }
 set -- $args
 for opt
 do
@@ -58,29 +60,28 @@ do
       git_init=1
       shift
       ;;
+    -m)
+      dc_migrate=1
+      shift
+      ;;
   esac
 done
 
 if [ ${dc_reset} != 0 ]; then
-  if [ ${dc_docker} != 0 ]; then
+  if [ ${dc_docker} != 0 -a ${dc_reset_all} != 0 ]; then
     # check to see if anything is running
     if [ ! -z "`docker ps -q -f name=${COMPOSE_PROJECT_NAME}`" ]; then
       echo '*>' Stopping all running containers
       docker-compose down
     fi
-    if [ ${dc_reset_all} != 0 ]; then
-      # remove all project volumes
-      volumes=`docker volume ls -q -f name=${COMPOSE_PROJECT_NAME}`
-    else
-      # remove project postgres volume
-      volumes=`docker volume ls -q -f name=${COMPOSE_PROJECT_NAME}_data-pgdata`
-    fi
+    # remove all project volumes
+    volumes=`docker volume ls -q -f name=${COMPOSE_PROJECT_NAME}`
     if [ ! -z "${volumes}" ]; then
       echo '*>' Removing volumes ${volumes}
       docker volume rm ${volumes}
     fi
   else
-    PGPASSWORD="${POSTGRES_PASSWORD}" psql -p ${DBPORT} postgres postgres <<SQL
+    PGPASSWORD="${POSTGRES_PASSWORD}" psql ${SELECT_DATABASE} -p ${DBPORT} postgres postgres <<SQL
 drop database ${DBNAME};
 drop user ${DBUSER};
 drop role ${DBROLE};
@@ -115,16 +116,21 @@ create database ${DBNAME} with owner ${DBROLE};
 grant all privileges on database ${DBNAME} to ${DBROLE};
 SQL
 
+if [ ${dc_migrate} != 0 ]; then
+  cd ${APP_DIR} && (
+    ./manage.py makemigrations
+    ./manage.py migrate
+    ./manage.py createsuperuser
+    ./manage.py collectstatic --no-input
+  )
+fi
+
 if [ ${dc_build_app} != 0 ]; then
 
   docker-compose build app
 
 fi
 
-# do intialisation if required
-docker-compose run --rm app ./manage.py migrate
-docker-compose run --rm app ./manage.py createsuperuser
-docker-compose run --rm app ./manage.py collectstatic --no-input
 
 if [ ${git_init} != 0 ]; then
 

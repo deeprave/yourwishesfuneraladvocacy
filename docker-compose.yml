@@ -19,7 +19,6 @@ services:
       - ${EXT_ROOT}:${APP_ROOT}/${APP_NAME}
       - ${EXT_STATIC}:${APP_ROOT}/${APP_NAME}/static
       - ${EXT_MEDIA}:${APP_ROOT}/${APP_NAME}/media
-      - ${EXT_DOCUMENTS}:${APP_ROOT}/${APP_NAME}/documents
     expose:
       - "8000"
     ports:

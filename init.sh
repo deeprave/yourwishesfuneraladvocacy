@@ -198,8 +198,8 @@ if [ ! -z "${rest}" ]; then
 fi
 
 [ -z ${EXT_ROOT} ]      && EXT_ROOT=${PWD}
-[ -z ${EXT_STATIC} ]    && EXT_STATIC=${EXT_ROOT}/${APP_DIR}/static
-[ -z ${EXT_MEDIA} ]     && EXT_MEDIA=${EXT_ROOT}/${APP_DIR}/media
+[ -z ${EXT_STATIC} ]    && EXT_STATIC=${EXT_ROOT}/static
+[ -z ${EXT_MEDIA} ]     && EXT_MEDIA=${EXT_ROOT}/media
 
 [ -z "${VIRTUAL_ENV}" ] && { echo "this script requires an active virtualenv"; exit 3; }
 
