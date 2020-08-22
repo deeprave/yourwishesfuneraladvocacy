@@ -1,0 +1,9 @@
+{% load wagtailcore_tags %}
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <h2 class="cc-inner-subtitle">{{ value.title }}</h2>
+      <div class="cc-simple-richtext">
+        {{ value.content|richtext }}
+      </div>
+    </div>
+  </div>

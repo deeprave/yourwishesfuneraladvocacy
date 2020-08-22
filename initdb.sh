@@ -8,11 +8,12 @@ function usage {
 `basename "$0"`: [options]
 Options:
   -h    this help message
-  -D    run services in docker (docker-compose-services)
+  -D    services run in docker (docker-compose-services)
   -r    reset postgres data
   -R    reset all docker data volumes for this project
   -b    (re)build the app docker container
   -g    update a local git repository (initialise if nencessary)
+  -m    run database migrations
 
 ** note: to set the postgres admin password a postgres data reset is required
 USAGE
@@ -22,9 +23,12 @@ dc_reset=0
 dc_reset_all=0
 dc_build_app=0
 dc_docker=0
+dc_migrate=0
 git_init=0
 
-args=`getopt hgdbrR $*` || { usage && exit 2; }
+SELECT_DATABASE=
+
+args=`getopt hDbRrgm $*` || { usage && exit 2; }
 set -- $args
 for opt
 do
@@ -35,6 +39,7 @@ do
       ;;
     -D)
       dc_docker=1
+      SELECT_DATABASE="-h ${DBHOST}"
       shift
       ;;
     -b)
@@ -55,29 +60,28 @@ do
       git_init=1
       shift
       ;;
+    -m)
+      dc_migrate=1
+      shift
+      ;;
   esac
 done
 
 if [ ${dc_reset} != 0 ]; then
-  if [ ${dc_docker} != 0 ]; then
+  if [ ${dc_docker} != 0 -a ${dc_reset_all} != 0 ]; then
     # check to see if anything is running
     if [ ! -z "`docker ps -q -f name=${COMPOSE_PROJECT_NAME}`" ]; then
       echo '*>' Stopping all running containers
       docker-compose down
     fi
-    if [ ${dc_reset_all} != 0 ]; then
-      # remove all project volumes
-      volumes=`docker volume ls -q -f name=${COMPOSE_PROJECT_NAME}`
-    else
-      # remove project postgres volume
-      volumes=`docker volume ls -q -f name=${COMPOSE_PROJECT_NAME}_data-pgdata`
-    fi
+    # remove all project volumes
+    volumes=`docker volume ls -q -f name=${COMPOSE_PROJECT_NAME}`
     if [ ! -z "${volumes}" ]; then
       echo '*>' Removing volumes ${volumes}
       docker volume rm ${volumes}
     fi
   else
-    PGPASSWORD="${POSTGRES_PASSWORD}" psql -p ${DBPORT} postgres postgres <<SQL
+    PGPASSWORD="${POSTGRES_PASSWORD}" psql ${SELECT_DATABASE} -p ${DBPORT} postgres postgres <<SQL
 drop database ${DBNAME};
 drop user ${DBUSER};
 drop role ${DBROLE};
@@ -96,7 +100,7 @@ fi
 
 # create a role with a user, use permission inheritance for convenience
 echo "Setting up database roles"
-PGPASSWORD="${POSTGRES_PASSWORD}" psql -p ${DBPORT} postgres postgres <<SQL
+PGPASSWORD="${POSTGRES_PASSWORD}" psql ${SELECT_DATABASE} -p ${DBPORT} postgres postgres <<SQL
 create role ${DBROLE} createdb;
 create user ${DBUSER} createrole inherit password '${DBPASS}';
 grant ${DBROLE} to ${DBUSER};
@@ -107,10 +111,19 @@ SQL
 
 # create the database(es)
 echo "Creating database: ${DBNAME}"
-PGPASSWORD="${POSTGRES_PASSWORD}" psql -p ${DBPORT} postgres postgres <<SQL
+PGPASSWORD="${POSTGRES_PASSWORD}" psql ${SELECT_DATABASE} -p ${DBPORT} postgres postgres <<SQL
 create database ${DBNAME} with owner ${DBROLE};
 grant all privileges on database ${DBNAME} to ${DBROLE};
 SQL
+
+if [ ${dc_migrate} != 0 ]; then
+  cd ${APP_DIR} && (
+    ./manage.py makemigrations
+    ./manage.py migrate
+    ./manage.py createsuperuser
+    ./manage.py collectstatic --no-input
+  )
+fi
 
 if [ ${dc_build_app} != 0 ]; then
 
@@ -118,21 +131,10 @@ if [ ${dc_build_app} != 0 ]; then
 
 fi
 
-# do intialisation if required
-docker-compose run app ./manage.py migrate
-docker-compose run app ./manage.py createuseruser
-docker-compose run app ./manage.py collectstatic --no-input
 
 if [ ${git_init} != 0 ]; then
 
   # Initialise a git repo
-  # Remove /.env exclusion - the project needs it
-  while read -r line
-  do
-    [[ ${line} != '/.env' ]] && echo "${line}"
-  done < .gitignore > .gitignore.new
-  mv .gitignore.new .gitignore
-
   [ ! -d .git ] && git init .
   git add -A
   git commit -m 'Initial commit'

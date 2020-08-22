@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% load static sass_tags %}
+
+{% block metas %}
+    <meta name="twitter:image" content="{% static 'cms/images/ywfa_logo.png' %}">
+  {% block description %}
+    <meta name="description" content="Providing advice about funerals when you need it most.">
+  {% endblock description %}
+{% endblock metas %}
+
+{% block global_stylesheets %}
+  <link rel="stylesheet" href="{% static 'vendor/bootstrap/dist/css/bootstrap.min.css' %}"/>
+{% endblock global_stylesheets %}
+
+{% block global_scripts %}
+  <script src="{% static 'vendor/popper.js/dist/umd/popper.min.js' %}"></script>
+  <script src="{% static 'vendor/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+{% endblock global_scripts %}
+
+{% block site_stylesheets %}
+  <link rel="stylesheet" type="text/css" href="{% sass_src 'cms/css/nav-clean.scss' %}">
+  <link rel="stylesheet" type="text/css" href="{% sass_src 'cms/css/cms.scss' %}">
+{% endblock site_stylesheets %}
+
+{% block navigation %}
+  {% include 'partials/_navigation.html' %}
+{% endblock navigation %}
