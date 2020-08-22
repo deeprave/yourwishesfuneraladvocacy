@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'search',
     'cms',
     'cms_blocks',
+    'testimonials',
 
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
