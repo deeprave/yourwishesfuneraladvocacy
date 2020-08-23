@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from django import forms
 from django.core.exceptions import ValidationError
 from django.forms.utils import ErrorList
@@ -7,13 +6,14 @@ from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.core import blocks
 from wagtail.core.blocks import PageChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
+from wagtail.snippets.blocks import SnippetChooserBlock
 
 
 class TitleBlock(blocks.StructBlock):
-    text = blocks.CharBlock(required=True, help_text='Enter a title for this section orpage')
+    text = blocks.CharBlock(required=True, help_text='Title text to display')
 
     class Meta:
-        template = "cms_blocks/title_block.html"
+        template = "blocks/title_block.html"
         icon = "edit"
         label = "Title"
         help_text = "Centered text to display on the page"
@@ -52,46 +52,41 @@ class Card(blocks.StructBlock):
     title = blocks.CharBlock(max_length=100, help_text='Bold title text for this card (len=100)')
     text = blocks.TextBlock(max_length=255, required=False, help_text='Optional text for this card (length=255)')
     image = ImageChooserBlock(help_text="Image - auto-cropped 570x370px")
-    link = Link(help_text='Enter a link or select a page')
+    link = Link(blank=True, help_text='Enter a link or select a page')
 
 
 class CardsBlock(blocks.StructBlock):
-
-    cards = blocks.ListBlock(
-        Card()
-    )
+    cards = blocks.ListBlock(Card())
 
     class Meta:
-        template = "cms_blocks/cards_block.html"
+        template = "blocks/cards_block.html"
         icon = "image"
-        label = "Standard Cards"
+        label = "Cards"
 
 
 class RadioSelectBlock(blocks.ChoiceBlock):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.field.widget = forms.RadioSelect(
-            choices=self.field.widget.choices
-        )
+        self.field.widget = forms.RadioSelect(choices=self.field.widget.choices)
 
 
 class ImageAndTextBlock(blocks.StructBlock):
 
-    image = ImageChooserBlock(help_text='Image the automagically cropped to 786px by 552px')
+    image = ImageChooserBlock(blank=True, null=True,
+                              help_text='Image the automagically cropped to 786px by 552px')
     image_alignment = RadioSelectBlock(
-        choices=(
-            ("left", "Image to the left"),
-            ("right", "Image to the right"),
-        ),
+        choices=(("left", "Image to the left"), ("right", "Image to the right"),),
         default='left',
         help_text='Image on the left with text on the right. Or image on the right with text on the left.'
     )
-    title = blocks.CharBlock(max_length=60, help_text='Max length of 60 characters.')
-    text = blocks.CharBlock(max_length=140, required=False)
+    title = blocks.CharBlock(max_length=60,
+                             help_text='Max length of 60 characters.')
+    text = blocks.CharBlock(max_length=140, required=False,
+                            help_text='Description for this card (optional)')
     link = Link()
 
     class Meta:
-        template = "cms_blocks/image_and_text_block.html"
+        template = "blocks/image_and_text_block.html"
         icon = "image"
         label = "Image & Text"
 
@@ -101,7 +96,7 @@ class CallToActionBlock(blocks.StructBlock):
     link = Link()
 
     class Meta:
-        template = "cms_blocks/call_to_action_block.html"
+        template = "blocks/call_to_action_block.html"
         icon = "plus"
         label = "Call to Action"
 
@@ -109,7 +104,7 @@ class CallToActionBlock(blocks.StructBlock):
 class CustomTableBlock(TableBlock):
 
     class Meta:
-        template = 'cms_blocks/custom_table_block.html'
+        template = 'blocks/custom_table_block.html'
         label = 'Pricing Table'
         icon = 'table'
         help_text = 'Price table'
@@ -126,4 +121,19 @@ class RichTextWithTitleBlock(blocks.StructBlock):
     content = blocks.RichTextBlock(features=RICHTEXTBLOCK_FEATURES)
 
     class Meta:
-        template = 'cms_blocks/simple_richtext_block.html'
+        template = 'blocks/simple_richtext_block.html'
+
+
+class TestimonialChooserBlock(SnippetChooserBlock):
+
+    def __init__(self, **kwargs):
+        super().__init__('testimonials.Testimonial', **kwargs)
+
+    class Meta:
+        template = 'blocks/testimonial_block.html'
+
+
+class LargeImageChooserBlock(ImageChooserBlock):
+
+    class Meta:
+        template = 'blocks/large_image_block.html'

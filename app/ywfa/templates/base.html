@@ -1,4 +1,5 @@
-{% load static sass_tags wagtailuserbar %}
+{% load static wagtailuserbar %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,7 +21,7 @@
 {% endblock fonts %}
 {% block global_stylesheets %}
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" crossorigin="anonymous" />
-  <link rel="stylesheet" href="{% sass_src 'css/ywfa.scss' %}" />
+  <link rel="stylesheet" href="{% static 'css/ywfa.scss' %}" />
 {% endblock global_stylesheets %}
 {% block extra_css %}{% endblock extra_css %}
 {% block site_stylesheets %}{% endblock site_stylesheets %}

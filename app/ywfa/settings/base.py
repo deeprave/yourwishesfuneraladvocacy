@@ -25,8 +25,6 @@ TOP_DIR = os.path.dirname(BASE_DIR)
 # Application definition
 
 INSTALLED_APPS = [
-    'home',
-    'search',
     'cms',
     'cms_blocks',
     'testimonials',
