@@ -34,14 +34,14 @@ EXT_MEDIA=
 
 function usage {
   msg="$*"
-  [ ! -z "${msg}" ] && echo ${msg} 1>&2
+  [ ! -z "${msg}" ] && { echo ${msg} 1>&2; }
   cat <<USAGE
 `basename "$0"`: [options] [appname]
 General Options:
- -P <name>      set project name     | -K             generate random SECRET_KEY
+ -X <name>      set project name     | -K             generate random SECRET_KEY
  -a <name>      set app name         | -d <directory> set app subdir
  -U <url>       set site base url    | -R             generate passwords
- -S             run docker services  | -e             use data volumes for app
+ -S             incl docker services | -e             use data volumes for app
  -D key=val     set env key to value | -h             this help message
 PostgreSQL Options:                  | Redis Options:
  -i <hostname>  hostname (use IP)    |  -I <hostname>  hostname (use IP)
@@ -52,7 +52,7 @@ PostgreSQL Options:                  | Redis Options:
  -w <password>  app password         |  -E <n>         prefix default database
  -G <password>  sa postgres password |                 and redis ports [1-6]
 USAGE
-  [ -z "${VIRTUAL_ENV}" ] && echo; echo "** WARNING: no virtualenv detected **"
+  [ -n "${VIRTUAL_ENV}" ] && { echo; echo "** WARNING: no virtualenv detected **"; }
 }
 
 function secretkey {
@@ -79,7 +79,7 @@ dc_services=0
 dc_data=0
 
 # parse the command line
-args=`getopt hpSKD:eE:a:d:i:p:u:w:g:rRI:P:c:s:E:U: $*` || { usage && exit 2; }
+args=`getopt X:D:E:a:d:u:n:w:G:g:i:I:p:P:c:s:E:U:hperRSK $*` || { usage && exit 2; }
 set -- $args
 for opt
 do
@@ -92,7 +92,8 @@ do
       var=$(echo "${2}" | cut -d'=' -f1)
       val=$(echo "${2}" | cut -d'=' -f2)
       printf -v ${var} "${val}"
-      shift; shift
+      shift
+	    shift
       ;;
     -S)
       dc_services=1
@@ -102,86 +103,110 @@ do
       dc_data=1
       shift
       ;;
-    -P)
+    -X)
       COMPOSE_PROJECT_NAME=${2}
-      shift; shift
+      shift
+	    shift
       ;;
     -a)
       APP_NAME=`lowercase ${2}` && { [ ${dir_set} == 0 ] && APP_DIR="${2}" && dir_set=1; }
-      shift; shift
+      shift
+	    shift
       ;;
     -U)
       BASE_URL=${2}
-      shift; shift
+      shift
+	    shift
       ;;
     -K)
       DJANGO_SECRET_KEY=`secretkey`
       shift
       ;;
     -d)
-      APP_DIR=${2} && dir_set=1
-      shift; shift
+      APP_DIR=${2}
+	    dir_set=1
+      shift
+	    shift
       ;;
     -n)
-      DBNAME=${2} && name_set=1
-      shift; shift
+      DBNAME=${2}
+	    name_set=16
+      shift
+	    shift
       ;;
     -i)
       DBHOST=${2}
-      shift; shift
+      shift
+	    shift
+      ;;
+    -g)
+      DBROLE=${2}
+  	  role_set=1
+      [ ${user_name} == 0 ] && { DBUSER=${2}user; user_name=1; }
+      [ ${name_set} == 0 ] && { DBNAME=${2}; name_set=1; }
+      shift
+	    shift
       ;;
     -p)
       DBPORT=${2}
-      shift; shift
-      ;;
-    -g)
-      DBROLE=${2} && role_set=1
-      [ ${user_name} == 0 ] && DBUSER=${2}user && user_name=1
-      [ ${name_set} == 0 ] && DBNAME=${2} && name_set=1
-      shift; shift
+      shift
+	    shift
       ;;
     -u)
-      DBUSER=${2} && user_name=1
-      [ ${name_set} == 0 ] && DBNAME=${2} && name_set=1
-      shift; shift
+      DBUSER=${2}
+	    user_name=1
+      [ ${name_set} == 0 ] && { DBNAME=${2}; name_set=1; }
+      shift
+	    shift
       ;;
     -w)
-      DBPASS=${2} && user_pass=1
-      shift; shift
+      DBPASS=${2}
+	    user_pass=1
+      shift
+	    shift
       ;;
     -r)
-      DBPASS="`random_password`" && user_pass=1
+      DBPASS="`random_password`"
+	    user_pass=1
       shift
       ;;
     -G)
-      POSTGRES_PASSWORD="${2}" && psql_pass=1
-      shift; shift
+      POSTGRES_PASSWORD="${2}"
+	    psql_pass=1
+      shift
+	    shift
       ;;
     -R)
-      POSTGRES_PASSWORD="`random_password`" && psql_pass=1
-      [ ${user_pass} == 0 ] && DBPASS="`random_password`" && user_pass=1
+      POSTGRES_PASSWORD="`random_password`"
+	    psql_pass=1
+      [ ${user_pass} == 0 ] && { DBPASS="`random_password`"; user_pass=1; }
       shift
       ;;
     -I)
-      RDHOST=${2} 
-      shift; shift
+      RDHOST=${2}
+      shift
+	    shift
       ;;
     -P)
-      RDPORT=${2} 
-      shift; shift
+      RDPORT=${2}
+      shift
+	    shift
       ;;
     -E)
       DBPORT=${2}5432
       RDPORT=${2}6379
-      shift; shift
+      shift
+	    shift
       ;;
     -c)
-      RD0=${2} 
-      shift; shift
+      RD0=${2}
+      shift
+	    shift
       ;;
     -s)
-      RD1=${2} 
-      shift; shift
+      RD1=${2}
+      shift
+	    shift
       ;;
     --)
       shift
@@ -203,16 +228,22 @@ if [ ! -z "${rest}" ]; then
   DJANGO_SECRET_KEY=`secretkey`
 fi
 
-[ -z ${EXT_ROOT} ]   && { [ ${dc_data} != 0] && EXT_ROOT=${APP_ROOT} || EXT_ROOT=${PWD}; }
-[ -z ${EXT_STATIC} ] && { [ ${dc_data} != 0] && EXT_STATIC=data-static || EXT_STATIC=${EXT_ROOT}/static; }
-[ -z ${EXT_MEDIA} ]  && { [ ${dc_data} != 0] && EXT_MEDIA=data-media || EXT_MEDIA=${EXT_ROOT}/media; }
+if [ ${dc_data} != 0 ]; then
+  [ -z ${EXT_ROOT} ]   && EXT_ROOT=${APP_ROOT}
+  [ -z ${EXT_STATIC} ] && EXT_STATIC=data-static
+  [ -z ${EXT_MEDIA} ]  && EXT_MEDIA=data-media
+else
+  [ -z ${EXT_ROOT} ]   && EXT_ROOT=${PWD}
+  [ -z ${EXT_STATIC} ] && EXT_STATIC=${EXT_ROOT}/static
+  [ -z ${EXT_MEDIA} ]  && EXT_MEDIA=${EXT_ROOT}/media
+fi
 
 [ -z "${VIRTUAL_ENV}" ] && { echo "this script requires an active virtualenv"; exit 3; }
 
-if [ ${dc_docker} != 0 ]; then
-  COMPOSE_FILE=docker-compose.yml
-else
+if [ ${dc_services} != 0 ]; then
   COMPOSE_FILE=docker-compose-services.yml:docker-compose.yml
+else
+  COMPOSE_FILE=docker-compose.yml
 fi
 
 cat <<ENV | tee .env

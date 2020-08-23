@@ -8,7 +8,7 @@ function usage {
 `basename "$0"`: [options]
 Options:
   -h    this help message
-  -D    services run in docker (docker-compose-services)
+  -S    services run in docker (docker-compose-services)
   -r    reset postgres data
   -R    reset all docker data volumes for this project
   -b    (re)build the app docker container
@@ -28,7 +28,7 @@ git_init=0
 
 SELECT_DATABASE=
 
-args=`getopt hDbRrgm $*` || { usage && exit 2; }
+args=`getopt hSbRrgm $*` || { usage && exit 2; }
 set -- $args
 for opt
 do
@@ -37,7 +37,7 @@ do
       usage
       exit 1
       ;;
-    -D)
+    -S)
       dc_docker=1
       SELECT_DATABASE="-h ${DBHOST}"
       shift
