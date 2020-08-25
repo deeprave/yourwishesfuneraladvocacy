@@ -9,6 +9,12 @@ from wagtail.images.blocks import ImageChooserBlock
 from wagtail.snippets.blocks import SnippetChooserBlock
 
 
+RICHTEXTBLOCK_FEATURES = [
+    'h2', 'h3', 'h4', 'bold', 'italic', 'ol', 'ul', 'hr', 'document-link', 'image', 'embed',
+    'code', 'blockquote', 'superscript', 'subscript', 'strikethrough'
+]
+
+
 class TitleBlock(blocks.StructBlock):
     text = blocks.CharBlock(required=True, help_text='Title text to display')
 
@@ -28,16 +34,21 @@ class LinkValue(blocks.StructValue):
 
 
 class Link(blocks.StructBlock):
-    link_text = blocks.CharBlock(max_length=50, default='More details')
+    link_text = blocks.CharBlock(required=False, blank=True, max_length=50, default='More details')
     internal_page = PageChooserBlock(required=False)
     external_link = blocks.URLBlock(required=False)
+    required = True
+
+    def __init__(self, local_blocks=None, **kwargs):
+        self.required = kwargs.pop('required', self.required)
+        super().__init__(local_blocks, **kwargs)
 
     def clean(self, value):
         errors = {}
         internal_page = value.get('internal_page')
         external_link = value.get('external_link')
         error_message = 'You must enter an external link OR select an internal page'
-        if (not internal_page and not external_link) or (internal_page and external_link):
+        if (not internal_page and not external_link and self.required) or (internal_page and external_link):
             errors['internal_page'] = ErrorList([error_message])
             errors['external_link'] = ErrorList([error_message])
         if errors:
@@ -49,9 +60,11 @@ class Link(blocks.StructBlock):
 
 
 class Card(blocks.StructBlock):
-    title = blocks.CharBlock(max_length=100, help_text='Bold title text for this card (len=100)')
-    text = blocks.TextBlock(max_length=255, required=False, help_text='Optional text for this card (length=255)')
-    image = ImageChooserBlock(help_text="Image - auto-cropped 570x370px")
+    title = blocks.CharBlock(blank=True, null=True, required=False, max_length=255,
+                             help_text='Bold title text for this card (len=255)')
+    text = blocks.RichTextBlock(blank=True, null=True, required=False,
+                                help_text='Optional text for this card')
+    image = ImageChooserBlock(required=False, help_text="Image - auto-cropped 570x370px")
     link = Link(blank=True, help_text='Enter a link or select a page')
 
 
@@ -74,16 +87,11 @@ class ImageAndTextBlock(blocks.StructBlock):
 
     image = ImageChooserBlock(blank=True, null=True,
                               help_text='Image the automagically cropped to 786px by 552px')
-    image_alignment = RadioSelectBlock(
-        choices=(("left", "Image to the left"), ("right", "Image to the right"),),
-        default='left',
-        help_text='Image on the left with text on the right. Or image on the right with text on the left.'
-    )
-    title = blocks.CharBlock(max_length=60,
+    title = blocks.CharBlock(required=False, blank=True, null=True, max_length=60,
                              help_text='Max length of 60 characters.')
-    text = blocks.CharBlock(max_length=140, required=False,
-                            help_text='Description for this card (optional)')
-    link = Link()
+    text = blocks.RichTextBlock(blank=True, required=False, features=RICHTEXTBLOCK_FEATURES,
+                            help_text='Description for this item')
+    link = Link(required=False)
 
     class Meta:
         template = "blocks/image_and_text_block.html"
@@ -92,7 +100,10 @@ class ImageAndTextBlock(blocks.StructBlock):
 
 
 class CallToActionBlock(blocks.StructBlock):
-    title = blocks.CharBlock(max_length=200, help_text='Call to action text (max=200)')
+    title = blocks.CharBlock(required=False, blank=True, null=True, max_length=60,
+                             help_text='Max length of 60 characters, optional')
+    text = blocks.RichTextBlock(required=False, blank=True, features=RICHTEXTBLOCK_FEATURES,
+                             help_text='Call to action text, optional (max=200)')
     link = Link()
 
     class Meta:
@@ -105,20 +116,17 @@ class CustomTableBlock(TableBlock):
 
     class Meta:
         template = 'blocks/custom_table_block.html'
-        label = 'Pricing Table'
+        label = 'Table'
         icon = 'table'
-        help_text = 'Price table'
+        help_text = 'Tabular data'
 
-
-RICHTEXTBLOCK_FEATURES = [
-    'h2', 'h3', 'h4', 'bold', 'italic', 'ol', 'ul', 'hr', 'document-link', 'image', 'embed',
-    'code', 'blockquote', 'superscript', 'subscript', 'strikethrough'
-]
 
 
 class RichTextWithTitleBlock(blocks.StructBlock):
-    title = blocks.CharBlock(max_length=50)
-    content = blocks.RichTextBlock(features=RICHTEXTBLOCK_FEATURES)
+    title = blocks.CharBlock(blank=True, null=True, required=False, max_length=120,
+                             help_text='Display title, optional (max len=120)')
+    content = blocks.RichTextBlock(features=RICHTEXTBLOCK_FEATURES,
+                                   help_text='Rich text block, required')
 
     class Meta:
         template = 'blocks/simple_richtext_block.html'
