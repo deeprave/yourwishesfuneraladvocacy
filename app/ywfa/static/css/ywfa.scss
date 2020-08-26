@@ -1,0 +1,162 @@
+@import 'partials/variables';
+@import 'partials/functions';
+
+// global customisations
+
+body {
+  background-image: url("../images/stars-background.jpg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: $background-anchor;
+  font-family: $font-family-default;
+  font-size: $font-size-base;
+}
+
+.container-top {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  margin-top: 0.5em;
+  margin-bottom: 1em;
+  border-radius: 15px;
+  background-color: $color-white;
+}
+
+// site custom styles
+
+.ywfa-nav li.nav-item {
+  padding-right: 2em;
+}
+
+img.ywfa-border {
+  border-radius: 2px;
+  border: 1px solid #092e6b;
+}
+
+.ywfa-simple-richtext {
+  img {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+  img.right {
+    float: right;
+    margin-left: 1em;
+  }
+  img.left {
+    float: left;
+    margin-right: 1em;
+  }
+  p {
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+  @media only screen and (max-width: $width-lg) {
+    img.left, img.right {
+      float: none;
+      margin-left: 0;
+      margin-right: 0;
+    }
+    p {
+      margin-top: 0;
+    }
+  }
+}
+
+h1.ywfa-page-title {
+  color: $color-dark;
+  font-family: $font-family-heading;
+  font-weight: bold;
+}
+
+img.ywfa-logo {
+  height: 36px;
+  width: auto;
+}
+
+img.ywfa-icon {
+}
+
+.ywfa-inner-subtitle {
+  font-size: 125%;
+  font-weight: bold;
+  padding: 5px;
+  width: 100%;
+  text-align: center;
+}
+
+.ywfa-inner-heading {
+  color: $color-dark;
+  font-family: $font-family-heading;
+  font-weight: bold;
+  margin-top: 10px;
+  padding: 5px;
+  width: 100%;
+  text-align: left;
+}
+
+.ywfa-iat-center, .ywfa-iat-full {
+  img {
+    width: 100%;
+    height: auto;
+  }
+}
+
+.ywfa-iat-image-content, .ywfa-iat-image-content a, .ywfa-iat-image-content a:hover {
+  color: $color-dark;
+  background-color: $frost-white;
+  background-blend-mode: saturation;
+  font-size: 110%;
+  margin-top: 0.5em;
+  padding: 0.2em;
+  padding-top: 0.1em;
+  text-decoration: none;
+}
+
+h2.ywfa-iat-title {
+  color: $color-dark;
+  font-family: $font-family-default;
+  font-weight: bold;
+  margin: 0.25em;
+  padding: 0.1em;
+  background-image: linear-gradient(to right, $color-light, $frost-white);
+}
+
+.ywfa-iat-image {
+  width: 100%;
+  height: auto;
+}
+
+.ywfa-iat-text {
+  padding: 0.5em;
+}
+
+.ywfa-cta {
+  padding: 10px;
+  border: 2px solid $color-light;
+}
+
+h2.ywfa-cta-title {
+  color: $color-dark;
+  font-size: 2em;
+  font-family: $font-family-default;
+  font-weight: bold;
+  text-align: center;
+}
+
+p.ywfa-cta-text {
+  color: $color-base;
+  font-size: 1.2em;
+  font-family: $font-family-default;
+  font-weight: normal;
+  text-align: center;
+}
+
+@media only screen and (max-width: $width-md) {
+  .ywfa-inner-subtitle {
+    font-size: 32px;
+  }
+}
+@media only screen and (max-width: $width-sm) {
+  .ywfa-inner-subtitle {
+    font-size: 26px;
+  }
+}

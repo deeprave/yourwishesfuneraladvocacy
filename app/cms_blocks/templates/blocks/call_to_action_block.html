@@ -1,0 +1,12 @@
+{% load wagtailcore_tags %}
+  <div class="row">
+    <div class="col-md-10 offset-md-1">
+      <div class="ywfa-cta text-center">
+        {% if value.title %}<h2 class="ywfa-cta-title">{{ value.title }}</h2>{% endif %}
+        {% if value.text %}<p class="ywfa-cta-text">{{ value.text|richtext }}</p>{% endif %}
+        <a href="{{ value.link.url }}" class="btn btn-primary btn-lg" style="padding-left: 3rem; padding-right: 3rem;">
+          {{ value.link.link_text }}
+        </a>
+      </div>
+    </div>
+  </div>

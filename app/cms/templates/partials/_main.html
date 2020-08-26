@@ -1,0 +1,17 @@
+{% load menu_tags %}
+{% for item in menu_items %}
+  {% if item.has_children_in_menu %}
+    <li class="nav-item {{ item.active_class }} dropdown" id="ddparent_{{ item.link_page.pk }}">
+      <a href="{{ item.href }}" class="nav-link dropdown-toggle" role="button" id="ddtoggle_{{ item.link_page.pk }}" data-toggle="dropdown" data-target="#ddparent_{{ item.link_page.pk }}" aria-expanded="false" aria-haspopup="true" aria-haspopup="true">
+        {{ item.text }}
+      </a>
+      {% sub_menu item template="partials/_sub.html" %}
+    </li>
+  {% else %}
+    <li class="nav-item {{ item.active_class }}">
+      <a href="{{ item.href }}" class="nav-link" aria-current="page">
+        {{ item.text }}
+      </a>
+    </li>
+  {% endif %}
+{% endfor %}

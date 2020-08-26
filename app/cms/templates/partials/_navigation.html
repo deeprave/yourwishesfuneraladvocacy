@@ -1,0 +1,26 @@
+{% load static menu_tags %}
+
+<nav class="navbar navbar-expand-lg navbar-clean">
+  <div class="container-fluid ywfa-nav">
+
+    <a class="navbar-brand" href="/"><img class="ywfa-logo" src="{% static 'images/ywfa_logo.svg' %}" alt="Your Wishes Logo"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainMenu" aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
+      <img src="{% static 'bootstrap-icons/icons/list.svg' %}" class="ywfa-border" alt="">
+    </button>
+
+    <div class="collapse navbar-collapse" id="mainMenu">
+      <ul class="navbar-nav mr-auto mb-lg-0">
+        {% main_menu template="partials/_main.html" %}
+      </ul>
+
+      <form class="d-flex input-group w-auto">
+        <input type="search" class="form-control" placeholder="Search..." aria-label="Search"/>
+        <button class="btn btn-outline-primary" type="button" data-ripple-color="dark">
+          <img class="ywfa-icon" src="{% static 'bootstrap-icons/icons/search.svg' %}" alt="search"/>
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+</nav>

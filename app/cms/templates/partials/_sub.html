@@ -1,0 +1,19 @@
+{% load menu_tags %}
+{% if menu_items %}
+	<ul class="dropdown-menu" aria-labelledby="ddtoggle_{{ parent_page.pk }}">
+	{% for item in menu_items %}
+	    <li>
+      {% if item.has_children_in_menu %}
+        <a href="{{ item.href }}" class="dropdown-item {{ item.active_class }} dropdown-toggle" id="ddtoggle_{{ item.pk }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{ item.text }}
+        </a>
+	        {% sub_menu item template=current_template %}
+      {% else %}
+        <a class="dropdown-item {{ item.active_class }}" href="{{ item.href }}">
+          {{ item.text }}
+        </a>
+      {% endif %}
+	    </li>
+	{% endfor %}
+	</ul>
+{% endif %}

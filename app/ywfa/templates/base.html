@@ -1,4 +1,5 @@
 {% load static sass_tags wagtailuserbar %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +8,7 @@
 {% block metas %}
 {% endblock metas %}
 {% block favicon %}
-  <link rel="icon" type="image/png" sizes="120x120" href="{% static 'images/favicon.png' %}" />
+  <link rel="icon" type="image/svg" sizes="120x120" href="{% static 'images/favicon.svg' %}" />
 {% endblock favicon %}
 {% block title_all %}
   <title>
@@ -28,15 +29,18 @@
 
 <body class="{% block body_class %}body{% endblock body_class %}" {% block body_attrs %}{% endblock body_attrs %}>
 {% wagtailuserbar %}{% block body_top %}{% endblock body_top %}
-{% block navigation %}{% endblock navigation %}
-{% block content %}{% endblock content %}
+{% block content_outer %}
+<div class="container container-top">
+  {% block navigation %}{% endblock navigation %}
+  {% block content %}{% endblock content %}
+</div>
+{% endblock content_outer %}
 {% block global_scripts %}
-  <script src="https://unpkg.com/@popperjs/core@2.4.0/dist/umd/popper.min.js" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/popper.js@1.16.1/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+  <script crossorigin="anonymous" src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"></script>
 {% endblock global_scripts %}
 {% block scripts %}
   <script type="text/javascript" src="{% static 'js/ywfa.js' %}"></script>
-  {% block extra_scripts %}{% endblock extra_scripts %}
 {% endblock scripts %}
 </body>
 </html>
