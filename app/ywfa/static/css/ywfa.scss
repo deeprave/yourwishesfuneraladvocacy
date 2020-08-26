@@ -129,17 +129,24 @@ h2.ywfa-iat-title {
   padding: 0.5em;
 }
 
+.ywfa-cta {
+  padding: 10px;
+  border: 2px solid $color-light;
+}
+
 h2.ywfa-cta-title {
-  color: $color-base;
+  color: $color-dark;
+  font-size: 2em;
   font-family: $font-family-default;
-  font-weight: normal;
+  font-weight: bold;
   text-align: center;
 }
 
 p.ywfa-cta-text {
-  color: $color-dark;
+  color: $color-base;
+  font-size: 1.2em;
   font-family: $font-family-default;
-  font-weight: bold;
+  font-weight: normal;
   text-align: center;
 }
 

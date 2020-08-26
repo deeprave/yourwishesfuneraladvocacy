@@ -65,7 +65,7 @@ class Card(blocks.StructBlock):
     text = blocks.RichTextBlock(blank=True, null=True, required=False,
                                 help_text='Optional text for this card')
     image = ImageChooserBlock(required=False, help_text="Image - auto-cropped 570x370px")
-    link = Link(blank=True, help_text='Enter a link or select a page')
+    link = Link(required=False, help_text='Enter a link or select a page')
 
 
 class CardsBlock(blocks.StructBlock):
@@ -90,7 +90,7 @@ class ImageAndTextBlock(blocks.StructBlock):
     title = blocks.CharBlock(required=False, blank=True, null=True, max_length=60,
                              help_text='Max length of 60 characters.')
     text = blocks.RichTextBlock(blank=True, required=False, features=RICHTEXTBLOCK_FEATURES,
-                            help_text='Description for this item')
+                                help_text='Description for this item')
     link = Link(required=False)
 
     class Meta:
@@ -103,7 +103,7 @@ class CallToActionBlock(blocks.StructBlock):
     title = blocks.CharBlock(required=False, blank=True, null=True, max_length=60,
                              help_text='Max length of 60 characters, optional')
     text = blocks.RichTextBlock(required=False, blank=True, features=RICHTEXTBLOCK_FEATURES,
-                             help_text='Call to action text, optional (max=200)')
+                                help_text='Call to action text, optional (max=200)')
     link = Link()
 
     class Meta:
@@ -121,7 +121,6 @@ class CustomTableBlock(TableBlock):
         help_text = 'Tabular data'
 
 
-
 class RichTextWithTitleBlock(blocks.StructBlock):
     title = blocks.CharBlock(blank=True, null=True, required=False, max_length=120,
                              help_text='Display title, optional (max len=120)')
@@ -130,6 +129,8 @@ class RichTextWithTitleBlock(blocks.StructBlock):
 
     class Meta:
         template = 'blocks/simple_richtext_block.html'
+        label = 'RichText with Title'
+        icon = 'doc-empty-inverse'
 
 
 class TestimonialChooserBlock(SnippetChooserBlock):
@@ -139,6 +140,8 @@ class TestimonialChooserBlock(SnippetChooserBlock):
 
     class Meta:
         template = 'blocks/testimonial_block.html'
+        icon = 'tick-inverse'
+        label = 'Testimonial'
 
 
 class LargeImageChooserBlock(ImageChooserBlock):
