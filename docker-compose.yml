@@ -16,9 +16,8 @@ services:
         REDIS_SESSION: ${REDIS_SESSION}
         DATABASE_URL: ${DATABASE_URL}
     volumes:
-      - ${EXT_ROOT}:${APP_ROOT}/${APP_NAME}
-      - ${EXT_STATIC}:${APP_ROOT}/static
-      - ${EXT_MEDIA}:${APP_ROOT}/media
+      - ${PWD}/static:${APP_ROOT}/static
+      - ${PWD}/media:${APP_ROOT}/media
     expose:
       - "8000"
     ports:
@@ -28,8 +27,8 @@ services:
         - internal_net
 
 volumes:
-  data-static:
-  data-media:
+  ywfa-static:
+  ywfa-media:
 
 networks:
   internal_net:
