@@ -28,18 +28,21 @@ RUN apk add libpq libjpeg openjpeg tiff freetype libffi pcre libressl libwebp lc
     pip install -r /tmp/requirements.txt && \
     pip install uvicorn && \
     apk del ${DEVLIBS} && \
-    rm -rf /root/.cache /var/cache/apk/* && \
-    adduser --disabled-password --home ${DJANGO_ROOT} ${DJANGO_USER} && \
-    mkdir -p ${DJANGO_ROOT}/static ${DJANGO_ROOT}/media && \
-    chown -R ${DJANGO_USER} ${DJANGO_ROOT}
+    rm -rf /root/.cache /var/cache/apk/*
+
+RUN adduser --disabled-password --home ${DJANGO_ROOT} ${DJANGO_USER} && \
+    mkdir -p ${APP_ROOT}/static ${APP_ROOT}/media && \
+    chown -R ${DJANGO_USER} ${DJANGO_ROOT} ${APP_ROOT}/static ${APP_ROOT}/media
 
 WORKDIR ${DJANGO_ROOT}/
 
 COPY ${APP_DIR}/ ${DJANGO_ROOT}/
+COPY startapp.sh /
+VOLUME ["${DJANGO_ROOT}", "${APP_ROOT}/media", "${APP_ROOT}/static"]
 
 USER ${DJANGO_USER}
-VOLUME ["${DJANGO_ROOT}", "${DJANGO_ROOT}/media", "${DJANGO_ROOT}/static"]
 
 EXPOSE 8000
 
-CMD exec uvicorn ${APP_NAME}.asgi:application --host 0.0.0.0 --port 8000 --workers 3 --access-log --use-colors
+CMD /startapp.sh
+
