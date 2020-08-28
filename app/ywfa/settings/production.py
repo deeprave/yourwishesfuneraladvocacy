@@ -14,8 +14,6 @@ ALLOWED_HOSTS = [
     'www.yourwishesfuneraladvocacy.com.au',
 ]
 
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
-
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
