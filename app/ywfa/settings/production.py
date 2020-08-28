@@ -3,7 +3,14 @@ from .base import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '::1', '172.105.169.83']
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '::1',
+    '172.105.169.83',
+    'ywfa.com.au',
+    'yourwishesfuneraladvocacy.com.au'
+]
 
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
