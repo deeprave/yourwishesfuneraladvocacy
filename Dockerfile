@@ -31,14 +31,14 @@ RUN apk add libpq libjpeg openjpeg tiff freetype libffi pcre libressl libwebp lc
     rm -rf /root/.cache /var/cache/apk/*
 
 RUN adduser --disabled-password --home ${DJANGO_ROOT} ${DJANGO_USER} && \
-    mkdir -p ${APP_ROOT}/static ${APP_ROOT}/media && \
-    chown -R ${DJANGO_USER} ${DJANGO_ROOT} ${APP_ROOT}/static ${APP_ROOT}/media
+    mkdir -p ${APP_ROOT}/static ${APP_ROOT}/media ${DJANGO_ROOT}/logs && \
+    chown -R ${DJANGO_USER} ${DJANGO_ROOT} ${DJANGO_ROOT}/logs ${APP_ROOT}/static ${APP_ROOT}/media
 
 WORKDIR ${DJANGO_ROOT}/
 
 COPY ${APP_DIR}/ ${DJANGO_ROOT}/
 COPY startapp.sh /
-VOLUME ["${DJANGO_ROOT}", "${APP_ROOT}/media", "${APP_ROOT}/static"]
+VOLUME ["${DJANGO_ROOT}", "${DJANGO_ROOT}/logs", "${APP_ROOT}/media", "${APP_ROOT}/static"]
 
 USER ${DJANGO_USER}
 
