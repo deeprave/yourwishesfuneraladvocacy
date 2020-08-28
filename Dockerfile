@@ -13,15 +13,15 @@ ARG APP_ROOT=/srv
 ARG DJANGO_MODE=dev
 ARG DJANGO_USER=cms
 ARG DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
-ARG DJANGO_LOGDIR=/srv/logs/app
 ARG REDIS_CACHE=redis://redis:6379/0
 ARG REDIS_SESSION=redis://redis:6379/1
 ARG DATABASE_URL=postgres://user:password@db:5432/app
 ARG DEVLIBS="build-base python3-dev postgresql-dev zlib-dev jpeg-dev openjpeg-dev tiff-dev freetype-dev libffi-dev pcre-dev libressl-dev libwebp-dev lcms2-dev"
 
 ENV APP_ROOT=${APP_ROOT} APP_NAME=${APP_NAME} APP_DIR=${APP_DIR} APP_LOGS=${APP_ROOT}/logs/${APP_NAME}
-ENV DJANGO_MODE=${DJANGO_MODE} DJANGO_ROOT=${APP_ROOT}/${APP_NAME} DJANGO_USER=${DJANGO_USER} DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
-ENV DJANGO_LOGDIR=${APP_LOGS} REDIS_CACHE=${REDIS_CACHE} REDIS_SESSION=${REDIS_SESSION} DATABASE_URL=${DATABASE_URL}
+ENV DJANGO_MODE=${DJANGO_MODE} DJANGO_ROOT=${APP_ROOT}/${APP_NAME} DJANGO_LOGDIR=${APP_ROOT}/${APP_NAME}/logs
+ENV DJANGO_USER=${DJANGO_USER} DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+ENV REDIS_CACHE=${REDIS_CACHE} REDIS_SESSION=${REDIS_SESSION} DATABASE_URL=${DATABASE_URL}
 ENV PYTHONUNBUFFERED 1
 
 RUN apk add libpq libjpeg openjpeg tiff freetype libffi pcre libressl libwebp lcms2 ${DEVLIBS} && \
@@ -31,19 +31,20 @@ RUN apk add libpq libjpeg openjpeg tiff freetype libffi pcre libressl libwebp lc
     apk del ${DEVLIBS} && \
     rm -rf /root/.cache /var/cache/apk/*
 
-RUN adduser --disabled-password --home ${DJANGO_ROOT} ${DJANGO_USER} && \
-    mkdir -p ${APP_ROOT}/static ${APP_ROOT}/media ${DJANGO_LOGDIR} && \
-    chown -R ${DJANGO_USER} ${DJANGO_ROOT} ${DJANGO_LOGDIR} ${APP_ROOT}/static ${APP_ROOT}/media
-
 WORKDIR ${DJANGO_ROOT}/
 
 COPY ${APP_DIR}/ ${DJANGO_ROOT}/
+
+RUN adduser --disabled-password --home ${DJANGO_ROOT} ${DJANGO_USER} && \
+    mkdir -p ${DJANGO_ROOT}/static ${APP_ROOT}/media ${APP_ROOT}/logs && \
+    chown -R ${DJANGO_USER} ${DJANGO_ROOT} ${DJANGO_ROOT}/static ${DJANGO_ROOT}/media ${DJANGO_ROOT}/logs
+
 COPY startapp.sh /
-VOLUME ["${DJANGO_ROOT}", "${DJANGO_LOGDIR}", "${APP_ROOT}/media", "${APP_ROOT}/static"]
+
+VOLUME ["${DJANGO_ROOT}", "${DJANGO_ROOT}/logs", "${DJANGO_ROOT}/media", "${DJANGO_ROOT}/static"]
 
 USER ${DJANGO_USER}
 
 EXPOSE 8000
 
 CMD /startapp.sh
-
