@@ -14,6 +14,16 @@ ALLOWED_HOSTS = [
 
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
+sentry_sdk.init(
+    dsn="https://02681a846266431889b46a7515f035c7@o440352.ingest.sentry.io/5409078",
+    integrations=[DjangoIntegration()],
+    send_default_pii=True
+)
+
+
 try:
     from .local import *
 except ImportError:
