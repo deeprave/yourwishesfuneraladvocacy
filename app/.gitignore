@@ -1,5 +1,5 @@
 # no version control in these dirs
 /node_modules/
-/logs/
-/media/
-/static/
+logs/
+media/
+static/
