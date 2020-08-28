@@ -9,7 +9,9 @@ ALLOWED_HOSTS = [
     '::1',
     '172.105.169.83',
     'ywfa.com.au',
-    'yourwishesfuneraladvocacy.com.au'
+    'www.ywfa.com.au',
+    'yourwishesfuneraladvocacy.com.au',
+    'www.yourwishesfuneraladvocacy.com.au',
 ]
 
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
