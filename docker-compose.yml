@@ -16,9 +16,9 @@ services:
         REDIS_SESSION: ${REDIS_SESSION}
         DATABASE_URL: ${DATABASE_URL}
     volumes:
-      - ${PWD}/${APP_DiR}/static:${APP_ROOT}/${APP_NAME}/static
-      - ${PWD}/${APP_DiR}/media:${APP_ROOT}/${APP_NAME}media
-      - ${PWD}/${APP_DiR}/logs:${APP_ROOT}/${APP_NAME}/logs
+      - ${PWD}/${APP_DIR}/static:${APP_ROOT}/${APP_NAME}/static
+      - ${PWD}/${APP_DIR}/media:${APP_ROOT}/${APP_NAME}media
+      - ${PWD}/${APP_DIR}/logs:${APP_ROOT}/${APP_NAME}/logs
     expose:
       - "8000"
     ports:
