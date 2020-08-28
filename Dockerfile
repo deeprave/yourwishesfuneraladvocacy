@@ -26,7 +26,7 @@ ENV PYTHONUNBUFFERED 1
 RUN apk add libpq libjpeg openjpeg tiff freetype libffi pcre libressl libwebp lcms2 ${DEVLIBS} && \
     pip install -q -U pip setuptools pip && \
     pip install -r /tmp/requirements.txt && \
-    pip install uvicorn && \
+    pip install gunicorn && \
     apk del ${DEVLIBS} && \
     rm -rf /root/.cache /var/cache/apk/*
 
