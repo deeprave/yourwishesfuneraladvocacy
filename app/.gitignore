@@ -1,2 +1,3 @@
 # no version control in these dirs
 /node_modules/
+/logs/
