@@ -10,14 +10,16 @@ services:
         APP_NAME: ${APP_NAME}
         APP_DIR: ${APP_DIR}
         APP_ROOT: ${APP_ROOT}
-        DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+        DJANGO_LOGDIR: ${APP_ROOT}/logs/${APP_NAME}
         DJANGO_MODE: ${DJANGO_MODE}
+        DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
         REDIS_CACHE: ${REDIS_CACHE}
         REDIS_SESSION: ${REDIS_SESSION}
         DATABASE_URL: ${DATABASE_URL}
     volumes:
       - ${PWD}/static:${APP_ROOT}/static
       - ${PWD}/media:${APP_ROOT}/media
+      - ${PWD}/logs:${APP_ROOT}/logs/${APP_DIR}
     expose:
       - "8000"
     ports:
