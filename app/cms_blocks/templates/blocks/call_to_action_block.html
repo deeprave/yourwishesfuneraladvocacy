@@ -4,9 +4,11 @@
       <div class="ywfa-cta text-center">
         {% if value.title %}<h2 class="ywfa-cta-title">{{ value.title }}</h2>{% endif %}
         {% if value.text %}<p class="ywfa-cta-text">{{ value.text|richtext }}</p>{% endif %}
-        <a href="{{ value.link.url }}" class="btn btn-primary btn-lg" style="padding-left: 3rem; padding-right: 3rem;">
-          {{ value.link.link_text }}
-        </a>
+        {% if value.link.url and value.link.link_text %}
+          <a href="{{ value.link.url }}" class="btn btn-primary btn-lg" style="padding-left: 3rem; padding-right: 3rem;">
+            {{ value.link.link_text }}
+          </a>
+        {% endif %}
       </div>
     </div>
   </div>

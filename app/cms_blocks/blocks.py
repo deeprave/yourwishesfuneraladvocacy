@@ -87,11 +87,16 @@ class ImageAndTextBlock(blocks.StructBlock):
 
     image = ImageChooserBlock(blank=True, null=True,
                               help_text='Image the automagically cropped to 786px by 552px')
+    image_alignment = RadioSelectBlock(
+        choices=(("full", "Full width centered"), ("left", "Image to the left"), ("right", "Image to the right"),),
+        default='full',
+        help_text='Full image - text below, Image left - text right, or image right - text left.'
+    )
     title = blocks.CharBlock(required=False, blank=True, null=True, max_length=60,
                              help_text='Max length of 60 characters.')
     text = blocks.RichTextBlock(blank=True, required=False, features=RICHTEXTBLOCK_FEATURES,
                                 help_text='Description for this item')
-    link = Link(required=False)
+    link = Link(required=False, blank=True, null=True)
 
     class Meta:
         template = "blocks/image_and_text_block.html"
@@ -104,7 +109,7 @@ class CallToActionBlock(blocks.StructBlock):
                              help_text='Max length of 60 characters, optional')
     text = blocks.RichTextBlock(required=False, blank=True, features=RICHTEXTBLOCK_FEATURES,
                                 help_text='Call to action text, optional (max=200)')
-    link = Link()
+    link = Link(required=False, blank=True, null=True)
 
     class Meta:
         template = "blocks/call_to_action_block.html"
