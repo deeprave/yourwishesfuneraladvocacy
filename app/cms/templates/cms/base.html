@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% load static sass_tags %}
+{% load static %}
 
 {% block metas %}
     <meta name="twitter:image" content="{% static 'images/ywfa_logo.png' %}">
@@ -10,7 +10,7 @@
 {% endblock metas %}
 
 {% block site_stylesheets %}
-  <link rel="stylesheet" href="{% sass_src 'css/cms.scss' %}" type="text/css" >
+  <link rel="stylesheet" href="{% static 'scss/cms.css' %}" type="text/css" >
 {% endblock site_stylesheets %}
 
 {% block navigation %}
