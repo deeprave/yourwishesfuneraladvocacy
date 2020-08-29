@@ -63,7 +63,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'django_extensions',
 
-    'sass_processor',
+    'django_sass',
 ]
 
 MIDDLEWARE = [
@@ -144,13 +144,12 @@ USE_L10N = True
 USE_TZ = True
 
 
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+#STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'npm.finders.NpmFinder',
-    'sass_processor.finders.CssFinder',
 ]
 
 STATICFILES_DIRS = [
@@ -190,10 +189,7 @@ CACHES = {
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 
-
-
 BASE_URL = 'https://yourwishesfuneraladvocacy.com.au'
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
@@ -203,5 +199,3 @@ NPM_STATIC_FILES_PREFIX = ''
 NPM_FINDER_USE_CACHE = False
 # NPM_FILE_PATTERNS = {
 # }
-
-
