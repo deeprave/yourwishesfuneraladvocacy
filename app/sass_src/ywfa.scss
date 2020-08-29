@@ -9,8 +9,7 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: $background-anchor;
-  font-family: $font-family-default;
-  font-size: $font-size-base;
+  font: $font-default;
   color: $color-text;
 }
 
@@ -71,7 +70,7 @@ img.ywfa-border {
 h2.ywfa-richtext-title {
   color: $color-dark;
   font-size: 2em;
-  font-family: $font-family-default;
+  font: $font-default;
   font-weight: bold;
   margin: 0.25em;
   padding: 0.1em;
@@ -81,13 +80,13 @@ h2.ywfa-richtext-title {
 .ywfa-richtext-text {
   font-size: 1em;
   margin-left: -5px;
-  margin-right: -5pxs;
+  margin-right: -5px;
   padding: 0;
 }
 
 h1.ywfa-page-title {
   color: $color-dark;
-  font-family: $font-family-heading;
+  font: $font-heading;
   font-weight: bold;
 }
 
@@ -109,7 +108,7 @@ img.ywfa-icon {
 
 .ywfa-inner-heading {
   color: $color-dark;
-  font-family: $font-family-heading;
+  font: $font-heading;
   font-weight: bold;
   margin-top: 10px;
   padding: 5px;
@@ -145,7 +144,7 @@ img.ywfa-icon {
 
 h2.ywfa-iat-title {
   color: $color-dark;
-  font-family: $font-family-default;
+  font: $font-default;
   font-weight: bold;
   margin: 0.25em;
   padding: 0.1em;
@@ -167,16 +166,16 @@ h2.ywfa-iat-title {
 
 .ywfa-cta-title {
   color: $color-dark;
+  font: $font-default;
   font-size: 2em;
-  font-family: $font-family-default;
   font-weight: bold;
   text-align: center;
 }
 
 p.ywfa-cta-text {
   color: $color-base;
+  font: $font-default;
   font-size: 1.2em;
-  font-family: $font-family-default;
   font-weight: normal;
   text-align: center;
 }
