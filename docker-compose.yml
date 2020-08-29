@@ -17,7 +17,7 @@ services:
         DATABASE_URL: ${DATABASE_URL}
     volumes:
       - ${PWD}/static:${APP_ROOT}/${APP_NAME}/static
-      - ${PWD}/media:${APP_ROOT}/${APP_NAME}media
+      - ${PWD}/media:${APP_ROOT}/${APP_NAME}/media
       - ${PWD}/logs:${APP_ROOT}/${APP_NAME}/logs
     expose:
       - "8000"
