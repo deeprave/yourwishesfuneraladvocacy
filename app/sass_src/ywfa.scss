@@ -11,6 +11,7 @@ body {
   background-position: $background-anchor;
   font-family: $font-family-default;
   font-size: $font-size-base;
+  color: $color-text;
 }
 
 .container-top {
@@ -33,10 +34,12 @@ img.ywfa-border {
   border: 1px solid #092e6b;
 }
 
-.ywfa-simple-richtext {
+.ywfa-richtext {
   img {
     margin-top: 0.5em;
     margin-bottom: 0.5em;
+    border-radius: 0.5em;
+    box-shadow: 1px 1px 8px $color-base;
   }
   img.right {
     float: right;
@@ -47,8 +50,11 @@ img.ywfa-border {
     margin-right: 1em;
   }
   p {
-    margin-top: 1em;
-    margin-bottom: 1em;
+    margin: 0.5em;
+    background-color: $color-white;
+  }
+  button {
+    box-shadow: 1px 1px 8px $color-base;
   }
   @media only screen and (max-width: $width-lg) {
     img.left, img.right {
@@ -57,9 +63,26 @@ img.ywfa-border {
       margin-right: 0;
     }
     p {
-      margin-top: 0;
+      margin: 0;
     }
   }
+}
+
+h2.ywfa-richtext-title {
+  color: $color-dark;
+  font-size: 2em;
+  font-family: $font-family-default;
+  font-weight: bold;
+  margin: 0.25em;
+  padding: 0.1em;
+  text-align: center;
+}
+
+.ywfa-richtext-text {
+  font-size: 1em;
+  margin-left: -5px;
+  margin-right: -5pxs;
+  padding: 0;
 }
 
 h1.ywfa-page-title {
@@ -69,7 +92,7 @@ h1.ywfa-page-title {
 }
 
 img.ywfa-logo {
-  height: 36px;
+  height:40px;
   width: auto;
 }
 
@@ -77,10 +100,10 @@ img.ywfa-icon {
 }
 
 .ywfa-inner-subtitle {
-  font-size: 125%;
+  font-size: 150%;
   font-weight: bold;
   padding: 5px;
-  width: 100%;
+  color: $color-dark;
   text-align: center;
 }
 
@@ -94,11 +117,20 @@ img.ywfa-icon {
   text-align: left;
 }
 
-.ywfa-iat-center, .ywfa-iat-full {
+.ywfa-iat-image {
   img {
     width: 100%;
     height: auto;
+    border-radius: 0.5em;
   }
+ }
+.ywfa-iat-image-full, .ywfa-iat-image-left, .ywfa-iat-image-right, {
+  img {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5em;
+  }
+  text-decoration: none;
 }
 
 .ywfa-iat-image-content, .ywfa-iat-image-content a, .ywfa-iat-image-content a:hover {
@@ -106,10 +138,9 @@ img.ywfa-icon {
   background-color: $frost-white;
   background-blend-mode: saturation;
   font-size: 110%;
-  margin-top: 0.5em;
-  padding: 0.2em;
-  padding-top: 0.1em;
+  padding: 0.1em 0.2em 0.2em;
   text-decoration: none;
+  border-radius: 0.5em;
 }
 
 h2.ywfa-iat-title {
@@ -118,24 +149,23 @@ h2.ywfa-iat-title {
   font-weight: bold;
   margin: 0.25em;
   padding: 0.1em;
-  background-image: linear-gradient(to right, $color-light, $frost-white);
-}
-
-.ywfa-iat-image {
-  width: 100%;
-  height: auto;
+//background-image: linear-gradient(to right, $color-light, $frost-white);
 }
 
 .ywfa-iat-text {
   padding: 0.5em;
 }
 
+
 .ywfa-cta {
-  padding: 10px;
-  border: 2px solid $color-light;
+  padding: 1em;
+  border-radius: 0.5em;
+  background-color: $color-light;
+  box-shadow: 1px 1px 8px $color-base;
+  color: $color-text;
 }
 
-h2.ywfa-cta-title {
+.ywfa-cta-title {
   color: $color-dark;
   font-size: 2em;
   font-family: $font-family-default;

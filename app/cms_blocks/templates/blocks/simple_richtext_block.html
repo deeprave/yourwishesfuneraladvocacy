@@ -1,8 +1,8 @@
 {% load wagtailcore_tags %}
   <div class="row">
-    <div class="col-md-10 offset-md-1">
-      {% if value.title %}<h2 class="ywfa-inner-subtitle">{{ value.title }}</h2>{% endif %}
-      <div class="ywfa-simple-richtext">
+    <div class="col-md-10 offset-md-1 ywfa-richtext">
+      {% if value.title %}<h2 class="ywfa-richtext-title display-4">{{ value.title }}</h2>{% endif %}
+      <div class="ywfa-richtext-text">
         {{ value.content|richtext }}
       </div>
     </div>
