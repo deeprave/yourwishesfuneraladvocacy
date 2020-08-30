@@ -19,15 +19,13 @@ $soft-white: rgba(255, 255, 255, 0.5);
 $softer-white: rgba(255, 255, 255, 0.4);
 $soft-shadow: rgba(53, 53, 53, 0.6);
 
-$font-family-default: 'Nunito Sans', Ariel, Helvetica, serif;
-$font-family-heading: 'Alex Brush', cursive, serif;
-
 $font-size-base: 16px;
+$font-default: $font-size-base 'Nunito Sans', Ariel, Helvetica, serif;
+$font-heading: $font-size-base 'Alex Brush', cursive, serif;
 
 $width-xl: 1200px;
 $width-lg: 992px;
 $width-md: 768px;
 $width-sm: 576px;
-
 
 $background-anchor: top center;

@@ -9,9 +9,9 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: $background-anchor;
-  font-family: $font-family-default;
-  font-size: $font-size-base;
+  font: $font-default;
   color: $color-text;
+  line-height: 1.5em;
 }
 
 .container-top {
@@ -25,11 +25,28 @@ body {
 
 // site custom styles
 
-.ywfa-nav li.nav-item {
-  padding-right: 2em;
+.ywfa-top-bar {
+  width: 100%;
+  padding: 5px;
+  text-align: center;
+  .ywfa-logo {
+    img {
+      width: auto;
+    }
+  }
 }
 
-img.ywfa-border {
+.ywfa-nav {
+  .nav-item, .nav-item a {
+    font-size: 1.1em;
+    color: $color-text;
+  }
+  .nav-item.active, .nav-item.active a {
+    opacity: 75%;
+  }
+}
+
+.ywfa-border {
   border-radius: 2px;
   border: 1px solid #092e6b;
 }
@@ -50,7 +67,7 @@ img.ywfa-border {
     margin-right: 1em;
   }
   p {
-    margin: 0.5em;
+    margin: 0.5em 0.5em 1em;
     background-color: $color-white;
   }
   button {
@@ -70,8 +87,8 @@ img.ywfa-border {
 
 h2.ywfa-richtext-title {
   color: $color-dark;
+  font: $font-default;
   font-size: 2em;
-  font-family: $font-family-default;
   font-weight: bold;
   margin: 0.25em;
   padding: 0.1em;
@@ -81,22 +98,18 @@ h2.ywfa-richtext-title {
 .ywfa-richtext-text {
   font-size: 1em;
   margin-left: -5px;
-  margin-right: -5pxs;
+  margin-right: -5px;
   padding: 0;
+  p {
+    margin: 0.5em 0.5em 1em;
+  }
 }
 
 h1.ywfa-page-title {
   color: $color-dark;
-  font-family: $font-family-heading;
+  font: $font-heading;
+  font-size: 3em;
   font-weight: bold;
-}
-
-img.ywfa-logo {
-  height:40px;
-  width: auto;
-}
-
-img.ywfa-icon {
 }
 
 .ywfa-inner-subtitle {
@@ -109,7 +122,7 @@ img.ywfa-icon {
 
 .ywfa-inner-heading {
   color: $color-dark;
-  font-family: $font-family-heading;
+  font: $font-heading;
   font-weight: bold;
   margin-top: 10px;
   padding: 5px;
@@ -141,11 +154,14 @@ img.ywfa-icon {
   padding: 0.1em 0.2em 0.2em;
   text-decoration: none;
   border-radius: 0.5em;
+  p {
+    margin: 0.5em 0.5em 1em;
+  }
 }
 
 h2.ywfa-iat-title {
   color: $color-dark;
-  font-family: $font-family-default;
+  font: $font-default;
   font-weight: bold;
   margin: 0.25em;
   padding: 0.1em;
@@ -156,9 +172,10 @@ h2.ywfa-iat-title {
   padding: 0.5em;
 }
 
-
 .ywfa-cta {
-  padding: 1em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  padding: 1.5em 1em;
   border-radius: 0.5em;
   background-color: $color-light;
   box-shadow: 1px 1px 8px $color-base;
@@ -167,18 +184,21 @@ h2.ywfa-iat-title {
 
 .ywfa-cta-title {
   color: $color-dark;
-  font-size: 2em;
-  font-family: $font-family-default;
+  font: $font-default;
+  font-size: 2.5em;
   font-weight: bold;
   text-align: center;
 }
 
 p.ywfa-cta-text {
   color: $color-base;
-  font-size: 1.2em;
-  font-family: $font-family-default;
+  font: $font-default;
+  font-size: 2em;
   font-weight: normal;
   text-align: center;
+  p {
+    margin: 0.5em 0.5em 1em;
+  }
 }
 
 @media only screen and (max-width: $width-md) {
