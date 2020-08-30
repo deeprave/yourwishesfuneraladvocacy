@@ -165,6 +165,13 @@ MEDIA_URL = '/media/'
 # Wagtail settings
 
 WAGTAIL_SITE_NAME = 'Your Wishes Funeral Advocacy'
+BASE_URL = 'https://yourwishesfuneraladvocacy.com.au'
+WAGTAILIMAGES_MAX_UPLOAD_SIZE = 20 * 1024 * 1024  # i.e. 20MB
+WAGTAILADMIN_NOTIFICATION_FROM_EMAIL = 'webmaster@ywfa.com.au'
+WAGTAILADMIN_NOTIFICATION_USE_HTML = True
+WAGTAILADMIN_NOTIFICATION_INCLUDE_SUPERUSERS = False
+WAGTAIL_ENABLE_UPDATE_CHECK = True
+WAGTAIL_USAGE_COUNT_ENABLED = True
 
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
@@ -188,8 +195,6 @@ CACHES = {
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
-
-BASE_URL = 'https://yourwishesfuneraladvocacy.com.au'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/

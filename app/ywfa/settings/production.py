@@ -23,6 +23,15 @@ sentry_sdk.init(
     send_default_pii=True
 )
 
+env = os.environ
+if env.get('EMAIL_HOST_USER') and env.get('EMAIL_HOST_PASSWORD'):
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = env.get('EMAIL_HOST', 'smtp.gmail.com')
+    EMAIL_USE_TLS = env.get('EMAIL_USE_TLS', True) not in (False, 0, '0', 'f', 'F', 'false', 'FALSE', 'off', 'disabled')
+    EMAIL_PORT = env.get('EMAIL_PORT', 587)
+    EMAIL_HOST_USER = env['EMAIL_HOST_USER']
+    EMAIL_HOST_PASSWORD = env['EMAIL_HOST_PASSWORD']
+
 
 try:
     from .local import *
