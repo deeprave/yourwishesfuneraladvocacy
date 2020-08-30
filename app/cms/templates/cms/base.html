@@ -9,10 +9,6 @@
   {% endblock description %}
 {% endblock metas %}
 
-{% block site_stylesheets %}
-  <link rel="stylesheet" href="{% static 'scss/cms.css' %}" type="text/css" >
-{% endblock site_stylesheets %}
-
 {% block navigation %}
-  {% include 'partials/_navigation.html' %}
+  {% include 'cms/partials/_navigation.html' %}
 {% endblock navigation %}
