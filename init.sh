@@ -28,6 +28,8 @@ BASE_URL='http://example.com'
 EXT_ROOT=
 EXT_STATIC=
 EXT_MEDIA=
+EMAIL_HOST_USER=
+EMAIL_HOST_PASSWORD=
 
 # if there i an existing .env, source it to retain values as defaults across sessions
 [ -f ./.env ] && source ./.env
@@ -272,6 +274,8 @@ BASE_URL=${BASE_URL}
 EXT_ROOT=${EXT_ROOT}
 EXT_STATIC=${EXT_STATIC}
 EXT_MEDIA=${EXT_MEDIA}
+EMAIL_HOST_USER=${EMAIL_HOST_USER}
+EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
 ENV
 
 echo ""

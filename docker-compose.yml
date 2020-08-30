@@ -15,6 +15,8 @@ services:
         REDIS_CACHE: ${REDIS_CACHE}
         REDIS_SESSION: ${REDIS_SESSION}
         DATABASE_URL: ${DATABASE_URL}
+        EMAIL_HOST_USER: ${EMAIL_HOST_USER}
+        EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
     volumes:
       - ${PWD}/static:${APP_ROOT}/${APP_NAME}/static
       - ${PWD}/media:${APP_ROOT}/${APP_NAME}/media
