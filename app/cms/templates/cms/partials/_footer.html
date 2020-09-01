@@ -1,0 +1,45 @@
+{% load wagtailcore_tags static menu_tags %}
+
+<footer class="page-footer font-small">
+  <div class="container-bottom text-center text-md-left">
+    <div class="row">
+
+      <div class="col-md-3 offset-md-1">
+        <h5 class="text-uppercase star text-md-left">Links</h5>
+          <nav>
+            <ul class="nav mb-md-0">
+              {% main_menu template="cms/partials/_links.html" levels=1 %}
+            </ul>
+          </nav>
+      </div>
+
+      <div class="col-md-4 mt-4 mt-md-0">
+        <h5 class="text-uppercase text-md-center star">Contact</h5>
+
+        <div>
+          <a href="{% slugurl 'contact' %}" class="btn btn-outline-primary btn-lg text-left contact">
+              Email
+          </a>
+          <a href="mailto:info@ywfa.com.au" class="btn btn-link text-decoration-none">info@ywfa.com.au</a>
+        </div>
+
+        <div>
+          <a href="tel:0425726246" class="btn btn-outline-primary btn-lg text-left contact">
+              Phone
+          </a>
+          <a href="tel:0425726246" class="btn btn-link text-decoration-none">0435 736 246</a>
+        </div>
+
+      </div>
+
+      <div class="col-md-3 mt-4 mt-md-0">
+        <h5 class="text-uppercase text-center star">Social Media</h5>
+        <ul class="text-center socicon">
+          <li><a href="http://facebook.com/YourWishesFuneralAdvocacy" target="_blank"><i class="socicon-facebook"></i></a></li>
+          <li><a href="http://linkedin.com/company/yourwishesfuneraladvocacy" target="_blank"><i class="socicon-linkedin"></i></a></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</footer>

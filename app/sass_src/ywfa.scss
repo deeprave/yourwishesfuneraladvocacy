@@ -1,33 +1,54 @@
+@import '../node_modules/bootstrap/scss/bootstrap.scss';
 @import 'partials/variables';
 @import 'partials/functions';
 
 // global customisations
 
 body {
+  font: $font-default;
+  color: $color-text;
+  line-height: $line-height-base;
+}
+
+body.ywfa {
   //noinspection CssUnknownTarget
   background-image: url("../images/stars-background.jpg");
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: $background-anchor;
-  font: $font-default;
-  color: $color-text;
-  line-height: 1.5em;
+  img {
+    @include rounded-shadowed;
+  }
+}
+
+.container-base {
+  @extend .container-md;
+  @include rounded;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  margin-top: 0.25em;
+  background-color: $color-white;
 }
 
 .container-top {
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
-  margin-top: 0.5em;
-  margin-bottom: 1em;
-  border-radius: 15px;
-  background-color: $color-white;
+  @extend .container-base;
+  @extend .container;
+}
+
+.container-body {
+  @extend .container-base;
+  @extend .container;
+}
+
+.container-bottom {
+  @extend .container-base;
+  @extend .container;
 }
 
 // site custom styles
 
 .ywfa-top-bar {
   width: 100%;
-  padding: 5px;
   text-align: center;
   .ywfa-logo {
     img {
@@ -46,17 +67,69 @@ body {
   }
 }
 
-.ywfa-border {
-  border-radius: 2px;
-  border: 1px solid #092e6b;
+footer {
+  h5 {
+    font: $font-emphasis;
+    font-weight: bold;
+  }
+  ul.nav {
+    display: block;
+    list-style: none;
+    padding-left: 1em;
+  }
+  .nav-link, .nav-link a {
+    color: $color-text;
+    display: inherit;
+    padding: 0;
+  }
+  .nav-item.active, .nav-item.active a {
+    opacity: 75%;
+  }
+  a.contact {
+    width: 9rem;
+    padding: 0.25rem 3rem;
+    margin-bottom: 0.25rem;
+  }
+  ul.socicon {
+    list-style-type: none;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    li {
+      @include rounded-sm;
+      display: inline-block;
+      font-size: 2em;
+      padding: 0.25em 0.15em 0;
+      margin: 0 0.12em;
+      vertical-align: baseline;
+      background-color: $color-dark;
+      a {
+        text-decoration: none;
+        color: $frost-white;
+      }
+    }
+  }
+}
+
+.star {
+  &::before {
+    //noinspection CssUnknownTarget
+    content: url(../bootstrap-icons/icons/star.svg)" ";
+  }
+  &::after {
+    //noinspection CssUnknownTarget
+    content: " "url(../bootstrap-icons/icons/star.svg);
+  }
+}
+
+.ywfa-logo img {
+  box-shadow: none !important;
 }
 
 .ywfa-richtext {
   img {
     margin-top: 0.5em;
     margin-bottom: 0.5em;
-    border-radius: 0.5em;
-    box-shadow: 1px 1px 8px $color-base;
   }
   img.right {
     float: right;
@@ -71,7 +144,7 @@ body {
     background-color: $color-white;
   }
   button {
-    box-shadow: 1px 1px 8px $color-base;
+    @include shadowed;
   }
   @media only screen and (max-width: $width-lg) {
     img.left, img.right {
@@ -134,14 +207,12 @@ h1.ywfa-page-title {
   img {
     width: 100%;
     height: auto;
-    border-radius: 0.5em;
   }
  }
 .ywfa-iat-image-full, .ywfa-iat-image-left, .ywfa-iat-image-right, {
   img {
     width: 100%;
     height: auto;
-    border-radius: 0.5em;
   }
   text-decoration: none;
 }
@@ -153,7 +224,6 @@ h1.ywfa-page-title {
   font-size: 110%;
   padding: 0.1em 0.2em 0.2em;
   text-decoration: none;
-  border-radius: 0.5em;
   p {
     margin: 0.5em 0.5em 1em;
   }
@@ -176,10 +246,9 @@ h2.ywfa-iat-title {
   margin-top: 1em;
   margin-bottom: 1em;
   padding: 1.5em 1em;
-  border-radius: 0.5em;
   background-color: $color-light;
-  box-shadow: 1px 1px 8px $color-base;
   color: $color-text;
+  @include rounded-shadowed;
 }
 
 .ywfa-cta-title {

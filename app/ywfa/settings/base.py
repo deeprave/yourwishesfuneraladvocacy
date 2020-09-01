@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'django_extensions',
 
     'django_sass',
+    'compressor'
 ]
 
 MIDDLEWARE = [
@@ -149,6 +150,7 @@ STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesSto
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
     'npm.finders.NpmFinder',
 ]
 
@@ -202,5 +204,20 @@ SESSION_CACHE_ALIAS = "default"
 NPM_ROOT_PATH = BASE_DIR
 NPM_STATIC_FILES_PREFIX = ''
 NPM_FINDER_USE_CACHE = False
-# NPM_FILE_PATTERNS = {
-# }
+NPM_FILE_PATTERNS = {
+    'bootstrap-icons': [
+        'bootstrap-icons'
+    ],
+    'popper.js': [
+        'dist/umd/popper.js',
+        'dist/umd/popper.js.map',
+    ],
+    'bootstrap': [
+        'dist/js/bootstrap.js',
+        'dist/js/bootstrap.js.map',
+    ],
+    'socicon': [
+        'css/socicon.css',
+        'font/*',
+    ]
+}
