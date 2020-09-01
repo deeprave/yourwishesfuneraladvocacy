@@ -86,6 +86,7 @@ footer {
     opacity: 75%;
   }
   a.contact {
+    @include shadowed;
     width: 9rem;
     padding: 0.25rem 3rem;
     margin-bottom: 0.25rem;
@@ -95,18 +96,57 @@ footer {
     text-align: center;
     padding: 0;
     margin: 0;
+
     li {
-      @include rounded-sm;
       display: inline-block;
-      font-size: 2em;
-      padding: 0.25em 0.15em 0;
-      margin: 0 0.12em;
-      vertical-align: baseline;
-      background-color: $color-dark;
+      zoom: 1;
+
       a {
         text-decoration: none;
         color: $frost-white;
+        z-index: 1;
+        position: relative;
+        display: block;
+        transform: translateZ(0);
+        transition-property: transform;
+        transition: 0.25s;
+
+        &:hover {
+          z-index: 2;
+          transform: scale(2.0);
+        }
       }
+
+      a i {
+        @include rounded-sm;
+        @include shadowed;
+        padding: 0.25em 0.15em 0;
+        margin: 0 0.1em;
+        background-color: $color-dark;
+        font-size: 1.75em;
+        vertical-align: baseline;
+      }
+
+      a i.socicon-facebook {
+        background-color: $color-facebook;
+      }
+
+      a i.socicon-twitter {
+        background-color: $color-twitter;
+      }
+
+      a i.socicon-linked {
+        background-color: $color-linkedin;
+      }
+
+      a i.socicon-youtube {
+        background-color: $color-youtube;
+      }
+
+      a i.socicon-instagram {
+        background: $color-instagram;
+      }
+
     }
   }
 }
@@ -201,6 +241,29 @@ h1.ywfa-page-title {
   padding: 5px;
   width: 100%;
   text-align: left;
+}
+
+.ywfa .contact-form {
+  form {
+    label {
+      font-weight: bold;
+      font-size: 105%;
+      margin-top: 0.5em;
+    }
+    small {
+      font-size: 80%;
+    }
+    .form-group ul {
+      list-style-type: none;
+      .form-control {
+        display: inline-block;
+        width: 1em;
+      }
+    }
+  }
+  button {
+    margin: 1em 0;
+  }
 }
 
 .ywfa-iat-image {

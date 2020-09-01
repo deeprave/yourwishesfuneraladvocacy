@@ -9,7 +9,9 @@
     </div>
   </div>
 {% endif %}
-  {% for body in page.body %}
+{% block inner-content %}
+{% for body in page.body %}
   {% include_block body %}
 {% endfor %}
-{% endblock %}
+{% endblock inner-content %}
+{% endblock content %}
