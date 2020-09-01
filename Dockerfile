@@ -17,7 +17,7 @@ ARG REDIS_CACHE=redis://redis:6379/0
 ARG REDIS_SESSION=redis://redis:6379/1
 ARG DATABASE_URL=postgres://user:password@db:5432/app
 ARG EMAIL_HOST_USER=${EMAIL_HOST_USER}
-ARG EMAIL_POST_PASSWRD=${EMAIL_HOST_PASSWORD}
+ARG EMAIL_POST_PASSWORD=${EMAIL_HOST_PASSWORD}
 ARG EMAIL_HOST=smtp.google.com
 # removable baggage required to build python modules
 ARG DEVLIBS="build-base python3-dev postgresql-dev zlib-dev jpeg-dev openjpeg-dev tiff-dev freetype-dev libffi-dev pcre-dev libressl-dev libwebp-dev lcms2-dev"
