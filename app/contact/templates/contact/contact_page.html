@@ -1,0 +1,78 @@
+{% extends 'cms/cms_page.html' %}
+{% load wagtailcore_tags wagtailimages_tags widget_tweaks %}
+
+{% block inner-content %}
+  <div class="row contact-form">
+    {% if page.intro or page.map_image %}
+      <div class="col-md-6">
+        {% if page.intro %}
+          <div class="contact-text">
+            {{ page.intro|richtext }}
+          </div>
+        {% endif %}
+        {% if page.map_image %}
+          <div class="d-none d-md-block">
+            {% if page.map_url %}<a href="{{ page.map_url }}" target="_blank">{% endif %}
+              <picture>
+                {% image page.map_image fill-580x335 as img %}
+                <img src="{{ img.url }}" alt="{{ img.alt }}" style="width: 100%; height: auto;">
+              </picture>
+            {% if page.map_url %}</a>{% endif %}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+    <div{% if page.intro or page.map_image %} class="col-md-6 mt-md-2 mt-0"{% else %} class="col-md-10 offset-md-1 mt-md-2 mt-0"{% endif %}>
+      <form action="{% pageurl page %}" method="POST" role="form" class="contact-form">
+        {% csrf_token %}
+
+          {% for field in form %}
+            <div class="row">
+              <div class="col-sm-12">
+                {% if field|widget_type == 'textarea' %}
+                  <div class="form-group">
+                    <label for="{{ field.id_for_label }}">
+                      {{ field.label }} {% if field.field.required %}<span style="color: red;">*</span>{% endif %}
+                    </label>
+                    {% render_field field class+="form-control" rows="6" placeholder=field.label %}
+                    {% if field.errors %}
+                      <small class="d-block text-danger text-small cc-font-light">
+                        {% for err in field.errors %}
+                          * {{ err|escape }}{% if not forloop.last %}<br />{% endif %}
+                        {% endfor %}
+                      </small>
+                    {% endif %}
+                    {% if field.help_text %}
+                      <small class="form-text text-muted cc-font-light">{{ field.help_text|safe }}</small>
+                    {% endif %}
+                  </div>
+                {% else %}
+                  {% if field.label != '' %}
+                    <div class="form-group">
+                      <label for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                        {% if field.field.required %}<span style="color: red;">*</span>{% endif %}
+                      </label>
+                      {% render_field field class+="form-control" placeholder=field.label %}
+                      {% if field.errors %}
+                        <small class="d-block text-danger text-small cc-font-light">
+                          {% for err in field.errors %}
+                            * {{ err|escape }}{% if not forloop.last %}<br />{% endif %}
+                          {% endfor %}
+                        </small>
+                      {% endif %}
+                      {% if field.help_text %}
+                        <small class="form-text text-muted cc-font-light">{{ field.help_text|safe }}</small>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+
+        <button type="submit" class="btn btn-primary btn-lg" style='padding-left: 3.5rem; padding-right: 3.5rem;'>Send Message</button>
+      </form>
+    </div>
+  </div>
+{% endblock inner-content %}

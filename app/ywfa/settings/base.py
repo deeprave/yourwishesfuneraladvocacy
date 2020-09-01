@@ -31,6 +31,8 @@ INSTALLED_APPS = [
     'cms',
     'cms_blocks',
     'testimonials',
+    'contact',
+    'ywfa_settings',
 
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
