@@ -276,13 +276,14 @@ h1.ywfa-page-title {
   img {
     width: 100%;
     height: auto;
+    margin: 0.5em;
   }
   text-decoration: none;
 }
 
 .ywfa-iat-image-content, .ywfa-iat-image-content a, .ywfa-iat-image-content a:hover {
+  @include rounded;
   color: $color-dark;
-  //background-color: $frost-white;
   background-color: $color-light;
   background-blend-mode: saturation;
   font-size: 110%;
