@@ -1,0 +1,16 @@
+@mixin rounded {
+  border-radius: 0.6em;
+}
+
+@mixin rounded-sm {
+  border-radius: 0.25em;
+}
+
+@mixin shadowed {
+  box-shadow: 0.1em 0.1em 0.5em 0.1em $color-soft;
+}
+
+@mixin rounded-shadowed {
+  @include rounded;
+  @include shadowed;
+}

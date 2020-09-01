@@ -1,4 +1,4 @@
-{% load static wagtailuserbar %}
+{% load static compress wagtailuserbar %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -16,31 +16,42 @@
     {% block title_suffix %}{% with self.get_site.site_name as site_name %}{% if site_name %}- {{ site_name }}{% endif %}{% endwith %}{% endblock title_suffix %}
   </title>
 {% endblock title_all %}
-  {% block fonts %}
+{% block fonts %}
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Roboto:ital,wght@0,100;0,400;0,700;1,100;1,400;1,700&display=swap">
 {% endblock fonts %}
 {% block global_stylesheets %}
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" crossorigin="anonymous" />
-  <link rel="stylesheet" href="{% static 'scss/ywfa.css' %}" />
+  {% compress css %}
+    <link rel="stylesheet" href="{% static 'socicon/css/socicon.css' %}" type="text/css" />
+    <link rel="stylesheet" href="{% static 'scss/ywfa.css' %}" type="text/css" />
+  {% endcompress %}
 {% endblock global_stylesheets %}
 {% block extra_css %}{% endblock extra_css %}
 {% block site_stylesheets %}{% endblock site_stylesheets %}
 </head>
 
-<body class="{% block body_class %}body{% endblock body_class %}" {% block body_attrs %}{% endblock body_attrs %}>
+<body class="{% block body_class %}ywfa{% endblock body_class %}" {% block body_attrs %}{% endblock body_attrs %}>
 {% wagtailuserbar %}{% block body_top %}{% endblock body_top %}
 {% block content_outer %}
-<div class="container container-top">
+<div class="container-top">
   {% block navigation %}{% endblock navigation %}
+</div>
+<div class="container-body">
   {% block content %}{% endblock content %}
+</div>
+<div class="container-bottom">
+{% block footer %}{% endblock footer %}
 </div>
 {% endblock content_outer %}
 {% block global_scripts %}
-  <script defer src="https://unpkg.com/popper.js@1.16.1/dist/umd/popper.min.js" crossorigin="anonymous"></script>
-  <script defer src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+  {% compress js %}
+    <script defer src="{% static 'popper.js/dist/umd/popper.js'%}"></script>
+    <script defer src="{% static 'bootstrap/dist/js/bootstrap.js' %}"></script>
+  {% endcompress %}
 {% endblock global_scripts %}
 {% block scripts %}
-  <script defer src="{% static 'js/ywfa.js' %}" type="text/javascript"></script>
+  {% compress js %}
+    <script defer src="{% static 'js/ywfa.js' %}" type="text/javascript"></script>
+  {% endcompress %}
 {% endblock scripts %}
 </body>
 </html>

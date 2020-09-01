@@ -2,14 +2,14 @@
 {% load wagtailcore_tags %}
 
 {% block content %}
+{% if page.title %}
   <div class="row">
     <div class="col-md-10 offset-md-1">
       <h1 class="ywfa-page-title">{{ page.title }}</h1>
     </div>
   </div>
-
+{% endif %}
   {% for body in page.body %}
-    {% include_block body %}
-  {% endfor %}
-
+  {% include_block body %}
+{% endfor %}
 {% endblock %}
