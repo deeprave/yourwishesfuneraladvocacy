@@ -152,8 +152,8 @@ STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesSto
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder',
     'npm.finders.NpmFinder',
+    'compressor.finders.CompressorFinder',
 ]
 
 STATICFILES_DIRS = [
@@ -208,7 +208,8 @@ NPM_STATIC_FILES_PREFIX = ''
 NPM_FINDER_USE_CACHE = False
 NPM_FILE_PATTERNS = {
     'bootstrap-icons': [
-        'bootstrap-icons'
+        'bootstrap-icons.svg',
+        'icons/*',
     ],
     'popper.js': [
         'dist/umd/popper.js',
