@@ -282,7 +282,8 @@ h1.ywfa-page-title {
 
 .ywfa-iat-image-content, .ywfa-iat-image-content a, .ywfa-iat-image-content a:hover {
   color: $color-dark;
-  background-color: $frost-white;
+  //background-color: $frost-white;
+  background-color: $color-light;
   background-blend-mode: saturation;
   font-size: 110%;
   padding: 0.1em 0.2em 0.2em;
@@ -298,7 +299,6 @@ h2.ywfa-iat-title {
   font-weight: bold;
   margin: 0.25em;
   padding: 0.1em;
-//background-image: linear-gradient(to right, $color-light, $frost-white);
 }
 
 .ywfa-iat-text {
