@@ -166,6 +166,11 @@ footer {
   box-shadow: none !important;
 }
 
+img.richtext-image.full-width {
+  display: block;
+  margin: 0 auto;
+}
+
 .ywfa-richtext {
   img {
     margin-top: 0.5em;
@@ -237,10 +242,8 @@ h1.ywfa-page-title {
   color: $color-dark;
   font: $font-heading;
   font-weight: bold;
-  margin-top: 10px;
-  padding: 5px;
-  width: 100%;
-  text-align: left;
+  font-size: 2.35em;
+  text-align: center;
 }
 
 .ywfa .contact-form {
@@ -271,18 +274,27 @@ h1.ywfa-page-title {
     width: 100%;
     height: auto;
   }
- }
-.ywfa-iat-image-full, .ywfa-iat-image-left, .ywfa-iat-image-right, {
-  img {
-    width: 100%;
-    height: auto;
-  }
-  text-decoration: none;
+}
+
+.ywfa-iat-image-left {
+  margin-right: 0.25em;
+}
+
+.ywfa-iat-image-right {
+  margin-left: 0.25em;
+}
+
+.ywfa-iat-image-full {
+  margin-bottom: 0.25em;
+}
+
+.ywfa-iat-button {
+
 }
 
 .ywfa-iat-image-content, .ywfa-iat-image-content a, .ywfa-iat-image-content a:hover {
+  @include rounded;
   color: $color-dark;
-  //background-color: $frost-white;
   background-color: $color-light;
   background-blend-mode: saturation;
   font-size: 110%;
@@ -296,13 +308,19 @@ h1.ywfa-page-title {
 h2.ywfa-iat-title {
   color: $color-dark;
   font: $font-default;
+  font-size: 125%;
   font-weight: bold;
-  margin: 0.25em;
+  margin: 0.25em auto;
   padding: 0.1em;
+  text-align: center;
 }
 
 .ywfa-iat-text {
   padding: 0.5em;
+}
+
+.ywfa-iat-buttton {
+  text-align: center;
 }
 
 .ywfa-cta {
