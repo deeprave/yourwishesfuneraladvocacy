@@ -62,6 +62,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'storages',
+
     'widget_tweaks',
     'django_extensions',
 
@@ -147,25 +149,6 @@ USE_L10N = True
 USE_TZ = True
 
 
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
-
-STATICFILES_FINDERS = [
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'npm.finders.NpmFinder',
-    'compressor.finders.CompressorFinder',
-]
-
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'ywfa', 'static'),
-]
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATIC_URL = '/static/'
-
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
-
 # Wagtail settings
 
 WAGTAIL_SITE_NAME = 'Your Wishes Funeral Advocacy'
@@ -203,9 +186,30 @@ SESSION_CACHE_ALIAS = "default"
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'npm.finders.NpmFinder',
+    'compressor.finders.CompressorFinder',
+]
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'ywfa', 'static'),
+]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/static/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+# django-npm settings
+
 NPM_ROOT_PATH = BASE_DIR
 NPM_STATIC_FILES_PREFIX = ''
-NPM_FINDER_USE_CACHE = False
+NPM_FINDER_USE_CACHE = True
 NPM_FILE_PATTERNS = {
     'bootstrap-icons': [
         'bootstrap-icons.svg',
@@ -224,3 +228,17 @@ NPM_FILE_PATTERNS = {
         'font/*',
     ]
 }
+
+# django-compress settings
+COMPRESS_ENABLED = True
+COMPRESS_CSS_HASHING_METHOD = 'content'
+COMPRESS_FILTERS = {
+    'css': [
+        'compressor.filters.css_default.CssAbsoluteFilter',
+        'compressor.filters.cssmin.CSSCompressorFilter',
+    ],
+    'js': [
+        'compressor.filters.jsmin.CalmjsFilter',
+    ]
+}
+
