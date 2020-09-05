@@ -165,3 +165,9 @@ class LargeImageChooserBlock(ImageChooserBlock):
 
     class Meta:
         template = 'blocks/large_image_block.html'
+
+
+class NewSectionBlock(blocks.StructBlock):
+
+    class Meta:
+        template = 'blocks/new_section.html'
