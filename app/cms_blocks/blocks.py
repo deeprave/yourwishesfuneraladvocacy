@@ -85,13 +85,25 @@ class RadioSelectBlock(blocks.ChoiceBlock):
 
 class ImageAndTextBlock(blocks.StructBlock):
 
-    image = ImageChooserBlock(blank=True, null=True,
-                              help_text='Image the automagically cropped to 786px by 552px')
+    image = ImageChooserBlock(blank=True, null=True)
     image_alignment = RadioSelectBlock(
-        choices=(("full", "Full width centered"), ("left", "Image to the left"), ("right", "Image to the right"),),
+        choices=(
+            ("full", "Full width centered"),
+            ("left", "Image to the left"),
+            ("right", "Image to the right"),
+        ),
         default='full',
         help_text='Full image - text below, Image left - text right, or image right - text left.'
     )
+    image_size = RadioSelectBlock(
+        choices=(
+            ('standard',  'Standard 786x552'),
+            ('landscape', 'Landscape 786x1104'),
+            ('portrait',  'Portrait 786x300'),
+        ),
+        default='standard',
+        help_text='Layout - match with picture dimensions'
+        )
     title = blocks.CharBlock(required=False, blank=True, null=True, max_length=60,
                              help_text='Max length of 60 characters.')
     text = blocks.RichTextBlock(blank=True, required=False, features=RICHTEXTBLOCK_FEATURES,

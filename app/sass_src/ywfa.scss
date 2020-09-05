@@ -19,6 +19,10 @@ body.ywfa {
   img {
     @include rounded-shadowed;
   }
+  a, a:any-link {
+    color: $color-dark;
+    text-decoration: none;
+  }
 }
 
 .container-base {
@@ -288,10 +292,6 @@ h1.ywfa-page-title {
   margin-bottom: 0.25em;
 }
 
-.ywfa-iat-button {
-
-}
-
 #carouselControls {
   .carousel-control {
     width: 2em;
@@ -331,6 +331,10 @@ h2.ywfa-iat-title {
 
 .ywfa-iat-text {
   padding: 0.5em;
+  text-decoration: none;
+  p {
+    text-decoration: none !important;
+  }
 }
 
 .ywfa-iat-buttton {
