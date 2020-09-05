@@ -197,13 +197,11 @@ footer {
   }
 
   @media only screen and (min-width: $width-lg) {
-    .carousel-inner .container {
-      margin-left: 2.5em;
-      margin-right: 2.5em;
-    }
+    margin-left: 2.5em;
+    margin-right: 2.5em;
   }
-
 }
+
 
 img.richtext-image.full-width {
   display: block;
