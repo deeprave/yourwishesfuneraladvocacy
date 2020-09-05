@@ -168,44 +168,56 @@ footer {
 
 .carousel-content {
   margin-bottom: 2em;
-}
 
-.carousel-item {
-  border-radius: 0.5em;
-  height: 24rem;
-  background: #777;
-  color: white;
-  position: relative;
-  background-position: center;
-  background-size: cover;
-}
+  .carousel-item {
+    height: 24rem;
+    background-color: #000;
+    color: white;
+    position: relative;
+    border-radius: 0.5em;
 
-.carousel-inner .container {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding-bottom: 2em;
-  margin-bottom: 2em;
+    .container {
+      padding-bottom: 2em;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
 
-  p {
-    margin: 0 2em;
-  }
+      @media only screen and (min-width: $width-lg) {
+        margin-left: 2.5em;
+        margin-right: 2.5em;
+      }
 
-  p.attribution {
-    font-style: italic;
-    margin-left: 6em;
-    &::before {
-      content: '- '
+      p {
+        margin: 0 2em;
+      }
+
+      p.attribution {
+        font-style: italic;
+        margin-left: 6em;
+        &::before {
+          content: '- '
+        }
+      }
     }
   }
 
-  @media only screen and (min-width: $width-lg) {
-    margin-left: 2.5em;
-    margin-right: 2.5em;
+  .overlay-image {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    width: 100%;
+    height: auto;
+    //border: none;
+    border-radius: 0.5em;
+    background-position: center;
+    background-size: cover;
+    opacity: 0.75;
   }
-}
 
+}
 
 img.richtext-image.full-width {
   display: block;

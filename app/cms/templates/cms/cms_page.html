@@ -21,13 +21,15 @@
 
         <div class="carousel-inner">
           {% for item in self.carousel_images.all %}
-            {% image item.carousel_image fill-900x400 as img %}
-              <div class="carousel-item{% if forloop.counter == 1 %} active{% endif %}" data-interval="{{ item.carousel_interval }}" style="background-image:url('{{ img.url }}');">
-                <div class="container">
-                  {% if item.carousel_title %}<h1>{{ item.carousel_title }}</h1>{% endif %}
-                  {% if item.carousel_content %}<p>{{ item.carousel_content|richtext }}</p>{% endif %}
-                  {% if item.carousel_attribution %}<p class="attribution">{{ item.carousel_attribution }}</p>{% endif %}
-                </div>
+            {% image item.carousel_image fill-1024x350 as img %}
+              <div class="carousel-item{% if forloop.counter == 1 %} active{% endif %}" data-interval="{{ item.carousel_interval }}">
+                <div class="overlay-image" style="background-image:url('{{ img.url }}');"></div>
+                  <div class="container">
+                    {% if item.carousel_title %}<h1>{{ item.carousel_title }}</h1>{% endif %}
+                    {% if item.carousel_content %}<p>{{ item.carousel_content|richtext }}</p>{% endif %}
+                    {% if item.carousel_attribution %}<p class="attribution">{{ item.carousel_attribution }}</p>{% endif %}
+                  </div>
+
               </div>
           {% endfor %}
         </div>
