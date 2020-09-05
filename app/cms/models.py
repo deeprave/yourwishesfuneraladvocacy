@@ -3,7 +3,7 @@ from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalKey
 from taggit.models import TaggedItemBase, Tag as TaggitTag
 from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel, MultiFieldPanel, InlinePanel
-from wagtail.core.fields import StreamField
+from wagtail.core.fields import StreamField, RichTextField
 from wagtail.core.models import Page, Orderable
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.snippets.models import register_snippet
@@ -25,6 +25,7 @@ class Tag(TaggitTag):
     class Meta:
         proxy = True
 
+
 class AbstractCMSPage(Page):
     """
     Abstract base page for the CMS
@@ -37,6 +38,7 @@ class AbstractCMSPage(Page):
         FieldPanel('title'),
         FieldPanel('tags'),
     ]
+
     class Meta:
         abstract = True
 
@@ -69,7 +71,7 @@ class CMSPage(AbstractCMSPage):
 
     content_panels = AbstractCMSPage.content_panels + [
         MultiFieldPanel([
-                InlinePanel('carousel_images', max_num=12, min_num=0, label='Image')
+                InlinePanel('carousel_images', max_num=12, min_num=0, label='Carousel Image')
             ], heading='Carousel Images'
         ),
         StreamFieldPanel('body')
@@ -81,12 +83,26 @@ class CMSPage(AbstractCMSPage):
 
 
 class CarouselImage(Orderable):
+    RICHTEXTBLOCK_FEATURES = [
+        'bold', 'italic', 'ol', 'ul'
+    ]
 
     parent_pg = ParentalKey('cms.CMSPage', related_name='carousel_images')
     # noinspection PyUnresolvedReferences
     carousel_image = models.ForeignKey('wagtailimages.Image', null=True, blank=True, on_delete=models.SET_NULL,
                                        related_name='+')
+    carousel_title = models.CharField(blank=True, null=True, max_length=120,
+                                      help_text='Display title, optional (max len=120)')
+    carousel_content = RichTextField(features=RICHTEXTBLOCK_FEATURES, null=True, blank=True)
+    carousel_attribution = models.CharField(blank=True, null=True, max_length=120,
+                                            help_text='Display title, optional (max len=120)')
+    carousel_interval = models.IntegerField(blank=False, null=False, default=12000,
+                                            help_text='Keep visible for time in milliseconds')
 
     panels = [
-        ImageChooserPanel('carousel_image')
+        ImageChooserPanel('carousel_image'),
+        FieldPanel('carousel_title'),
+        FieldPanel('carousel_content'),
+        FieldPanel('carousel_attribution'),
+        FieldPanel('carousel_interval')
     ]
