@@ -166,33 +166,33 @@ footer {
   box-shadow: none !important;
 }
 
-.carousel-content {
+.carousel-item {
+  border-radius: 0.5em;
+  height: 24rem;
+  background: #777;
+  color: white;
+  position: relative;
+  background-position: center;
+  background-size: cover;
+}
 
-  .carousel-item {
-    border-radius: 0.5em;
-    height: 24rem;
-    background: #777;
-    color: white;
-    position: relative;
-    background-position: center;
-    background-size: cover;
+.carousel-inner .container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding-bottom: 2em;
+  margin-bottom: 2em;
+
+  p {
+    margin: 0 2em;
   }
 
-  .carousel-inner .container {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding-bottom: 2em;
-    p {
-      margin: 0 2em;
-    }
-    p.attribution {
-      font-style: italic;
-      margin-left: 6em;
-      &::before {
-        content: '- '
-      }
+  p.attribution {
+    font-style: italic;
+    margin-left: 6em;
+    &::before {
+      content: '- '
     }
   }
 
@@ -202,8 +202,6 @@ footer {
       margin-right: 2.5em;
     }
   }
-
-  margin-bottom: 2em;
 
 }
 
