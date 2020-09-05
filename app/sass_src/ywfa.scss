@@ -292,6 +292,20 @@ h1.ywfa-page-title {
   margin-bottom: 0.25em;
 }
 
+#carouselControls {
+  .carousel-control {
+    width: 2em;
+    img {
+      width: 2em;
+      height: auto;
+      color: white;
+      font-size: 2em;
+      border-radius: 0;
+      box-shadow: none;
+    }
+  }
+}
+
 .ywfa-iat-image-content, .ywfa-iat-image-content a, .ywfa-iat-image-content a:hover {
   @include rounded;
   color: $color-dark;
