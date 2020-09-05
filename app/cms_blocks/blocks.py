@@ -171,3 +171,5 @@ class NewSectionBlock(blocks.StructBlock):
 
     class Meta:
         template = 'blocks/new_section.html'
+        icon = 'horizontalrule'
+        label = 'Start new sectiom'

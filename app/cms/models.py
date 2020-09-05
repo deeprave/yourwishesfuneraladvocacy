@@ -62,7 +62,7 @@ class CMSPage(AbstractCMSPage):
         ('large_image',     cmsblocks.LargeImageChooserBlock(
             help_text='A large image - cropped to 1200x775',
         )),
-        ('rule',            cmsblocks.NewSectionBlock(
+        ('new_section',     cmsblocks.NewSectionBlock(
             help_text='Insert a horizontal rule'
         )),
     ], blank=True, null=True)
