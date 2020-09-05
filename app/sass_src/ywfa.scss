@@ -19,10 +19,6 @@ body.ywfa {
   img {
     @include rounded-shadowed;
   }
-  a, a:any-link {
-    color: $color-dark;
-    text-decoration: none;
-  }
 }
 
 .container-base {
@@ -270,6 +266,13 @@ h1.ywfa-page-title {
   }
   button {
     margin: 1em 0;
+  }
+}
+
+.plain-link {
+  a, a:any-link {
+    color: $color-dark;
+    text-decoration: none;
   }
 }
 
