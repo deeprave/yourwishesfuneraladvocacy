@@ -183,11 +183,6 @@ footer {
       left: 0;
       right: 0;
 
-      @media only screen and (min-width: $width-lg) {
-        margin-left: 2.5em;
-        margin-right: 2.5em;
-      }
-
       p {
         margin: 0 2em;
       }
@@ -200,6 +195,14 @@ footer {
         }
       }
     }
+
+    @media only screen and (min-width: $width-lg) {
+      .container {
+        margin-left: 2.5em;
+        margin-right: 2.5em;
+      }
+    }
+
   }
 
   .overlay-image {
