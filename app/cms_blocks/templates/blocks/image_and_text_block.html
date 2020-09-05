@@ -4,9 +4,21 @@
 
     {% if self.image %}
       {% if self.image_alignment in 'left|right' %}
-        {% image self.image fill-400x280 as img %}
+        {% if self.image_size == 'landscape' %}
+          {% image self.image fill-420x110 as img %}
+        {% elif self.image_size == 'portrait' %}
+          {% image self.image fill-420x560 as img %}
+        {% else %}
+          {% image self.image fill-420x280 as img %}
+        {% endif %}
       {% else %}
-        {% image self.image fill-786x552 as img %}
+        {% if self.image_size == 'landscape' %}
+          {% image self.image fill-800x250 as img %}
+        {% elif self.image_size == 'portrait' %}
+          {% image self.image fill-800x1050 as img %}
+        {% else %}
+          {% image self.image fill-800x560 as img %}
+        {% endif %}
       {% endif %}
     {% endif %}
 
@@ -31,11 +43,7 @@
       <div class="col-lg-10 offset-lg-1 d-flex flex-grow">
         <div class="col-lg-6 ywfa-iat-image-content">
           {% if self.title %}<h2 class="ywfa-iat-title ywfa-iat-title-right">{{ self.title }}</h2>{% endif %}
-          {% if self.text %}
-            <div class="ywfa-iat-text">
-              {{ self.text|richtext }}
-            </div>
-          {% endif %}
+          {% if self.text %}<div class="ywfa-iat-text">{{ self.text|richtext }}</div>{% endif %}
         </div>
         <div class="col-lg-6 ywfa-iat-image ywfa-iat-image-right">
           <picture>
