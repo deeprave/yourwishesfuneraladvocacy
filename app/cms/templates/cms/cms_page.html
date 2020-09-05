@@ -1,5 +1,5 @@
 {% extends 'cms/base.html' %}
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load static wagtailcore_tags wagtailimages_tags %}
 
 {% block content %}
 {% if page.display_title and page.title %}
@@ -12,24 +12,31 @@
 {% if self.carousel_images.count > 0 %}
   <div class="row">
     <div class="col-lg-10 offset-lg-1">
-      <div id="carouselControls" class="carousel slide" data-ride="carousel">
+
+      <div id="carouselControls" class="carousel slide carousel-fade" data-ride="carousel">
+      <ol class="carousel-indicators">
+        {% for loop_cycle in self.carousel_images.all %}
+          <li data-target="#carouselControls" data-slide-to="{{ forloop.counter0 }}"></li>
+        {% endfor %}
+      </ol>
         <div class="carousel-inner">
           {% for loop_cycle in self.carousel_images.all %}
             {% image loop_cycle.carousel_image fill-900x400 as img %}
-              <div class="carousel-item{% if forloop.counter == 1 %} active{% endif %}">
+              <div class="carousel-item{% if forloop.counter == 1 %} active{% endif %}" data-interval="10000">
                 <img src="{{ img.url }}" class="d-block w-100" alt="{{ img.alt }}">
               </div>
           {% endfor %}
         </div>
-        <a class="carousel-control-prev" href="#carouselControls" role="button" data-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <a class="carousel-control-prev carousel-control" href="#carouselControls" role="button" data-slide="prev">
+            <img src="{% static 'bootstrap-icons/icons/caret-left-fill.svg' %}" alt="&lt;" aria-hidden="true" />
             <span class="sr-only">Previous</span>
         </a>
-        <a class="carousel-control-next" href="#carouselControls" role="button" data-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <a class="carousel-control-next carousel-control" href="#carouselControls" role="button" data-slide="next">
+            <img src="{% static 'bootstrap-icons/icons/caret-right-fill.svg' %}" alt="&gt;" aria-hidden="true" />
             <span class="sr-only">Next</span>
         </a>
       </div>
+
     </div>
   </div>
 {% endif %}
