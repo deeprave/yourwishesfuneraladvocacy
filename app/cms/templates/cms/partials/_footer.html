@@ -17,28 +17,18 @@
       <div class="col-md-4 mt-4 mt-md-0">
         <h5 class="text-uppercase text-md-center star">Contact</h5>
 
-        <div class="text-left">
+        <div class="text-center">
           {% if contact.contact_button_text and contact.contact_button_page %}
           <a href="{% pageurl contact.contact_button_page %}" class="btn btn-outline-primary btn-lg contact">
               {{ contact.contact_button_text }}
           </a>
           {% endif %}
-          {% if contact.email_display_text and contact.email_address %}
-          <a href="mailto:{{ contact.email_display_text }}" class="btn btn-link text-decoration-none">
-            {{ contact.email_address }}
-          </a>
-          {% endif %}
         </div>
 
-        <div class="text-left">
+        <div class="text-center">
           {% if contact.call_button_text and contact.call_button_number %}
           <a href="tel:{{ contact.call_button_number }}" class="btn btn-outline-primary btn-lg text-left contact">
               {{ contact.call_button_text }}
-          </a>
-          {% endif %}
-          {% if contact.phone_display_text and contact.phone_number %}
-          <a href="tel:{{ contact.phone_number }}" class="btn btn-link text-decoration-none">
-            {{ contact.phone_display_text }}
           </a>
           {% endif %}
         </div>

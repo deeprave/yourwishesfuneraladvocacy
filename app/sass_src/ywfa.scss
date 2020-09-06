@@ -87,8 +87,10 @@ footer {
   }
   a.contact {
     @include shadowed;
-    width: 9rem;
-    padding: 0.25rem 3rem;
+    width: 18rem;
+    font-family: $font-heading;
+    font-weight: bold;
+    padding: 0.5rem 3rem;
     margin-bottom: 0.25rem;
   }
   ul.socicon {

@@ -36,10 +36,6 @@ class ContactSettings(BaseSetting):
         PageChooserPanel('contact_button_page'),
         FieldPanel("call_button_text"),
         FieldPanel("call_button_number"),
-        FieldPanel("email_display_text"),
-        FieldPanel("email_address"),
-        FieldPanel("phone_display_text"),
-        FieldPanel("phone_number"),
     ]
 
     def save(self, *args, **kwargs):
