@@ -49,7 +49,7 @@ if _vars_are_set('S3_API_KEY', 'S3_API_SECRET', 'S3_API_ENDPOINT', 'S3_API_BUCKE
     AWS_SECRET_ACCESS_KEY = env['S3_API_SECRET']
 
     MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.SJBoto3Storage'
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # alerts & monitoring
 
