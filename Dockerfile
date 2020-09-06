@@ -16,9 +16,14 @@ ARG DJANGO_LOGDIR=/srv/logs/app
 ARG REDIS_CACHE=redis://redis:6379/0
 ARG REDIS_SESSION=redis://redis:6379/1
 ARG DATABASE_URL=postgres://user:password@db:5432/app
-ARG EMAIL_HOST_USER=${EMAIL_HOST_USER}
-ARG EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
+ARG EMAIL_HOST_USER
+ARG EMAIL_HOST_PASSWORD
 ARG EMAIL_HOST=smtp.google.com
+ARG S3_API_ENDPOINT
+ARG S3_API_BUCKET
+ARG S3_API_KEY
+ARG S3_API_SECRET
+
 # removable baggage required to build python modules
 ARG DEVLIBS="build-base python3-dev postgresql-dev zlib-dev jpeg-dev openjpeg-dev tiff-dev freetype-dev libffi-dev pcre-dev libressl-dev libwebp-dev lcms2-dev"
 
@@ -29,6 +34,7 @@ ENV DJANGO_MODE=${DJANGO_MODE} DJANGO_ROOT=${APP_ROOT}/${APP_NAME} DJANGO_USER=$
 ENV EMAIL_HOST_USER=${EMAIL_HOST_USER} EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
 ENV DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY} DJANGO_LOGDIR=${DJANGO_ROOT}/logs
 ENV REDIS_CACHE=${REDIS_CACHE} REDIS_SESSION=${REDIS_SESSION} DATABASE_URL=${DATABASE_URL}
+ENV S3_API_ENDPOINT=${S3_API_ENDPOINT} S3_API_BUCKET=${S3_API_BUCKET} S3_API_KEY=${S3_API_KEY} S3_API_SECRET=${S3_API_SECRET}
 
 # install runtime requirements and dev, but remove dev before creating this layer
 
