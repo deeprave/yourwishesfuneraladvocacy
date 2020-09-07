@@ -2,7 +2,7 @@ from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
 from django.db import models
 
-from wagtail.admin.edit_handlers import FieldPanel, PageChooserPanel
+from wagtail.admin.edit_handlers import FieldPanel, PageChooserPanel, MultiFieldPanel
 from wagtail.contrib.settings.models import BaseSetting, register_setting
 
 
@@ -21,21 +21,24 @@ class ContactSettings(BaseSetting):
     call_button_number = models.CharField(null=True, blank=True, max_length=32, default=None,
                                           help_text='Enter the number to call')
 
-    email_display_text = models.CharField(null=True, blank=True, max_length=32,
-                                          help_text='Enter the email address that will appear for email contact')
-    email_address = models.CharField(null=True, blank=True, max_length=32,
-                                     help_text='Enter the email address that will be used for email contact')
-
-    phone_display_text = models.CharField(null=True, blank=True, max_length=32,
-                                          help_text='Enter the number that will appear for phone contact')
-    phone_number = models.CharField(null=True, blank=True, max_length=32,
-                                    help_text='Enter the phone number that will be used for phone contact')
+    book_button_text = models.CharField(null=True, blank=True, max_length=32,
+                                          help_text='Enter the text for make booking')
+    book_button_link = models.URLField(null=True, blank=True, max_length=64, default=None,
+                                       help_text='Enter the URL to make a booking')
 
     panels = [
-        FieldPanel("contact_button_text"),
-        PageChooserPanel('contact_button_page'),
-        FieldPanel("call_button_text"),
-        FieldPanel("call_button_number"),
+        MultiFieldPanel([
+            FieldPanel("contact_button_text"),
+            PageChooserPanel('contact_button_page'),
+        ], heading='Contact Button'),
+        MultiFieldPanel([
+            FieldPanel("call_button_text"),
+            FieldPanel("call_button_number"),
+        ], heading='Call Button'),
+        MultiFieldPanel([
+            FieldPanel("book_button_text"),
+            FieldPanel("book_button_link"),
+        ], heading='Book Button'),
     ]
 
     def save(self, *args, **kwargs):
@@ -52,6 +55,7 @@ class SocialMediaSettings(BaseSetting):
     twitter = models.URLField(blank=True, help_text='Enter your Twitter URL')
     youtube = models.URLField(blank=True, help_text='Enter your YouTube URL')
     instagram = models.URLField(blank=True, help_text='Enter your Instagram URL')
+    snapchat = models.URLField(blank=True, help_text='Enter your Snapchat URL')
 
     panels = [
         FieldPanel("facebook"),
@@ -59,6 +63,7 @@ class SocialMediaSettings(BaseSetting):
         FieldPanel("twitter"),
         FieldPanel("youtube"),
         FieldPanel("instagram"),
+        FieldPanel("snapchat"),
     ]
 
     def save(self, *args, **kwargs):

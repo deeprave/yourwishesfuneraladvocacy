@@ -85,16 +85,27 @@ footer {
   .nav-item.active, .nav-item.active a {
     opacity: 75%;
   }
+
   a.contact {
     @include shadowed;
-    width: 18rem;
+    width: 24rem;
     font-family: $font-heading;
     font-weight: bold;
-    padding: 0.5rem 3rem;
-    margin-bottom: 0.25rem;
-    line-height: 2em;
-    font-size: 150%;
+    padding: 0.1rem 2rem;
+    margin-bottom: 0.3rem;
+    font-size: 125%;
+    background-color: $color-light;
+    color: darkblue;
   }
+  a.contact-call {
+    background-color: $color-base;
+    color: black;
+  }
+  a.contact-book {
+    background-color: $color-dark;
+    color: white;
+  }
+
   ul.socicon {
     list-style-type: none;
     text-align: center;

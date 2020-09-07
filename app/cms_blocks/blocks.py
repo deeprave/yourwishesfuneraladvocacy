@@ -9,6 +9,19 @@ from wagtail.images.blocks import ImageChooserBlock
 from wagtail.snippets.blocks import SnippetChooserBlock
 
 
+__all__ = (
+    'Link',
+    'CardsBlock',
+    'RadioSelectBlock',
+    'ImageAndTextBlock',
+    'CallToActionBlock',
+    'CustomTableBlock',
+    'RichTextWithTitleBlock',
+    'TestimonialChooserBlock',
+    'LargeImageChooserBlock',
+    'NewSectionBlock',
+)
+
 RICHTEXTBLOCK_FEATURES = [
     'h2', 'h3', 'h4', 'bold', 'italic', 'ol', 'ul', 'hr', 'document-link', 'image', 'embed',
     'code', 'blockquote', 'superscript', 'subscript', 'strikethrough'
