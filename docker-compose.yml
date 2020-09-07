@@ -17,6 +17,10 @@ services:
         DATABASE_URL: ${DATABASE_URL}
         EMAIL_HOST_USER: ${EMAIL_HOST_USER}
         EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
+        S3_API_ENDPOINT: ${S3_API_ENDPOINT}
+        S3_API_BUCKET: ${S3_API_BUCKET}
+        S3_API_KEY: ${S3_API_KEY}
+        S3_API_SECRET: ${S3_API_SECRET}
     volumes:
       - ${PWD}/static:${APP_ROOT}/${APP_NAME}/static
       - ${PWD}/media:${APP_ROOT}/${APP_NAME}/media
@@ -24,7 +28,7 @@ services:
     expose:
       - "8000"
     ports:
-      - "127.0.0.1:8800:8000"
+      - "127.0.0.1:${APP_PORT}:8000"
     restart: always
     networks:
         - internal_net

@@ -7,6 +7,10 @@ from wagtail.contrib.forms.models import AbstractEmailForm, AbstractFormField
 from wagtail.core.fields import RichTextField
 from wagtail.images.edit_handlers import ImageChooserPanel
 
+__all__ = (
+    'ContactPage',
+)
+
 FORM_FIELD_CHOICES = (
     ('singleline', _('Single line text')),
     ('multiline', _('Multi-line text')),

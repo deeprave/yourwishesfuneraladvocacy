@@ -17,34 +17,31 @@
       <div class="col-md-4 mt-4 mt-md-0">
         <h5 class="text-uppercase text-md-center star">Contact</h5>
 
-        <div class="text-left">
-          {% if contact.contact_button_text and contact.contact_button_page %}
+        {% if contact.contact_button_text and contact.contact_button_page %}
+        <div class="text-center">
           <a href="{% pageurl contact.contact_button_page %}" class="btn btn-outline-primary btn-lg contact">
               {{ contact.contact_button_text }}
           </a>
-          {% endif %}
-          {% if contact.email_display_text and contact.email_address %}
-          <a href="mailto:{{ contact.email_display_text }}" class="btn btn-link text-decoration-none">
-            {{ contact.email_address }}
-          </a>
-          {% endif %}
         </div>
+        {% endif %}
 
-        <div class="text-left">
-          {% if contact.call_button_text and contact.call_button_number %}
-          <a href="tel:{{ contact.call_button_number }}" class="btn btn-outline-primary btn-lg text-left contact">
+        {% if contact.call_button_text and contact.call_button_number %}
+        <div class="text-center">
+          <a href="tel:{{ contact.call_button_number }}" class="btn btn-outline-primary btn-lg contact contact-call">
               {{ contact.call_button_text }}
           </a>
-          {% endif %}
-          {% if contact.phone_display_text and contact.phone_number %}
-          <a href="tel:{{ contact.phone_number }}" class="btn btn-link text-decoration-none">
-            {{ contact.phone_display_text }}
-          </a>
-          {% endif %}
         </div>
-        {% endwith %}
+        {% endif %}
 
+        {% if contact.book_button_text and contact.book_button_link %}
+        <div class="text-center">
+          <a href="{{ contact.book_button_link }}" class="btn btn-outline-primary btn-lg contact contact-book">
+              {{ contact.book_button_text }}
+          </a>
+        </div>
+        {% endif %}
       </div>
+      {% endwith %}
 
       <div class="col-md-3 mt-4 mt-md-0">
         <h5 class="text-uppercase text-center star">Social Media</h5>
@@ -76,6 +73,11 @@
             </a>
           </li>{% endif %}
         </ul>
+          {% if social.snapchat %}<li data-toggle="tooltip" data-placement="top" title="Snapchat">
+            <a href="{{ social.snapchat }}" target="_blank">
+              <i class="socicon-snapchat"></i>
+            </a>
+          </li>{% endif %}
         {% endwith %}
       </div>
 
