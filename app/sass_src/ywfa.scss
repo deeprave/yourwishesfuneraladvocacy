@@ -19,6 +19,9 @@ body.ywfa {
   img {
     @include rounded-shadowed;
   }
+  img.noshadow {
+    @include rounded-noshadowed;
+  }
 }
 
 .container-base {
@@ -88,7 +91,8 @@ footer {
 
   a.contact {
     @include shadowed;
-    width: 24rem;
+    min-width: 12rem;
+    width: 80%;
     font-family: $font-heading;
     font-weight: bold;
     padding: 0.1rem 2rem;
@@ -96,6 +100,7 @@ footer {
     font-size: 125%;
     background-color: $color-light;
     color: darkblue;
+    border-color: darkblue;
   }
   a.contact-call {
     background-color: $color-base;
@@ -104,6 +109,7 @@ footer {
   a.contact-book {
     background-color: $color-dark;
     color: white;
+    border-color: white;
   }
 
   ul.socicon {

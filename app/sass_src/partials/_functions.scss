@@ -14,3 +14,8 @@
   @include rounded;
   @include shadowed;
 }
+
+@mixin rounded-noshadowed {
+  @include rounded;
+  box-shadow: none;
+}

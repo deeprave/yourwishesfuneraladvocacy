@@ -72,13 +72,17 @@
               <i class="socicon-instagram"></i>
             </a>
           </li>{% endif %}
-        </ul>
           {% if social.snapchat %}<li data-toggle="tooltip" data-placement="top" title="Snapchat">
             <a href="{{ social.snapchat }}" target="_blank">
               <i class="socicon-snapchat"></i>
             </a>
           </li>{% endif %}
+        </ul>
         {% endwith %}
+        <div>
+          <img src="{% static 'images/vcci.png' %}" width="100%" height="auto" class="noshadow"
+               alt="Proud member of the Victorian Chamber of Commerce and Industry">
+        </div>
       </div>
 
     </div>
