@@ -12,7 +12,7 @@ Options:
   -r    reset postgres data
   -R    reset all docker data volumes for this project
   -b    (re)build the app docker container
-  -g    update a local git repository (initialise if nencessary)
+  -g    update a local git repository (initialise if necessary)
   -m    run database migrations
 
 ** note: to set the postgres admin password a postgres data reset is required
