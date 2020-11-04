@@ -1,0 +1,12 @@
+      <div class="products-nav">
+        <ul>
+          <li>
+            <a href="{% url 'products' %}" class="btn btn-{% if category is None %}dark{% else %}primary{% endif %}">All</a>
+          </li>
+        {% for cat in categories %}
+          <li>
+            <a href="{% url 'product-category' slug=cat.slug %}" class="btn btn-{% if cat == category %}dark{% else %}primary{% endif %}">{{ cat.name }}</a>
+          </li>
+        {% endfor %}
+        </ul>
+      </div>

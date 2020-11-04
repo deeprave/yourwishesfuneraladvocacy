@@ -1,0 +1,59 @@
+{% extends 'cms/base.html' %}
+{% load static %}
+{% block content %}
+  <div class="row">
+    <div class="col-md-10 offset-md-1">
+    {% include 'shop/partials/_category.html' %}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-10 offset-md-1 text-center products">
+      <div class="row h-100">
+
+      {% for product in products %}
+      <div class="card col-sm-12 col-md-3 p-2 m-3 border-0 shadow-lg product-card">
+
+          <div class="card-header text-center p-0 m-0">
+            <a href="{% url 'product-detail' slug=product.slug %}">
+              <h4>{{ product.title }}</h4>
+            </a>
+          </div>
+
+          <div class="card-body p-1">
+            <a href="{% url 'product-detail' slug=product.slug %}">
+              {% if product.image %}
+              <p class="mt-1 product-image">
+                  <img src="{% get_media_prefix %}{{ product.image }}" alt="{{ product.code }}" width="100%" height="auto">
+              </p>
+              {% endif %}
+              {% if product.detail %}
+              <p class="cart-text text-muted text-center small product-detail">
+                  {{ product.detail }}
+              </p>
+              {% endif %}
+            </a>
+          </div>
+
+          <div class="card-footer shadow-lg">
+            <a href="{% url 'product-detail' slug=product.slug %}">
+              <p class="text-center product-price mb-0">
+                <strong>AUD {{ product.price }}</strong>
+              </p>
+              <p class="text-center">
+                <a href="{% url 'cart-add' slug=product.slug %}" class="btn btn-outline-primary btn-lg">
+                  Add to cart
+                </a>
+              </p>
+            </a>
+          </div>
+
+      </div>
+      {% endfor %}
+
+      </div>
+    </div>
+  </div>
+  <div class="row">
+
+  </div>
+{% endblock content %}

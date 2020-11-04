@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from django.contrib import messages
 import dj_database_url
 # noinspection PyUnresolvedReferences
 from .logger import *
@@ -33,6 +34,8 @@ INSTALLED_APPS = [
     'testimonials',
     'contact',
     'ywfa_settings',
+
+    'shop',
 
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
@@ -115,6 +118,14 @@ DATABASES = {
     'default': dj_database_url.config(default=DATABASE_URL),
 }
 
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+MESSAGE_TAGS = {
+    messages.DEBUG: 'alert-info',
+    messages.INFO: 'alert-info',
+    messages.SUCCESS: 'alert-success',
+    messages.WARNING: 'alert-warning',
+    messages.ERROR: 'alert-danger',
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators

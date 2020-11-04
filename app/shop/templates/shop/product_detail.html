@@ -1,0 +1,44 @@
+{% extends 'cms/base.html' %}
+{% load static %}
+{% block content %}
+  <div class="row">
+    <div class="col-md-10 offset-md-1">
+    {% include 'shop/partials/_category.html' %}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-10 offset-md-1">
+      <div class="row d-flex justify-content-center flex-row">
+
+        <div class="col-md-6 p-2">  <!-- left side -->
+          {% if product.image %}
+            <p class="product-image">
+              <img src="{% get_media_prefix %}{{ product.image }}" alt="{{ product.code }}" width="100%" height="auto">
+            </p>
+          {% endif %}
+        </div>
+
+        <div class="col-md-6 p-2 text-center">  <!-- right side -->
+          <p>Category: {{ product.category.name }}</p>
+          <h4>{{ product.title }}</h4>
+          {% if product.detail %}
+            <p class="cart-text text-muted small product-detail">
+                {{ product.detail }}
+            </p>
+          {% endif %}
+          <div class="mt-auto">
+            <p class="text-center product-price mb-0">
+              <strong>AUD {{ product.price }}</strong>
+            </p>
+            <p class="text-center">
+              <a href="{% url 'cart-add' slug=product.slug %}" class="btn btn-outline-primary btn-lg">
+                Add to cart
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+{% endblock content %}
