@@ -28,4 +28,16 @@
     </div>
   </nav>
 
+{% block messages %}{% if messages %}
+  <div class="row">
+    <div class="col">
+    {% for message in messages %}
+      <div class="alert {{ message.tags }}" role="alert">
+        {{ message }}
+      </div>
+    {% endfor %}
+    </div>
+  </div>
+{% endif %}{% endblock messages %}
+
 </div>
