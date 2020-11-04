@@ -1,2 +1,3 @@
 #!/bin/sh
-direnv exec .. ./manage.py "$@"
+. ${HOME}/.virtualenvs/ywfa/bin/activate
+./manage.py "$@"
