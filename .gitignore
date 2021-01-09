@@ -3,11 +3,12 @@
 *.tmp
 *.swp
 __pycache__
-node_modules
+node_modules/
 /.idea
 .*_history
-.cache/
+.*cache/
 .env
 /studio/
 /static/
 /media/
+/backups/

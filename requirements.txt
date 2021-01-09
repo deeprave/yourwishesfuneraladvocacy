@@ -1,13 +1,16 @@
-Django~=3.1.3
-wagtail~=2.11
-django-extensions~=3.0.9
+Django~=3.1.5
+wagtail~=2.11.3
+django-extensions~=3.1.0
 # nice widhget utilities
 django-widget-tweaks~=1.4.8
+# crispy forms
+django-crispy-forms~=1.10.0
 # menus support
-wagtailmenus~=3.0.2
+# wagtailmenus~=3.0.2
+-e git://github.com/deeprave/wagtailmenus.git#egg=wagtailmenus
 # database/postgresql
 dj-database-url~=0.5.0
-psycopg2-binary~=2.8.6
+psycopg2~=2.8.6
 # redis support
 django-redis~=4.12.1
 # read .env for config
@@ -22,7 +25,7 @@ django-compressor~=2.4
 calmjs~=3.4.1
 csscompressor~=0.9.5
 # for media in aws-s3 or linode-object store
-django-storages~=1.10.1
-boto3~=1.16.10
+django-storages~=1.11
+boto3~=1.16.40
 # sentry.io monitoring
-sentry-sdk~=0.19.2
+sentry-sdk~=0.19.5
