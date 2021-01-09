@@ -23,6 +23,8 @@ ARG S3_API_ENDPOINT
 ARG S3_API_BUCKET
 ARG S3_API_KEY
 ARG S3_API_SECRET
+ARG STRIPE_PUBLIC_KEY
+ARG STRIPE_PRIVATE_KEY
 
 # removable baggage required to build python modules
 ARG DEVLIBS="build-base python3-dev postgresql-dev zlib-dev jpeg-dev openjpeg-dev tiff-dev freetype-dev libffi-dev pcre-dev libressl-dev libwebp-dev lcms2-dev"
@@ -35,10 +37,11 @@ ENV EMAIL_HOST_USER=${EMAIL_HOST_USER} EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD
 ENV DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY} DJANGO_LOGDIR=${DJANGO_ROOT}/logs
 ENV REDIS_CACHE=${REDIS_CACHE} REDIS_SESSION=${REDIS_SESSION} DATABASE_URL=${DATABASE_URL}
 ENV S3_API_ENDPOINT=${S3_API_ENDPOINT} S3_API_BUCKET=${S3_API_BUCKET} S3_API_KEY=${S3_API_KEY} S3_API_SECRET=${S3_API_SECRET}
+ENV STRIPE_PUBLIC_KEY=${STRIPE_PUBLIC_KEY} STRIPE_PRIVATE_KEY=${STRIPE_PRIVATE_KEY}
 
 # install runtime requirements and dev, but remove dev before creating this layer
 
-RUN apk add libpq libjpeg openjpeg tiff freetype libffi pcre libressl libwebp lcms2 ${DEVLIBS} && \
+RUN apk add git libpq libjpeg openjpeg tiff freetype libffi pcre libressl libwebp lcms2 ${DEVLIBS} && \
     pip install -q -U pip setuptools pip && \
     pip install -r /tmp/requirements.txt && \
     pip install gunicorn && \
