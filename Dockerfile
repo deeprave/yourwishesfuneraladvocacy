@@ -23,6 +23,8 @@ ARG S3_API_ENDPOINT
 ARG S3_API_BUCKET
 ARG S3_API_KEY
 ARG S3_API_SECRET
+ARG STRIPE_PUBLIC_KEY
+ARG STRIPE_PRIVATE_KEY
 
 # removable baggage required to build python modules
 ARG DEVLIBS="build-base python3-dev postgresql-dev zlib-dev jpeg-dev openjpeg-dev tiff-dev freetype-dev libffi-dev pcre-dev libressl-dev libwebp-dev lcms2-dev"

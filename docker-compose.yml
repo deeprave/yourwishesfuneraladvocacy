@@ -21,6 +21,8 @@ services:
         S3_API_BUCKET: ${S3_API_BUCKET}
         S3_API_KEY: ${S3_API_KEY}
         S3_API_SECRET: ${S3_API_SECRET}
+        STRIPE_PUBLIC_KEY: ${STRIPE_PUBLIC_KEY}
+        STRIPE_PRIVATE_KEY: ${STRIPE_PRIVATE_KEY}
     volumes:
       - ${PWD}/static:${APP_ROOT}/${APP_NAME}/static
       - ${PWD}/media:${APP_ROOT}/${APP_NAME}/media
