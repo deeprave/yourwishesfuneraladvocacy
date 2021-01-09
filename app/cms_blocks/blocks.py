@@ -174,6 +174,17 @@ class TestimonialChooserBlock(SnippetChooserBlock):
         label = 'Testimonial'
 
 
+class ProductChooserBlock(SnippetChooserBlock):
+
+    def __init__(self, **kwargs):
+        super().__init__('shop.Product', **kwargs)
+
+    class Meta:
+        template = 'blocks/product_block.html'
+        icon = 'tick-inverse'
+        label = 'Product'
+
+
 class LargeImageChooserBlock(ImageChooserBlock):
 
     class Meta:

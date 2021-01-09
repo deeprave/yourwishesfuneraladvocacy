@@ -1,0 +1,101 @@
+{% extends 'cms/base.html' %}
+{% load static %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-sm-12 col-md-10 offset-md-1">
+    {% include 'shop/partials/_category.html' %}
+    </div>
+  </div>
+
+  <div class="row cart">
+    <div class="col-sm-12 col-md-10 offset-md-1">
+      <h3>Your cart:</h3>
+      <table class="table table-secondary shadow-lg" width="100%">
+        <thead>
+          <tr class="table-dark">
+            <th>Code</th>
+            <th>Description</th>
+            <th class="text-right">Quanity</th>
+            <th class="text-right">Unit Price AUD</th>
+            <th class="text-right">Price AUD</th>
+            <td></td>
+          </tr>
+        </thead>
+        <tbody>
+        {% for item in cart %}
+          <tr>
+            <td class="nowrap">{{ item.product.code }}</td>
+            <td>{{ item.product.title }}</td>
+            <td class="text-right">{{ item.quantity }}</td>
+            <td class="text-right">{{ item.product.price|floatformat:2 }}</td>
+            <td class="text-right">{{ item.total_price|floatformat:2 }}</td>
+            <td>
+              <form action="{% url 'cart-remove' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="product_code" value="{{ item.product.code }}" />
+                <input type="hidden" name="product_quantity" value="{{ item.quantity }}" />
+                <input type="image" src="{% static 'shop/images/trash.svg'%}"
+                       class="btn-trash" title="Remove Item" aria-title="Remove" />
+              </form>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6">&nbsp;</td></tr>
+          <tr>
+            <td colspan="6" class="text-center">There are no items in your cart.</td>
+          </tr>
+          <tr><td colspan="6">&nbsp;</td></tr>
+        {% endfor %}
+          {% if cart.shipping %}
+          <tr>
+            <td></td>
+            <td>Shipping &amp; Handling</td>
+            <td colspan="2"></td>
+            <td class="text-right">{{ cart.shipping_price|floatformat:2 }}</td>
+            <td></td>
+          </tr>
+          {% endif %}
+          <tr class="table-dark">
+            <td colspan="3"></td>
+            <td class="text-right"><strong>Total</strong></td>
+            <td class="text-right"><strong>{{ cart.total_price|floatformat:2 }}</strong></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col-sm-12 col-md-10 offset-md-1 mb-2">
+      <br/>
+      <div class="row">
+        <div class="col-sm-12 col-md-6 row background-info">
+          <ul>
+            <li>All prices are inclusive of Australian GST</li>
+            {% if cart.shipping %}<li>Standard postage/shipping charges may apply</li>{% endif %}
+          </ul>
+        </div>
+
+        <div class="col-sm-12 col-md-6 text-right place-order">
+
+          <form action="{% url 'cart-clear' %}" method="post">
+            {% csrf_token %}
+            <button class="btn btn-secondary btn-lg rounded-lg shadow-lg{% if cart.length == 0 %} disabled{% endif %}">
+              Clear All
+            </button>
+          </form>
+
+          <form action="{% url 'create-order' %}" method="post">
+            {% csrf_token %}
+            <button class="btn btn-primary btn-lg rounded-lg shadow-lg{% if cart.length == 0 %} disabled{% endif %}">
+              Place Order
+            </button>
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}

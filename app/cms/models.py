@@ -61,6 +61,9 @@ class CMSPage(AbstractCMSPage):
         ('testimonial',     cmsblocks.TestimonialChooserBlock(
             help_text='Select testimonial'
         )),
+        ('product',         cmsblocks.ProductChooserBlock(
+            help_text='Select product'
+        )),
         ('large_image',     cmsblocks.LargeImageChooserBlock(
             help_text='A large image - cropped to 1200x775',
         )),

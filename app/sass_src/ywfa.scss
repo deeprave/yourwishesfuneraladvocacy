@@ -27,10 +27,10 @@ body.ywfa {
 .container-base {
   @extend .container-md;
   @include rounded;
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
+  padding-top: 8px;
+  //padding-bottom: 0.5em;
   background-color: $color-white;
-  margin-top: 0.75em;
+  margin-top: 0.25em;
 }
 
 .container-top {
@@ -46,27 +46,46 @@ body.ywfa {
 .container-bottom {
   @extend .container-base;
   @extend .container;
+  margin-bottom: 0.25em;
 }
 
 // site custom styles
 
 .ywfa-top-bar {
+  position: relative;
   width: 100%;
-  text-align: center;
+  height: 4em;
   .ywfa-logo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    text-align: left;
     img {
       width: auto;
     }
   }
+  .ywfa-cart, .ywfa-order {
+    text-align: right;
+    position: absolute;
+    top: 10px;
+    right: 0;
+    font-size: 65%;
+    color: $color-base;
+    line-height: 1.1em;
+  }
 }
 
 .ywfa-nav {
+  padding: 0;
   .nav-item, .nav-item a {
     font-size: 1.1em;
     color: $color-text;
   }
   .nav-item.active, .nav-item.active a {
     opacity: 75%;
+  }
+  .container-fluid {
+    padding: 0;
   }
 }
 
@@ -170,6 +189,11 @@ footer {
 
     }
   }
+}
+
+.alert {
+  padding: 0.25em 0.5em;
+  margin: 0 3em 0.25em;
 }
 
 .star {
@@ -474,5 +498,79 @@ p.ywfa-cta-text {
   }
   .card {
     height: 500px;
+  }
+}
+
+ul.errorlist {
+  list-style: none;
+  font-weight: bold;
+  ul {
+    font-weight: normal;
+    li {
+      display: inline;
+    }
+    li:not(:first-child):before {
+      content: ', ';
+    }
+  }
+}
+
+.shopping-cart, .shopping-order {
+  vertical-align: text-bottom;
+  a img {
+    box-shadow: none;
+    padding: 0;
+    margin: 0.2em;
+    border-radius: 0;
+  }
+}
+
+input.btn-trash {
+  height: 1.0em;
+  width: auto;
+  padding: 0;
+  margin: 0;
+  vertical-align: baseline;
+}
+
+.place-order form {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+}
+
+.cart, .order {
+  form .form-row {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+  .asteriskField {
+    color: red;
+    &:before {
+      content: ' ';
+    }
+  }
+}
+
+.org-logo img {
+  height: auto;
+  width: 49%;
+  .vcci {
+    width: 50%;
+  }
+  .wbg {
+  }
+}
+
+.org-logo {
+  img {
+    height: auto;
+    .vcci {
+      width: 50%;
+    }
+    .wbg {
+      width: 49%;
+    }
   }
 }

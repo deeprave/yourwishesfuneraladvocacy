@@ -5,11 +5,13 @@ __all__ = (
 
 def _logging_path(filename):
     import os
+    logdir = os.environ.get('DJANGO_LOGDIR', f'{os.getcwd()}/logs')
     path = os.path.expanduser(
         os.path.expandvars(
-            os.path.join(os.environ.get('DJANGO_LOGDIR', f'{os.getcwd()}/logs'), filename)
+            os.path.join(logdir, filename)
         )
     )
+    os.makedirs(logdir, exist_ok=True)
     with open(path, 'w+') as _:
         pass
     return path

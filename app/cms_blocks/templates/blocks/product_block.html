@@ -1,20 +1,9 @@
-{% extends 'cms/base.html' %}
 {% load static %}
-
-
-{% block add-to-cart %}
-{% endblock add-to-cart %}
-
-{% block content %}
+<div class="pt-4">
   <div class="row">
-    <div class="col-md-10 offset-md-1">
-    {% include 'shop/partials/_category.html' %}
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-10 offset-md-1">
-      <div class="row d-flex justify-content-center flex-row">
-
+    <div class="col-sm-12 col-md-10 offset-md-1">
+      <div class="row">
+        {% with value as product %}
         <div class="col-md-6 p-2">  <!-- left side -->
           {% if product.image %}
             <p class="product-image">
@@ -23,8 +12,7 @@
           {% endif %}
         </div>
 
-        <div class="col-md-6 p-2 text-center">  <!-- right side -->
-          <p>Category: {{ product.category.name }}</p>
+        <div class="col-md-6 p-2">  <!-- right side -->
           <h4>{{ product.title }}</h4>
           {% if product.detail %}
             <p class="cart-text text-muted small product-detail">
@@ -36,12 +24,12 @@
               <strong>AUD {{ product.price }}</strong>
             </p>
             <p class="text-center">
-              {% include 'shop/partials/_add_to_cart.html' with product=product %}
+              {% include 'shop/partials/_add_to_cart.html' %}
             </p>
           </div>
         </div>
+        {% endwith %}
       </div>
-
     </div>
   </div>
-{% endblock content %}
+</div>

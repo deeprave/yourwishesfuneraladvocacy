@@ -71,7 +71,8 @@ INSTALLED_APPS = [
     'django_extensions',
 
     'django_sass',
-    'compressor'
+    'compressor',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -82,8 +83,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-
-    'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 ]
 
 ROOT_URLCONF = 'ywfa.urls'
@@ -106,6 +105,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'wagtail.contrib.settings.context_processors.settings',
                 'wagtailmenus.context_processors.wagtailmenus',
+                'shop.context_processors.cart',
             ],
         },
     },
@@ -253,3 +253,8 @@ COMPRESS_FILTERS = {
     ]
 }
 
+CART_SESSION_ID = '_ywfa_cart'
+ORDER_SESSION_ID = '_ywfa_order'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+STRIPE_PUBLIC_KEY = os.environ['STRIPE_PUBLIC_KEY']
+STRIPE_PRIVATE_KEY = os.environ['STRIPE_PRIVATE_KEY']

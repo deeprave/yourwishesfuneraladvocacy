@@ -4,7 +4,7 @@
   <div class="container-bottom text-center text-md-left">
     <div class="row">
 
-      <div class="col-md-3 offset-md-1">
+      <div class="col-md-3">
         <h5 class="text-uppercase star text-md-left">Links</h5>
           <nav>
             <ul class="nav mb-md-0">
@@ -43,7 +43,7 @@
       </div>
       {% endwith %}
 
-      <div class="col-md-3 mt-4 mt-md-0">
+      <div class="col-md-5 mt-4 mt-md-0">
         <h5 class="text-uppercase text-center star">Social Media</h5>
         {% with settings.ywfa_settings.SocialMediaSettings as social %}
         <ul class="text-center socicon">
@@ -79,8 +79,10 @@
           </li>{% endif %}
         </ul>
         {% endwith %}
-        <div>
-          <img src="{% static 'images/vcci.png' %}" width="100%" height="auto" class="noshadow"
+        <div class="org-logo">
+          <img src="{% static 'images/wbg.png' %}" class="wbg noshadow"
+               alt="Proud member of the Whitehorse Business Group">
+          <img src="{% static 'images/vcci.png' %}" class="vcci noshadow"
                alt="Proud member of the Victorian Chamber of Commerce and Industry">
         </div>
       </div>

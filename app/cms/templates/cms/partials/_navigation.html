@@ -1,4 +1,4 @@
-{% load static menu_tags %}
+{% load static menu_tags cart %}
 <div class="container-fluid container-top">
 
   <div class="row ywfa-top-bar">
@@ -6,6 +6,9 @@
       <picture>
         <img src="{% static 'images/ywfa-logo-full.png' %}" alt="Your Wishes Logo" height="80">
       </picture>
+    </div>
+    <div class="ywfa-cart">
+      {% cart %}
     </div>
   </div>
 
@@ -25,6 +28,7 @@
     {#        </button>#}
     {#      </form>#}
       </div>
+    <!-- shopping cart -->
     </div>
   </nav>
 

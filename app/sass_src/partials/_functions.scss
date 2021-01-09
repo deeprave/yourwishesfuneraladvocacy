@@ -10,6 +10,10 @@
   box-shadow: 0.1em 0.1em 0.5em 0.1em $color-soft;
 }
 
+@mixin drop-shadow {
+  box-shadow: 0.1em 0.1em 0.5em $color-soft;
+}
+
 @mixin rounded-shadowed {
   @include rounded;
   @include shadowed;

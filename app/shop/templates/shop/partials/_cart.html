@@ -1,0 +1,18 @@
+{% load static %}
+{% if cart_available %}
+  <div class="shopping-cart">
+    <a href="{% url 'cart' %}">
+      <img src="{% static 'shop/images/shopping-cart.svg' %}" alt="shopping cart" height="32" width="auto"/>
+    </a><br/>
+    {{ cart.length }} item{{ cart.length|pluralize }}<br/>
+    ${{ cart.total_price }}
+  </div>
+{% elif order_available %}
+  <div class="shopping-order">
+    <a href="{% url 'payment' order.id %}">
+      <img src="{% static 'shop/images/shopping-order.svg' %}" alt="shopping order" height="32" width="auto"/>
+    </a><br/>
+    {{ order.total_items }} item{{ order.total_items|pluralize }}<br/>
+    ${{ order.total_price }} GST ${{ order.tax }}
+  </div>
+{% endif %}
