@@ -8,6 +8,7 @@ node_modules/
 .*_history
 .*cache/
 .env
+.s3cfg
 /studio/
 /static/
 /media/
