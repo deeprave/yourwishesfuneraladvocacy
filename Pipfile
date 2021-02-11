@@ -1,0 +1,32 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+wagtail = "~=2.11"
+asgiref = "~=3.3"
+Django = "~=3.1"
+django-extensions = "~=3.1"
+django-widget-tweaks = "~=1.4"
+django-crispy-forms = "~=1.10"
+psycopg2 = "~=2.8"
+django-redis = "~=4.12"
+django-npm = "~=1.0.0"
+libsass = "~=0.20.1"
+django-sass = "~=1.0.0"
+django-compressor = "~=2.4"
+calmjs = "~=3.4.1"
+csscompressor = "~=0.9.5"
+django-storages = "~=1.10"
+boto3 = "~=1.14"
+wagtailmenus = {editable = true, git = "git://github.com/deeprave/wagtailmenus.git"}
+django-env = {editable = true, git = "git://github.com/apnarm/django-env.git"}
+sentry-sdk = "~=0.19"
+
+[dev-packages]
+pytest = "~=6.2"
+pytest-django = "~=4.1"
+
+[requires]
+python_version = "3.9"
