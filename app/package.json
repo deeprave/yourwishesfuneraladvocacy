@@ -2,11 +2,14 @@
   "name": "yourwishesfuneraladvocacy",
   "version": "1.0.0",
   "repository": "https://github.com/deeprave/yourwishesfuneraladvocacy",
-  "author": "David L Nugent",
+  "author": {
+    "name": "David L Nugent",
+    "email": "davidn@uniquode.io"
+  },
   "license": "MIT",
   "dependencies": {
-    "bootstrap": "~5.0.0-alpha1",
-    "bootstrap-icons": "~1.0.0-alpha5",
+    "bootstrap": "~5.0.0-beta2",
+    "bootstrap-icons": "~1.2.0",
     "popper.js": "^1.16.1",
     "socicon": "^3.0.5"
   }
