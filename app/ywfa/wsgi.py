@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 # WSGI config for ywfa project
-import os
-import dotenv
-
-dotenv.load_dotenv('../.env')
+from os import environ as env
 
 from django.core.wsgi import get_wsgi_application
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ywfa.settings." + os.environ.get("DJANGO_MODE", "dev"))
 
+
+env.setdefault("DJANGO_SETTINGS_MODULE", "ywfa.settings.environ." + env.get("DJANGO_MODE", "dev"))
 application = get_wsgi_application()

@@ -1,18 +1,16 @@
 # noinspection PyUnresolvedReferences
 
-from .base import *
+from ..base import *
+from ..base import env
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
-env = os.environ
-
-
 def _var_is_set(_var: str):
-    return env.get(_var, None)
+    return _var in env
 
 
 def _vars_are_set(*_vars):
-    return all([_var_is_set(_var) for _var in _vars])
+    return all(v in env for v in _vars)
 
 
 DEBUG = False
@@ -34,8 +32,8 @@ ALLOWED_HOSTS = [
 if _vars_are_set('EMAIL_HOST_USER', 'EMAIL_HOST_PASSWORD'):
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_HOST = env.get('EMAIL_HOST', 'smtp.gmail.com')
-    EMAIL_USE_TLS = env.get('EMAIL_USE_TLS', True) not in (False, 0, '0', 'f', 'F', 'false', 'FALSE', 'off', 'disabled')
-    EMAIL_PORT = env.get('EMAIL_PORT', 587)
+    EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', True)
+    EMAIL_PORT = env.int('EMAIL_PORT', 587)
     EMAIL_HOST_USER = env['EMAIL_HOST_USER']
     EMAIL_HOST_PASSWORD = env['EMAIL_HOST_PASSWORD']
 
@@ -43,10 +41,10 @@ if _vars_are_set('EMAIL_HOST_USER', 'EMAIL_HOST_PASSWORD'):
 
 if _vars_are_set('S3_API_KEY', 'S3_API_SECRET', 'S3_API_ENDPOINT', 'S3_API_BUCKET'):
     AWS_STORAGE_BUCKET_NAME = env['S3_API_BUCKET']
+    AWS_S3_ACCESS_KEY_ID = env['S3_API_KEY']
+    AWS_S3_SECRET_ACCESS_KEY = env['S3_API_SECRET']
     AWS_API_ENDPOINT = env['S3_API_ENDPOINT']
     AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.{AWS_API_ENDPOINT}"
-    AWS_ACCESS_KEY_ID = env['S3_API_KEY']
-    AWS_SECRET_ACCESS_KEY = env['S3_API_SECRET']
 
     MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'

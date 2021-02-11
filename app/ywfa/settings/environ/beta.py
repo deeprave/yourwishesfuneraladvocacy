@@ -1,4 +1,4 @@
-from .base import *
+from ..base import *
 from .production import *
 
 # identical to production, except the email backend

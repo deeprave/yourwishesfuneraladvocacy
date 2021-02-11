@@ -153,6 +153,6 @@ class PaymentView(DetailView):
     def get_queryset(self):
         return Order.objects.get(pk=self.order.order_id).select_related('order_items')
 
-    def get(self, request, orderid=None):
+    def get(self, request, orderid=None, *args, **kwargs):
         self.order = CartOrder(request)
         return super().get(request, orderid=orderid)
