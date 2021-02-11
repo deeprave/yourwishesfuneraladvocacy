@@ -1,6 +1,6 @@
 # no version control in these dirs
 .pytest_cache/
-/node_modules
-/shop/tests/logs
-/media
-/static
+/node_modules/
+**/logs/
+/media/
+/staticfiles/
