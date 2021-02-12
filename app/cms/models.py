@@ -58,6 +58,7 @@ class CMSPage(AbstractCMSPage):
         ('cta',             cmsblocks.CallToActionBlock()),
         ('table',           cmsblocks.CustomTableBlock()),
         ('richtext',        cmsblocks.RichTextWithTitleBlock()),
+        ('video',           cmsblocks.VideoBlock()),
         ('testimonial',     cmsblocks.TestimonialChooserBlock(
             help_text='Select testimonial'
         )),

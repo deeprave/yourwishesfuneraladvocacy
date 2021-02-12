@@ -18,7 +18,7 @@
         <h5 class="text-uppercase text-md-center star">Contact</h5>
 
         {% if contact.contact_button_text and contact.contact_button_page %}
-        <div class="text-center">
+        <div class="text-center nowrap">
           <a href="{% pageurl contact.contact_button_page %}" class="btn btn-outline-primary btn-lg contact">
               {{ contact.contact_button_text }}
           </a>
@@ -26,7 +26,7 @@
         {% endif %}
 
         {% if contact.call_button_text and contact.call_button_number %}
-        <div class="text-center">
+        <div class="text-center nowrap">
           <a href="tel:{{ contact.call_button_number }}" class="btn btn-outline-primary btn-lg contact contact-call">
               {{ contact.call_button_text }}
           </a>
@@ -34,7 +34,7 @@
         {% endif %}
 
         {% if contact.book_button_text and contact.book_button_link %}
-        <div class="text-center">
+        <div class="text-center nowrap">
           <a href="{{ contact.book_button_link }}" class="btn btn-outline-primary btn-lg contact contact-book">
               {{ contact.book_button_text }}
           </a>

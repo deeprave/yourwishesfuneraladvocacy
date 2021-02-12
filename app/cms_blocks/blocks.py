@@ -5,6 +5,7 @@ from django.forms.utils import ErrorList
 from wagtail.contrib.table_block.blocks import TableBlock
 from wagtail.core import blocks
 from wagtail.core.blocks import PageChooserBlock
+from wagtail.embeds.blocks import EmbedBlock
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.snippets.blocks import SnippetChooserBlock
 
@@ -20,6 +21,8 @@ __all__ = (
     'TestimonialChooserBlock',
     'LargeImageChooserBlock',
     'NewSectionBlock',
+    'ProductChooserBlock',
+    'VideoBlock',
 )
 
 RICHTEXTBLOCK_FEATURES = [
@@ -174,6 +177,19 @@ class TestimonialChooserBlock(SnippetChooserBlock):
         label = 'Testimonial'
 
 
+class VideoBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=False, blank=True, null=True, max_length=60,
+                             help_text='Max length of 60 characters, optional')
+    video = EmbedBlock()
+    text = blocks.RichTextBlock(required=False, blank=True, features=RICHTEXTBLOCK_FEATURES,
+                                help_text='Call to action text, optional (max=200)')
+
+    class Meta:
+        template = 'blocks/video_block.html'
+        icon = 'media'
+        label = 'Embed Video'
+
+
 class ProductChooserBlock(SnippetChooserBlock):
 
     def __init__(self, **kwargs):
@@ -197,3 +213,5 @@ class NewSectionBlock(blocks.StructBlock):
         template = 'blocks/new_section.html'
         icon = 'horizontalrule'
         label = 'Start new sectiom'
+
+

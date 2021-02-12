@@ -17,6 +17,7 @@ env = Env(exception=ImproperlyConfigured)
 if env.bool('DJANGO_READ_DOT_ENV_FILE', default=False):
     env.read_env(search_path=PROJECT_ROOT, parents=True)
 
+DEBUG = env.bool('DJANGO_DEBUG', False)
 
 # Application definition
 
@@ -91,6 +92,15 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'ywfa.urls'
 
+TEMPLATE_LOADERS = [
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader'
+]
+if not DEBUG:
+    TEMPLATE_LOADERS = [
+        ('django.template.loaders.cached.Loader', TEMPLATE_LOADERS)
+    ]
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -98,12 +108,7 @@ TEMPLATES = [
             DJANGO_ROOT / 'templates',
         ],
         'OPTIONS': {
-            'loaders': [
-                ('django.template.loaders.cached.Loader', [
-                    'django.template.loaders.filesystem.Loader',
-                    'django.template.loaders.app_directories.Loader'
-                ])
-            ],
+            'loaders': TEMPLATE_LOADERS,
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.media',

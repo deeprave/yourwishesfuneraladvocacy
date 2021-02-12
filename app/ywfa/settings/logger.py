@@ -23,7 +23,7 @@ LOGGING = {
     'disable_existing_loggers': True,
     'formatters': {
         'standard': {
-            'format': "[%(asctime)s.%(msecs)03d] %(levelname)-18s %(message)s (%(name)s:%(lineno)s)",
+            'format': "[%(asctime)s.%(msecs)03d] %(levelname)-8s %(message)s (%(name)s:%(lineno)s)",
             'datefmt': "%Y-%m-%d %H:%M:%S"
         },
     },
@@ -52,7 +52,6 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': True,
         },
