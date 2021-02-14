@@ -26,6 +26,9 @@ ALLOWED_HOSTS = [
     'www.yourwishesfuneraladvocacy.com.au',
 ]
 
+TEMPLATE_LOADERS = [
+    ('django.template.loaders.cached.Loader', TEMPLATE_LOADERS)
+]
 
 # email handling
 

@@ -1,7 +1,8 @@
 from django.contrib import admin
+from django.utils.html import format_html
 from wagtail.contrib.modeladmin.options import ModelAdmin, modeladmin_register, ModelAdminGroup
 
-from .models import Category, Product, Order, OrderItem
+from .models import Category, Product, Order, OrderItem, StripePayment
 
 
 @admin.register(Category)
@@ -31,7 +32,15 @@ class AdminOrder(admin.ModelAdmin):
     inlines = (OrderItemInline,)
 
 
-# Register your models here.
+@admin.register(StripePayment)
+class AdminStripePayment(admin.ModelAdmin):
+    list_display = ('id', 'created', 'order_url', 'milestone', 'session_id')
+
+    def order_url(self, obj):
+        order = obj.order
+        return format_html(f'<a href="{order.get_absolute_url()}" alt="{order}">{order}</a>')
+
+
 class ProductCategoryAdmin(ModelAdmin):
     model = Category
     menu_label = 'Categories'
@@ -62,15 +71,33 @@ class OrdersAdmin(ModelAdmin):
     menu_order = 3
     add_to_settings_menu = False
     exclude_from_explorer = True
-    list_display = ('id', 'created', 'status', 'paid', 'name', 'email', 'total_items', 'total_price')
+    list_display = ('id', 'created', 'url', 'status', 'paid', 'name', 'email', 'total_items', 'total_price')
     search_fields = ('first_name', 'last_name', 'email')
+
+    def url(self, order):
+        return format_html(f'<a href="{order.get_absolute_url()}" alt="{order}">{order}</a>')
+
+class StripePaymentAdmin(ModelAdmin):
+    model = StripePayment
+    menu_label = 'Payments'
+    menu_icon = 'success'
+    menu_order = 4
+    add_to_settings_menu = False
+    exclude_from_explorer = True
+    list_display = ('id', 'created', 'order_url', 'action', 'session_id')
+    search_fields = ('dt_created', 'milestone', 'order__id')
+
+    def order_url(self, obj):
+        order = obj.order
+        return format_html(f'<a href="{order.get_absolute_url()}" alt="{order}">{order}</a>')
 
 
 class ShopGroup(ModelAdminGroup):
     menu_label = 'Shop'
     menu_icon = 'pick'
     menu_order = 500
-    items = (ProductCategoryAdmin, ProductsAdmin, OrdersAdmin)
+    items = (ProductCategoryAdmin, ProductsAdmin, OrdersAdmin, StripePaymentAdmin)
 
 
 modeladmin_register(ShopGroup)
+

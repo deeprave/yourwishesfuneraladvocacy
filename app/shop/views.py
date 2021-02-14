@@ -1,14 +1,20 @@
+from decimal import Decimal
+from http import HTTPStatus
+from urllib.parse import urlunparse
+
 from django.conf import settings
 from django.contrib import messages
+from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
 from django.views.decorators.http import require_POST
-from django.views.generic import ListView, DetailView, TemplateView, FormView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, TemplateView, CreateView
 
-from .cart import Cart, CartOrder
+import stripe
+
+from .cart import Cart
 from .forms import CartItemForm, OrderForm
-from .models import Product, Category, Order
-
+from .models import Product, Category, Order, OrderStatus, StripePayment, Action
 
 __all__ = (
     'ProductListView',
@@ -17,6 +23,8 @@ __all__ = (
     'cart_removeitem',
     'cart_clear'
 )
+
+from .utils import get_current_url
 
 
 class CategoryMixin:
@@ -132,27 +140,123 @@ class OrderView(CreateView):
 
     def get_success_url(self):
         messages.info(self.request, 'Your order has been successfully created.')
-        cart = Cart(self.request)
-        cart.clear()
+        self.cart.clear()
         return reverse('payment', args=(self.object.id,))
 
-    def get(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         self.cart = Cart(request)
-        return super().get(request, *args, **kwargs)
+        super().dispatch(request, *args, **kwargs)
 
-    def post(self, request, *args, **kwargs):
-        self.cart = Cart(request)
-        return super().post(request, *args, **kwargs)
+
+class OrderDetailView(DetailView):
+    template_name = 'shop/order_detail.html'
+    model = Order
+    context_object_name = 'order'
+    pk_url_kwarg = 'orderid'
 
 
 class PaymentView(DetailView):
     template_name = 'shop/payment.html'
-    context_object_name = 'order'
     model = Order
+    context_object_name = 'order'
+    pk_url_kwarg = 'orderid'
 
-    def get_queryset(self):
-        return Order.objects.get(pk=self.order.order_id).select_related('order_items')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['stripe_public_key'] = settings.STRIPE_PUBLIC_KEY
+        return context
 
     def get(self, request, orderid=None, *args, **kwargs):
-        self.order = CartOrder(request)
-        return super().get(request, orderid=orderid)
+        return super().get(request, *args, **kwargs)
+
+
+class StripeSuccessView(TemplateView):
+    template_name = 'shop/stripe_success.html'
+
+    def get(self, request, order_id, session_id, *args, **kwargs):
+        try:
+            order: Order = Order.objects.get(pk=order_id)
+            if not order.paid_or_cancelled:
+                order.set_status(OrderStatus.PAYMENT_PROCESSING)
+                StripePayment.record_action(order, session_id, Action.ACCEPTED)
+        except Order.DoesNotExist:
+            pass    # ignore
+        return super().get(request, *args, **kwargs)
+
+class StripeCancelView(TemplateView):
+    template_name = 'shop/stripe_cancelled.html'
+
+    def get(self, request, order_id, session_id, *args, **kwargs):
+        try:
+            order: Order = Order.objects.get(pk=order_id)
+            if not order.paid_or_cancelled:
+                order.set_status(OrderStatus.CANCELED)
+                StripePayment.record_action(order, session_id, Action.CANCELLED)
+        except Order.DoesNotExist:
+            pass    # ignore
+        return super().get(request, *args, **kwargs)
+
+
+CURRENCY = 'aud'
+APPLICATION_PROBLEM_JSON = 'application/problem+json'
+
+
+def stripe_callback_url(request, responsetype, order_id):
+    url = get_current_url(request)
+    url[2] = reverse(responsetype, args=(order_id, '{CHECKOUT_SESSION_ID}',))
+    return urlunparse(url).replace('%7B', '{').replace('%7D', '}')      # remove urlencoding
+
+
+def stripe_session(request):
+    """ajax handler"""
+    if request.method == 'POST':
+        # default return
+        try:
+            orderid, amount = int(request.POST['orderid']), str(request.POST['order_amount'])
+            order :Order = Order.objects.get(pk=orderid)
+            if Decimal(order.total_price) == Decimal(amount):
+                """
+                seems in order, create a checkout session
+                """
+                line_items = [
+                    dict(name=item.product.title, quantity=item.quantity, amount=int(item.price*100), currency=CURRENCY)
+                    for item in order.items.all()
+                ]
+                if order.shipping:
+                    line_items.append(dict(name='Shipping and handling', quantity=1,
+                                           amount=int(order.shipping*100), currency=CURRENCY))
+                if order.tax:
+                    line_items.append(dict(name='GST', quantity=1,
+                                           amount=int(order.tax*100), currency=CURRENCY))
+                stripe.api_key = settings.STRIPE_PRIVATE_KEY
+                checkout_session = stripe.checkout.Session.create(
+                    success_url = stripe_callback_url(request, 'stripe-success', orderid),
+                    cancel_url = stripe_callback_url(request, 'stripe-cancel', orderid),
+                    payment_method_types = ['card'],
+                    mode = 'payment',
+                    line_items = line_items
+                )
+                order.set_status(OrderStatus.PAYMENT_ACCEPT)
+                StripePayment.record_action(order, checkout_session['id'], Action.CREATED, session_data=checkout_session)
+                return JsonResponse({
+                    'status': 'true',
+                    'sessionId': checkout_session['id']
+                })
+
+        except (Order.DoesNotExist, KeyError):
+            pass
+        return JsonResponse({
+                'status': ''
+                          'false',
+                'message': 'invalid or obsolete information provided'
+            },
+            status=HTTPStatus.BAD_REQUEST,
+            content_type=APPLICATION_PROBLEM_JSON,
+        )
+    return JsonResponse({
+            'status': 'false',
+            'message': f'unsupported method {request.method}'
+        },
+        status=HTTPStatus.METHOD_NOT_ALLOWED,
+        content_type=APPLICATION_PROBLEM_JSON,
+    )

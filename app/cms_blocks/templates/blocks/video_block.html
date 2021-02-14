@@ -1,7 +1,7 @@
 {% load embedurl wagtailcore_tags wagtailembeds_tags %}
 
   <div class="row">
-    <div class="col-md-10 offset-md-1">
+    <div class="col-sm-12 col-md-10 offset-md-1">
       <div class="embed-responsive embed-responsive-16by9">
         <!-- {{ value.video.url }} -->
         <iframe class="embed-responsive-item" src="{{ value.video.url|embedurl }}" allowfullscreen></iframe>

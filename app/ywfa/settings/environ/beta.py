@@ -15,7 +15,6 @@ ALLOWED_HOSTS = [
     'beta.yourwishesfuneraladvocacy.com.au',
 ]
 
-try:
-    from .local import *
-except ImportError:
-    pass
+TEMPLATE_LOADERS = [
+    ('django.template.loaders.cached.Loader', TEMPLATE_LOADERS)
+]

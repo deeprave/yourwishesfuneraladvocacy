@@ -23,6 +23,7 @@ boto3 = "~=1.14"
 wagtailmenus = {editable = true, git = "git://github.com/deeprave/wagtailmenus.git"}
 django-env = {editable = true, git = "git://github.com/apnarm/django-env.git"}
 sentry-sdk = "~=0.19"
+stripe = "~=2.55"
 
 [dev-packages]
 pytest = "~=6.2"

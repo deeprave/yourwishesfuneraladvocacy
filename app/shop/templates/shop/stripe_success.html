@@ -1,0 +1,22 @@
+{% extends 'cms/base.html' %}
+{% load static %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-sm-12 col-md-10 offset-md-1">
+      <row class="text-center mb-4 mt-4">
+        <div>
+          <h3>Transaction successful</h3>
+          <p>Thank you for your order and payment!</p>
+          <p>Should a physical delivery be required, will will be in touch when your order is processed</p>
+        </div>
+        <div class="center-block mb-4">
+          <button type="link" class="btn btn-outline-primary btn-lg rounded-lg shadow-lg">
+              <a href="{% url 'products' %}" alt="products home"> Return Home </a>
+          </button>
+        </div>
+      </row>
+    </div>
+  </div>
+
+{% endblock content %}

@@ -1,4 +1,9 @@
+# -*- coding: utf-8 -*-
 import re
+from datetime import timedelta, datetime
+from dateutil.tz import tzlocal
+from typing import Union
+
 from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
 from django.core.validators import RegexValidator
@@ -10,6 +15,8 @@ from wagtail.admin.edit_handlers import FieldPanel
 from wagtail.contrib.settings.models import BaseSetting
 from wagtail.contrib.settings.registry import register_setting
 from wagtail.snippets.models import register_snippet
+
+from shop.utils import convert_to_str
 
 
 class Category(models.Model):
@@ -51,13 +58,13 @@ class Product(models.Model):
     shipping = models.BooleanField(default=True, help_text='Is there a shipping charge for this product?')
 
     def created(self):
-        return self.dt_created
+        return self.dt_created.replace(microsecond=0, tzinfo=tzlocal()).isoformat(sep=' ')
 
     def updated(self):
-        return self.dt_updated
+        return self.dt_updated.replace(microsecond=0, tzinfo=tzlocal()).isoformat(sep=' ')
 
     def get_absolute_url(self):
-        return reverse('product-detail', args=[self.slug])
+        return reverse('product-detail', args=(self.slug,))
 
     def save(self, *args, **kwargs):
         self.code = self.code.upper()
@@ -76,11 +83,14 @@ register_snippet(Product)
 
 class OrderStatus(models.IntegerChoices):
     UNKNOWN = -2, _('Unknown')
-    CANCELED = -1, _('Canceled')
-    NEW = 0, _('New')
-    PROCESSING = 1, _('Processing')
-    DISPATCHED = 2, _('Dispatched')
-    COMPLETED = 3, _('Completed')
+    CANCELED = -1, _('Cancelled')
+    NEW_ORDER = 0, _('New Order')
+    READY = 1, _('Ready for Payment')
+    PAYMENT_ACCEPT = 2, _('Accepting Payment')
+    PAYMENT_PROCESSING = 3, _('Processing Payment')
+    PAYMENT_COMPLETE = 4, _('Payment Completed')
+    DISPATCHED = 5, _('Dispatched')
+    COMPLETED = 6, _('Completed')
 
     @classmethod
     def value_of(cls, v: int):
@@ -91,6 +101,9 @@ class OrderStatus(models.IntegerChoices):
 
 
 class Order(models.Model):
+
+    TIMEOUT_PROCESSING = timedelta(minutes=5)
+    TIMEOUT_PAYMENT = timedelta(hours=1)
 
     dt_created = models.DateTimeField(auto_now_add=True)
     dt_updated = models.DateTimeField(auto_now=True)
@@ -103,13 +116,16 @@ class Order(models.Model):
     city = models.CharField(_('City'), max_length=100)
     postal_code = models.CharField(_('Postal Code'), max_length=20)
 
-    order_status = models.IntegerField(choices=OrderStatus.choices, default=OrderStatus.NEW)
+    order_status = models.IntegerField(choices=OrderStatus.choices, default=OrderStatus.NEW_ORDER)
     paid_status = models.BooleanField(default=False)
 
     # total_price includes both of the following components
     shipping = models.DecimalField(max_digits=10, decimal_places=2)
     tax = models.DecimalField(max_digits=10, decimal_places=2)
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def get_absolute_url(self):
+        return reverse('order-detail', args=(self.id,))
 
     def __str__(self):
         return f'Order #{self.id}'
@@ -124,13 +140,37 @@ class Order(models.Model):
 
     @property
     def status(self):
-        return f'{OrderStatus.value_of(self.order_status).label}'
+        return f'{OrderStatus.value_of(self.get_status()).label}'
+
+    @property
+    def can_accept_payment(self):
+        return self.get_status() in (OrderStatus.NEW_ORDER, OrderStatus.READY)
+
+    @property
+    def paid_or_cancelled(self):
+        return self.get_status() in (OrderStatus.PAYMENT_PROCESSING, OrderStatus.PAYMENT_COMPLETE, OrderStatus.CANCELED)
 
     def created(self):
-        return self.dt_created
+        return self.dt_created.replace(microsecond=0, tzinfo=tzlocal()).isoformat(sep=' ')
 
     def updated(self):
-        return self.dt_updated
+        return self.dt_updated.replace(microsecond=0, tzinfo=tzlocal()).isoformat(sep=' ')
+
+    def get_status(self):
+        # fix up some timeod out
+        now = datetime.now(tz=tzlocal())
+        if self.order_status == OrderStatus.PAYMENT_ACCEPT:
+            # accept payment timeout ... reset order
+            expires_at = self.dt_updated + self.TIMEOUT_PROCESSING
+            if now > expires_at:
+                self.set_status(OrderStatus.READY, timestamp=now)
+        return self.order_status
+
+    def set_status(self, status: OrderStatus, timestamp: Union[None, datetime]=None):
+        updated_at = timestamp if timestamp else datetime.now(tz=tzlocal())
+        self.dt_updated = updated_at
+        self.order_status = status
+        self.save()
 
     @property
     def total_items(self):
@@ -149,11 +189,14 @@ class Order(models.Model):
         # create the items
         if creating and cart:
             for item in cart:
-                OrderItem.objects.create(order=self, product=item['product'],
-                                         price=item['price'], quantity=item['quantity'])
+                product = item['product']
+                price = item['price']
+                quantity = int(item['quantity'])
+                OrderItem.objects.create(order=self, product=product, price=price, quantity=quantity)
 
     class Meta:
         ordering = ('id',)
+
 
 
 class OrderItem(models.Model):
@@ -171,6 +214,54 @@ class OrderItem(models.Model):
 
     class Meta:
         ordering = ('-order', 'id',)
+
+
+class Action(models.IntegerChoices):
+    UNKNOWN = -1, ('unknown')
+    CREATED = 0, _('created')
+    ACCEPTED = 1, _('accepted')
+    CANCELLED = 2, _('cancelled')
+    CONFIRMED = 3, _('confirmed')
+
+    @classmethod
+    def value_of(cls, v: int):
+        for s in cls:
+            if s.value == v:
+                return s
+        return cls.UNKNOWN
+
+
+class StripePayment(models.Model):
+    """
+    This is a simple log of stripe payment transactions
+    """
+    dt_created = models.DateTimeField(editable=False, auto_now_add=True,
+                                      help_text='date and time created')
+    order = models.ForeignKey(Order, related_name='payments', on_delete=models.CASCADE, help_text='Related order')
+    amount = models.DecimalField(max_digits=10, decimal_places=2, help_text='Total amount paid')
+    session_id = models.TextField(help_text='Transaction session id')
+    milestone = models.IntegerField(choices=Action.choices, help_text='Action for this esssion')
+    session_data = models.TextField(blank=True, null=True, help_text='Verbose session data')
+
+    @classmethod
+    def record_action(self, order, session_id, milestone: Action, amount=None, session_data=None):
+        session_data = convert_to_str(session_data)
+        return StripePayment.objects.create(order=order, session_id=session_id,
+                                            amount=amount or order.total_price,
+                                            milestone=milestone, session_data=session_data)
+
+    @property
+    def action(self):
+        return Action.value_of(self.milestone).label
+
+    def created(self):
+        return self.dt_created.replace(microsecond=0, tzinfo=tzlocal()).isoformat(sep=' ')
+
+    def __str__(self):
+        return f"Payment {self.created} {self.record_action}"
+
+    class Meta:
+        ordering = ('-dt_created', 'milestone')
 
 
 @register_setting

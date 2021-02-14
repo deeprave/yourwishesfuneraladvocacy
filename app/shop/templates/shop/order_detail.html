@@ -4,7 +4,10 @@
 {% block content %}
   <div class="row cart">
     <div class="col-sm-12 col-md-10 offset-md-1">
-      <h3 class="text-center">Ordered Items</h3>
+      <h3 class="text-center">Order #{{ order.id }}</h3>
+      <div class="bg-warning px-1">
+        <p>{{ order.status }}, {{ order.paid }}</p>
+      </div>
       <table class="table table-secondary shadow-lg" width="100%">
         <thead>
           <tr class="table-dark">
@@ -13,36 +16,26 @@
             <th class="text-right">Quantity</th>
             <th class="text-right">Unit Price AUD</th>
             <th class="text-right">Price AUD</th>
-            <td></td>
           </tr>
         </thead>
         <tbody>
-        {% for item in cart %}
+        {% for item in order.items.all %}
           <tr>
             <td class="nowrap">{{ item.product.code }}</td>
             <td>{{ item.product.title }}</td>
             <td class="text-right">{{ item.quantity }}</td>
             <td class="text-right">{{ item.product.price|floatformat:2 }}</td>
             <td class="text-right">{{ item.total_price|floatformat:2 }}</td>
-            <td>
-              <form action="{% url 'cart-remove' %}" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="product_code" value="{{ item.product.code }}" />
-                <input type="hidden" name="product_quantity" value="{{ item.quantity }}" />
-                <input type="image" src="{% static 'shop/images/trash.svg'%}"
-                       class="btn-trash" title="Remove Item" aria-title="Remove" />
-              </form>
-            </td>
           </tr>
         {% empty %}
           <tr>
-            <td colspan="6">&nbsp;</td>
+            <td colspan="5">&nbsp;</td>
           </tr>
           <tr>
-            <td colspan="6" class="text-center">There are no items in your cart.</td>
+            <td colspan="5" class="text-center">There are no items in this order.</td>
           </tr>
           <tr>
-            <td colspan="6">&nbsp;</td>
+            <td colspan="5">&nbsp;</td>
           </tr>
         {% endfor %}
           {% if cart.shipping %}
@@ -50,15 +43,13 @@
             <td></td>
             <td>Shipping &amp; Handling</td>
             <td colspan="2"></td>
-            <td class="text-right">{{ cart.shipping_price|floatformat:2 }}</td>
-            <td></td>
+            <td class="text-right">{{ order.shipping|floatformat:2 }}</td>
           </tr>
           {% endif %}
           <tr class="table-dark">
             <td colspan="3"></td>
             <td class="text-right"><strong>Total</strong></td>
-            <td class="text-right"><strong>{{ cart.total_price|floatformat:2 }}</strong></td>
-            <td></td>
+            <td class="text-right"><strong>{{ order.total_price|floatformat:2 }}</strong></td>
           </tr>
         </tbody>
       </table>
@@ -66,18 +57,19 @@
 
     <div class="col-sm-12 col-md-10 offset-md-1 mb-2">
       <h2 class="text-center">Order Details</h2>
-      <form method="post">
-      <div class="row">
-    {% if cart.length > 0 %}
-        {% crispy form %}
+      <div class="bg-light">
+        <div class="row">
+          <div class="sm-5 col-md-2 text-right font-weight-bold">Name</div><div class="sm-6 col-md-3">{{ order.first_name }} {{ order.last_name }}</div>
+          <div class="sm-5 col-md-2 text-right font-weight-bold">Email</div><div class="sm-6 col-md-3">{{ order.email }}</div>
+        </div>
+        <div class="row">
+          <div class="sm-5 col-md-2 text-right font-weight-bold">Address</div><div class="sm-6 col-md-3">{{ order.address }}</div>
+        </div>
+        <div class="row">
+          <div class="sm-5 col-md-2 text-right font-weight-bold">City</div><div class="sm-6 col-md-3">{{ order.city }}</div>
+          <div class="sm-5 col-md-2 text-right font-weight-bold">Post Code</div><div class="sm-6 col-md-3">{{ order.postal_code }}</div>
+        </div>
       </div>
-    {% else %}
-        <button type="submit" class="btn btn-dark btn-lg rounded-lg shadow-lg disabled">
-          Confirm
-        </button>
-      </div>
-    {% endif %}
-      </form>
     </div>
   </div>
 

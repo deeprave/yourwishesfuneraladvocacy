@@ -1,0 +1,21 @@
+{% extends 'cms/base.html' %}
+{% load static %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-sm-12 col-md-10 offset-md-1">
+      <row class="text-center mb-4 mt-4">
+        <div>
+          <h3>Transaction cancelled</h3>
+          <p>Your transaction was cancelled or payment was refused by our online payment provider.
+          If we were the cause of this problem, we sincerely apologise.</p>
+        </div>
+        <div class="center-block mb-4">
+          <button type="link" class="btn btn-outline-primary btn-lg rounded-lg shadow-lg">
+              <a href="{% url 'products' %}" alt="products home"> Return Home </a>
+          </button>
+        </div>
+    </div>
+  </div>
+
+{% endblock content %}
