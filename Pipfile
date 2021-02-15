@@ -24,6 +24,10 @@ wagtailmenus = {editable = true, git = "git://github.com/deeprave/wagtailmenus.g
 django-env = {editable = true, git = "git://github.com/apnarm/django-env.git"}
 sentry-sdk = "~=0.19"
 stripe = "~=2.55"
+whitenoise = "~=5.2"
+brotli = "~=1.0"
+
+# web server
 gunicorn = "*"
 
 [dev-packages]
