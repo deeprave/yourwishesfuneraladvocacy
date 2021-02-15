@@ -4,6 +4,7 @@ Django settings for ywfa project.
 from pathlib import Path
 from django.contrib import messages
 from django.core.exceptions import ImproperlyConfigured
+# noinspection PyPackageRequirements
 from django_env import Env
 
 # noinspection PyUnresolvedReferences
@@ -18,6 +19,7 @@ if env.bool('DJANGO_READ_DOT_ENV_FILE', default=False):
     env.read_env(search_path=PROJECT_ROOT, parents=True)
 
 DEBUG = env.bool('DJANGO_DEBUG', False)
+SECRET_KEY = env['DJANGO_SECRET_KEY']
 
 # Application definition
 
