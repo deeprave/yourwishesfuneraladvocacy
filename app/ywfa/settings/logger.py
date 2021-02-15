@@ -20,7 +20,7 @@ def _mb(val: int):
 
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': True,
+    'disable_existing_loggers': False,
     'formatters': {
         'standard': {
             'format': "[%(asctime)s.%(msecs)03d] %(levelname)-8s %(message)s (%(name)s:%(lineno)s)",
