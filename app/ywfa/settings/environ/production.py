@@ -52,6 +52,10 @@ if _vars_are_set('S3_API_KEY', 'S3_API_SECRET', 'S3_API_ENDPOINT', 'S3_API_BUCKE
     MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
+    import logging
+    for var in ('AWS_S3_ACCESS_KEY_ID', 'AWS_S3_SECRET_ACCESS_KEY', 'AWS_S3_CUSTOM_DOMAIN'):
+        logging.info(f'{var}={vars()[var]}')
+
 BASE_URL = 'https://yourwishesfuneraladvocacy.com.au'
 
 # alerts & monitoring
