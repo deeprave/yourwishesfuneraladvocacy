@@ -11,4 +11,4 @@ node_modules/
 .s3cfg
 /studio/
 /backups/
-/staticfiles/
+/static/

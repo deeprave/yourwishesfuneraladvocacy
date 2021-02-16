@@ -7,10 +7,12 @@ from django.contrib import messages
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView, DetailView, TemplateView, CreateView
 
 import stripe
+from stripe.error import SignatureVerificationError
 
 from .cart import Cart
 from .forms import CartItemForm, OrderForm
@@ -260,3 +262,36 @@ def stripe_session(request):
         status=HTTPStatus.METHOD_NOT_ALLOWED,
         content_type=APPLICATION_PROBLEM_JSON,
     )
+
+
+@csrf_exempt
+def stripe_webhook(request):
+    stripe.api_key = settings.STRIPE_PRIVATE_KEY
+    endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
+    payload = request.body
+    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+    event = None
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, endpoint_secret
+        )
+    except ValueError as e:
+        # Invalid payload
+        return JsonResponse({
+            'status': 'false',
+            'message': f'{e}'
+        }, status=HTTPStatus.BAD_REQUEST)
+    except SignatureVerificationError as e:
+        # Invalid signature
+        return JsonResponse({
+            'status': 'false',
+            'message': f'{e}'
+         }, status=HTTPStatus.NOT_ACCEPTABLE)
+
+    # Handle the checkout.session.completed event
+    if event['type'] == 'checkout.session.completed':
+        print("Payment was successful.")
+        # TODO: run some custom code here
+
+    return JsonResponse(status=200)

@@ -84,7 +84,6 @@ INSTALLED_APPS = LOCAL_APPS + \
 
 MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -182,17 +181,14 @@ SESSION_CACHE_ALIAS = 'default'
 
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 STATICFILES_FINDERS = [
-    'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'npm.finders.NpmFinder',
     'compressor.finders.CompressorFinder',
 ]
-STATICFILES_DIRS = [
-    DJANGO_ROOT / 'static',
-]
-STATIC_ROOT = DJANGO_ROOT / 'staticfiles'
+
+STATIC_ROOT = DJANGO_ROOT / 'static'
 STATIC_URL = '/static/'
 MEDIA_ROOT = DJANGO_ROOT / 'media'
 MEDIA_URL = '/media/'
