@@ -52,6 +52,8 @@ if _vars_are_set('S3_API_KEY', 'S3_API_SECRET', 'S3_API_ENDPOINT', 'S3_API_BUCKE
     MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
+BASE_URL = 'https://yourwishesfuneraladvocacy.com.au'
+
 # alerts & monitoring
 
 sentry_sdk.init(

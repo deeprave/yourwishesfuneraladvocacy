@@ -12,8 +12,13 @@ ALLOWED_HOSTS = [
     '::1',
     '172.105.169.83',
     'beta.ywfa.com.au',
+    'ywfa.com.au',
     'beta.yourwishesfuneraladvocacy.com.au',
+    'yourwishesfuneraladvocacy.com.au',
 ]
+
+BASE_URL = 'https://beta.yourwishesfuneraladvocacy.com.au'
+
 
 TEMPLATE_LOADERS = [
     ('django.template.loaders.cached.Loader', TEMPLATE_LOADERS)
