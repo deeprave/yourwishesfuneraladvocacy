@@ -25,7 +25,7 @@ services:
         STRIPE_PUBLIC_KEY: ${STRIPE_PUBLIC_KEY}
         STRIPE_PRIVATE_KEY: ${STRIPE_PRIVATE_KEY}
     volumes:
-      - ${PWD}/staticfiles:${APP_ROOT}/${APP_NAME}/staticfiles
+      - ${PWD}/static:${APP_ROOT}/${APP_NAME}/static
       - ${PWD}/media:${APP_ROOT}/${APP_NAME}/media
       - ${PWD}/logs:${APP_ROOT}/${APP_NAME}/logs
     expose:

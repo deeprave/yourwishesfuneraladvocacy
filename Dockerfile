@@ -97,7 +97,7 @@ ENV DJANGO_USER=${DJANGO_USER} DJANGO_LOGDIR=${APP_ROOT}/logs/${APP_NAME} DJANGO
 
 WORKDIR ${DJANGO_ROOT}/
 COPY ${APP_DIR}/ ${DJANGO_ROOT}/
-RUN mkdir -p ${DJANGO_ROOT}/staticfiles ${DJANGO_ROOT}/media ${DJANGO_ROOT}/logs
+RUN mkdir -p ${DJANGO_ROOT}/static ${DJANGO_ROOT}/media ${DJANGO_ROOT}/logs
 RUN find ${DJANGO_ROOT} -name '.DS_Store' -o -name '__pycache__' -o -name '*.py[cod]' -exec rm -rf {} +
 RUN chown -R ${DJANGO_USER}:${DJANGO_USER} ${DJANGO_ROOT}
 
@@ -120,7 +120,7 @@ COPY startapp.sh /
 USER ${DJANGO_USER}
 
 # export these volumes
-VOLUME ["${DJANGO_ROOT}", "${DJANGO_ROOT}/logs", "${DJANGO_ROOT}/media", "${DJANGO_ROOT}/staticfiles"]
+VOLUME ["${DJANGO_ROOT}", "${DJANGO_ROOT}/logs", "${DJANGO_ROOT}/media", "${DJANGO_ROOT}/static"]
 
 EXPOSE 8000
 
