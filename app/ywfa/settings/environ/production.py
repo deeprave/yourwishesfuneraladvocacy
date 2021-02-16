@@ -47,7 +47,7 @@ if env.is_all_set('AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY', 'AWS_STORAGE_BUC
 
     import logging
     for var in ('AWS_S3_ACCESS_KEY_ID', 'AWS_S3_SECRET_ACCESS_KEY', 'AWS_S3_CUSTOM_DOMAIN'):
-        logging.warning(f'{var}={vars()[var]}')
+        logging.warning(f'{var}={globals()[var]}')
 
 BASE_URL = 'https://yourwishesfuneraladvocacy.com.au'
 
