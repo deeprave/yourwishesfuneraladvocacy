@@ -25,6 +25,7 @@ services:
         S3_BUCKET_NAME: ${S3_BUCKET_NAME}
         STRIPE_PUBLIC_KEY: ${STRIPE_PUBLIC_KEY}
         STRIPE_PRIVATE_KEY: ${STRIPE_PRIVATE_KEY}
+        STRIPE_SIGNING_KEY: ${STRIPE_SIGNING_KEY}
     volumes:
       - ${PWD}/static:${APP_ROOT}/${APP_NAME}/static
       - ${PWD}/media:${APP_ROOT}/${APP_NAME}/media
