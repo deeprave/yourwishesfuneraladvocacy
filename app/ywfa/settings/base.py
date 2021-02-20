@@ -123,6 +123,8 @@ TEMPLATES = [
     },
 ]
 
+
+
 WSGI_APPLICATION = 'ywfa.wsgi.application'
 
 DATABASES = {
@@ -203,9 +205,9 @@ NPM_FILE_PATTERNS = {
         'bootstrap-icons.svg',
         'icons/*',
     ],
-    'popper.js': [
-        'dist/umd/popper.js',
-        'dist/umd/popper.js.map',
+    '@popperjs': [
+        'core/dist/umd/popper.js',
+        'core/dist/umd/popper.js.map',
     ],
     'bootstrap': [
         'dist/js/bootstrap.js',
@@ -235,3 +237,17 @@ ORDER_SESSION_ID = '_ywfa_order'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 STRIPE_PUBLIC_KEY = env['STRIPE_PUBLIC_KEY']
 STRIPE_PRIVATE_KEY = env['STRIPE_PRIVATE_KEY']
+
+
+# media files handling
+
+if env.is_all_set('AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY', 'AWS_STORAGE_BUCKET_NAME', 'AWS_API_ENDPOINT'):
+    AWS_ACCESS_KEY_ID = env['AWS_ACCESS_KEY_ID']
+    AWS_SECRET_ACCESS_KEY = env['AWS_SECRET_ACCESS_KEY']
+    AWS_STORAGE_BUCKET_NAME = env['AWS_STORAGE_BUCKET_NAME']
+    AWS_API_ENDPOINT = env['AWS_API_ENDPOINT']
+    AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.{AWS_API_ENDPOINT}"
+
+    MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+

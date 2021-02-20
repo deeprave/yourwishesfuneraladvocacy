@@ -26,9 +26,9 @@ sentry-sdk = "~=0.19"
 stripe = "~=2.55"
 whitenoise = "~=5.2"
 brotli = "~=1.0"
-
 # web server
 gunicorn = "*"
+django-debug-toolbar = "~=3.2"
 
 [dev-packages]
 pytest = "~=6.2"

@@ -270,9 +270,9 @@ def stripe_webhook(request):
     endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
     payload = request.body
     sig_header = request.META['HTTP_STRIPE_SIGNATURE']
-    event = None
 
     try:
+        # Check the received data including signature
         event = stripe.Webhook.construct_event(
             payload, sig_header, endpoint_secret
         )
