@@ -14,8 +14,9 @@ urlpatterns = [
     path('cart/order/', views.create_order, name='create-order'),
     path('category/<slug:slug>/', views.ProductListView.as_view(), name='product-category'),
     path('<slug:slug>/', views.ProductDetailView.as_view(), name='product-detail'),
-    path('strip-create-session', views.stripe_session, name='stripe-session'),
-    path('strip-success/<int:order_id>/<str:session_id>/', views.StripeSuccessView.as_view(), name='stripe-success'),
-    path('strip-cancelled/<int:order_id>/<str:session_id>/', views.StripeCancelView.as_view(), name='stripe-cancel'),
+    path('stripe-create-session', views.stripe_session, name='stripe-session'),
+    path('stripe-success/<int:order_id>/<str:session_id>/', views.StripeSuccessView.as_view(), name='stripe-success'),
+    path('stripe-cancelled/<int:order_id>/<str:session_id>/', views.StripeCancelView.as_view(), name='stripe-cancel'),
+    path('stripe-notify/', views.stripe_webhook, name='stripe-webook'),
     path('', views.ProductListView.as_view(), name='products'),
 ]

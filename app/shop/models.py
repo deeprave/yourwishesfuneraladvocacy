@@ -83,7 +83,7 @@ register_snippet(Product)
 
 class OrderStatus(models.IntegerChoices):
     UNKNOWN = -2, _('Unknown')
-    CANCELED = -1, _('Cancelled')
+    CANCELLED = -1, _('Cancelled')
     NEW_ORDER = 0, _('New Order')
     READY = 1, _('Ready for Payment')
     PAYMENT_ACCEPT = 2, _('Accepting Payment')
@@ -148,7 +148,7 @@ class Order(models.Model):
 
     @property
     def paid_or_cancelled(self):
-        return self.get_status() in (OrderStatus.PAYMENT_PROCESSING, OrderStatus.PAYMENT_COMPLETE, OrderStatus.CANCELED)
+        return self.get_status() in (OrderStatus.PAYMENT_PROCESSING, OrderStatus.PAYMENT_COMPLETE, OrderStatus.CANCELLED)
 
     def created(self):
         return self.dt_created.replace(microsecond=0, tzinfo=tzlocal()).isoformat(sep=' ')

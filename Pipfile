@@ -4,35 +4,43 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+# wagtail
 wagtail = "~=2.11"
-asgiref = "~=3.3"
+wagtailmenus = "~=3.0"
+# django base
 Django = "~=3.1"
+asgiref = "~=3.3"
+brotli = "~=1.0"
+# django extras
+django-env = {git = "https://github.com/davidn-news/django-env.git"}
 django-extensions = "~=3.1"
 django-widget-tweaks = "~=1.4"
 django-crispy-forms = "~=1.10"
+stripe = "~=2.55"
+sentry-sdk = "~=0.19"
+# storages
+django-storages = "~=1.11"
+boto3 = "~=1.17"
+# db
 psycopg2 = "~=2.8"
+# cache
 django-redis = "~=4.12"
+# frontend
 django-npm = "~=1.0.0"
 libsass = "~=0.20.1"
 django-sass = "~=1.0.0"
 django-compressor = "~=2.4"
 calmjs = "~=3.4.1"
 csscompressor = "~=0.9.5"
-django-storages = "~=1.10"
-boto3 = "~=1.14"
-wagtailmenus = {editable = true, git = "git://github.com/deeprave/wagtailmenus.git"}
-django-env = {editable = true, git = "git://github.com/apnarm/django-env.git"}
-sentry-sdk = "~=0.19"
-stripe = "~=2.55"
-whitenoise = "~=5.2"
-brotli = "~=1.0"
+# general
+python-dateutil = "~=2.8"
 # web server
 gunicorn = "*"
-django-debug-toolbar = "~=3.2"
 
 [dev-packages]
 pytest = "~=6.2"
 pytest-django = "~=4.1"
+django-debug-toolbar = "~=3.2"
 
 [requires]
 python_version = "3.9"

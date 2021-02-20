@@ -4,7 +4,7 @@ from urllib.parse import urlunparse
 
 from django.conf import settings
 from django.contrib import messages
-from django.http import HttpRequest, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
@@ -146,6 +146,7 @@ class OrderView(CreateView):
         return reverse('payment', args=(self.object.id,))
 
     def dispatch(self, request, *args, **kwargs):
+        # noinspection PyAttributeOutsideInit
         self.cart = Cart(request)
         super().dispatch(request, *args, **kwargs)
 
@@ -172,30 +173,39 @@ class PaymentView(DetailView):
         return super().get(request, *args, **kwargs)
 
 
+def order_args(args, kwargs):
+    order_id = None
+    for arg in args:
+        order_id = arg
+        break
+    session_id = kwargs.pop('session_id')
+    return order_id, session_id
+
+
+def handle_get(args, kwargs, order_status, action):
+    order_id, session_id = order_args(args, kwargs)
+    try:
+        order: Order = Order.objects.get(pk=order_id)
+        if not order.paid_or_cancelled:
+            order.set_status(order_status)
+            StripePayment.record_action(order, session_id, action)
+    except Order.DoesNotExist:
+        pass  # ignore
+
+
 class StripeSuccessView(TemplateView):
     template_name = 'shop/stripe_success.html'
 
-    def get(self, request, order_id, session_id, *args, **kwargs):
-        try:
-            order: Order = Order.objects.get(pk=order_id)
-            if not order.paid_or_cancelled:
-                order.set_status(OrderStatus.PAYMENT_PROCESSING)
-                StripePayment.record_action(order, session_id, Action.ACCEPTED)
-        except Order.DoesNotExist:
-            pass    # ignore
+    def get(self, request, *args, **kwargs):
+        handle_get(args, kwargs, order_status=OrderStatus.PAYMENT_PROCESSING, action=Action.ACCEPTED)
         return super().get(request, *args, **kwargs)
+
 
 class StripeCancelView(TemplateView):
     template_name = 'shop/stripe_cancelled.html'
 
-    def get(self, request, order_id, session_id, *args, **kwargs):
-        try:
-            order: Order = Order.objects.get(pk=order_id)
-            if not order.paid_or_cancelled:
-                order.set_status(OrderStatus.CANCELED)
-                StripePayment.record_action(order, session_id, Action.CANCELLED)
-        except Order.DoesNotExist:
-            pass    # ignore
+    def get(self, request, *args, **kwargs):
+        handle_get(args, kwargs, order_status=OrderStatus.CANCELLED, action=Action.CANCELLED)
         return super().get(request, *args, **kwargs)
 
 
@@ -215,7 +225,7 @@ def stripe_session(request):
         # default return
         try:
             orderid, amount = int(request.POST['orderid']), str(request.POST['order_amount'])
-            order :Order = Order.objects.get(pk=orderid)
+            order: Order = Order.objects.get(pk=orderid)
             if Decimal(order.total_price) == Decimal(amount):
                 """
                 seems in order, create a checkout session
@@ -232,14 +242,15 @@ def stripe_session(request):
                                            amount=int(order.tax*100), currency=CURRENCY))
                 stripe.api_key = settings.STRIPE_PRIVATE_KEY
                 checkout_session = stripe.checkout.Session.create(
-                    success_url = stripe_callback_url(request, 'stripe-success', orderid),
-                    cancel_url = stripe_callback_url(request, 'stripe-cancel', orderid),
-                    payment_method_types = ['card'],
-                    mode = 'payment',
-                    line_items = line_items
+                    success_url=stripe_callback_url(request, 'stripe-success', orderid),
+                    cancel_url=stripe_callback_url(request, 'stripe-cancel', orderid),
+                    payment_method_types=['card'],
+                    mode='payment',
+                    line_items=line_items
                 )
                 order.set_status(OrderStatus.PAYMENT_ACCEPT)
-                StripePayment.record_action(order, checkout_session['id'], Action.CREATED, session_data=checkout_session)
+                StripePayment.record_action(order, checkout_session['id'], Action.CREATED,
+                                            session_data=checkout_session)
                 return JsonResponse({
                     'status': 'true',
                     'sessionId': checkout_session['id']
@@ -248,8 +259,7 @@ def stripe_session(request):
         except (Order.DoesNotExist, KeyError):
             pass
         return JsonResponse({
-                'status': ''
-                          'false',
+                'status': 'false',
                 'message': 'invalid or obsolete information provided'
             },
             status=HTTPStatus.BAD_REQUEST,
@@ -294,4 +304,9 @@ def stripe_webhook(request):
         print("Payment was successful.")
         # TODO: run some custom code here
 
-    return JsonResponse(status=200)
+    return JsonResponse({
+            'status': 'true',
+            'message': 'notification received'
+        },
+        status=HTTPStatus.OK
+    )
