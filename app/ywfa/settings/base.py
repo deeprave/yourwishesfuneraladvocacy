@@ -194,11 +194,11 @@ def path_slash(path):
     """with a trailing slash"""
     return f"{path}/"
 
-STATIC_ROOT = path_slash(DJANGO_ROOT / 'static')
 STATIC_URL = '/static/'
+STATIC_ROOT = path_slash(DJANGO_ROOT / 'static')
 
-MEDIA_ROOT = path_slash(DJANGO_ROOT / 'media')
 MEDIA_URL = '/media/'
+MEDIA_ROOT = path_slash(DJANGO_ROOT / 'media')
 
 # django-npm settings
 
