@@ -123,8 +123,6 @@ TEMPLATES = [
     },
 ]
 
-
-
 WSGI_APPLICATION = 'ywfa.wsgi.application'
 
 DATABASES = {
@@ -263,3 +261,13 @@ if env.is_all_set('S3_ACCESS_KEY', 'S3_SECRET_KEY', 'S3_BUCKET_NAME', 'S3_REGION
 
 
 DJANGO_TOOLBAR_ENABLED = DEBUG and env.bool('DJANGO_TOOLBAR_ENABLED', False)
+
+USE_WHITENOISE = env.bool('DJANGO_USE_WHITENOISE', False)
+
+# whitenoise static handling
+if USE_WHITENOISE:
+    MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+    if DEBUG:
+        INSTALLED_APPS.insert(0, 'whitenoise.runserver_nostatic')
