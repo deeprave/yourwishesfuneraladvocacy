@@ -7,25 +7,10 @@ services:
     build:
       context: .
       args:
-        APP_NAME: ${APP_NAME}
-        APP_DIR: ${APP_DIR}
-        APP_ROOT: ${APP_ROOT}
-        DJANGO_MODE: ${DJANGO_MODE}
-        DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
-        CACHE_URL: ${CACHE_URL}
-        DATABASE_URL: ${DATABASE_URL}
-        EMAIL_HOST: ${EMAIL_HOST}
-        EMAIL_HOST_USER: ${EMAIL_HOST_USER}
-        EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
-        EMAIL_URL: ${EMAIL_URL}
-        S3_DOMAIN: ${S3_DOMAIN}
-        S3_REGION: ${S3_REGION}
-        S3_ACCESS_KEY: ${S3_ACCESS_KEY}
-        S3_SECRET_KEY: ${S3_SECRET_KEY}
-        S3_BUCKET_NAME: ${S3_BUCKET_NAME}
-        STRIPE_PUBLIC_KEY: ${STRIPE_PUBLIC_KEY}
-        STRIPE_PRIVATE_KEY: ${STRIPE_PRIVATE_KEY}
-        STRIPE_SIGNING_KEY: ${STRIPE_SIGNING_KEY}
+        - APP_ROOT=${APP_ROOT}
+        - APP_NAME=${APP_NAME}
+        - APP_DIR=${APP_DIR}
+        - DJANGO_USER=${DJANGO_USER}
     volumes:
       - ${PWD}/static:${APP_ROOT}/${APP_NAME}/static
       - ${PWD}/media:${APP_ROOT}/${APP_NAME}/media

@@ -16,7 +16,7 @@ PROJECT_ROOT = DJANGO_ROOT.parent
 
 env = Env(exception=ImproperlyConfigured)
 if env.bool('DJANGO_READ_DOT_ENV_FILE', default=False):
-    env.read_env(search_path=PROJECT_ROOT, parents=True)
+    env.read_env(search_path=DJANGO_ROOT, parents=True)
 
 DEBUG = env.bool('DJANGO_DEBUG', False)
 SECRET_KEY = env['DJANGO_SECRET_KEY']
@@ -190,9 +190,14 @@ STATICFILES_FINDERS = [
     'compressor.finders.CompressorFinder',
 ]
 
-STATIC_ROOT = DJANGO_ROOT / 'static'
+def path_slash(path):
+    """with a trailing slash"""
+    return f"{path}/"
+
+STATIC_ROOT = path_slash(DJANGO_ROOT / 'static')
 STATIC_URL = '/static/'
-MEDIA_ROOT = DJANGO_ROOT / 'media'
+
+MEDIA_ROOT = path_slash(DJANGO_ROOT / 'media')
 MEDIA_URL = '/media/'
 
 # django-npm settings
@@ -255,3 +260,6 @@ if env.is_all_set('S3_ACCESS_KEY', 'S3_SECRET_KEY', 'S3_BUCKET_NAME', 'S3_REGION
 
     MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/"
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+
+DJANGO_TOOLBAR_ENABLED = DEBUG and env.bool('DJANGO_TOOLBAR_ENABLED', False)
