@@ -4,7 +4,7 @@ ARG APP_ROOT=/srv
 ARG APP_DIR=app
 ARG APP_NAME=crm
 ARG DJANGO_USER=crm
-ARG RUNTIME_PKGS="git bash nodejs=14.15.5-r0 npm libpq libjpeg openjpeg tiff freetype libffi pcre libressl libwebp lcms2 bzip2 libxml2 libxslt"
+ARG RUNTIME_PKGS="git bash nodejs npm libpq libjpeg openjpeg tiff freetype libffi pcre libressl libwebp lcms2 bzip2 libxml2 libxslt"
 ARG BUILD_PKGS="build-base postgresql-dev zlib-dev jpeg-dev openjpeg-dev tiff-dev freetype-dev libffi-dev pcre-dev libressl-dev libwebp-dev lcms2-dev bzip2-dev readline-dev sqlite-dev libxml2-dev libxslt-dev"
 ARG PIPENV_VENV_IN_PROJECT=1
 ARG PYVER=3.9.2
