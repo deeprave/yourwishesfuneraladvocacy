@@ -148,7 +148,7 @@ class OrderView(CreateView):
     def dispatch(self, request, *args, **kwargs):
         # noinspection PyAttributeOutsideInit
         self.cart = Cart(request)
-        super().dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
 
 class OrderDetailView(DetailView):

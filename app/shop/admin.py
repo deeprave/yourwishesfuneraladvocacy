@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.utils.html import format_html
+from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel
 from wagtail.contrib.modeladmin.options import ModelAdmin, modeladmin_register, ModelAdminGroup
+from wagtail.images.edit_handlers import ImageChooserPanel
 
 from .models import Category, Product, Order, OrderItem, StripePayment
 
@@ -49,8 +51,14 @@ class ProductCategoryAdmin(ModelAdmin):
     add_to_settings_menu = False
     exclude_from_explorer = True
     list_display = ('name', 'slug')
-    search_fields = ('code', 'slug')
+    search_fields = ('name', 'slug')
 
+    panels = [
+        MultiFieldPanel([
+            FieldPanel('name'),
+            FieldPanel('slug')
+        ])
+    ]
 
 class ProductsAdmin(ModelAdmin):
     model = Product
@@ -61,6 +69,19 @@ class ProductsAdmin(ModelAdmin):
     exclude_from_explorer = True
     list_display = ('code', 'available', 'title', 'slug', 'detail')
     search_fields = ('code', 'title', 'slug', 'detail')
+
+    panels = [
+        MultiFieldPanel([
+            FieldPanel('category'),
+            FieldPanel('code'),
+            FieldPanel('title'),
+            FieldPanel('detail'),
+            FieldPanel('image'),
+            FieldPanel('price'),
+            FieldPanel('available'),
+            FieldPanel('shipping'),
+        ])
+    ]
 
 
 # noinspection PyMethodMayBeStatic
