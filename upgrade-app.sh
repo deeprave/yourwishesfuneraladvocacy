@@ -12,7 +12,7 @@ cmd () {
 cmd git fetch -atpf
 cmd git checkout master
 cmd git pull
-cmd ./make_env.py -o docker.env
+cmd ./make_env.py docker.env
 if [[ ! -f .latest -o $(find . -mtime +48h -name .latest) ]]; then
    docker tag ${APP_NAME}:latest ${APP_NAME}:previous
    cmd touch .latest
