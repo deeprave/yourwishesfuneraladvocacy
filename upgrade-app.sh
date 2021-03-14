@@ -1,5 +1,5 @@
 #!/bin/sh
-alias dc=docker-compose
+APP_NAME=ywfa
 
 cmd () {
   args="$@"
@@ -13,6 +13,10 @@ cmd git fetch -atpf
 cmd git checkout master
 cmd git pull
 cmd ./make_env.py -o docker.env
+if [[ ! -f .latest -o $(find . -mtime +48h -name .latest) ]]; then
+   docker tag ${APP_NAME}:latest ${APP_NAME}:previous
+   cmd touch .latest
+fi 
 cmd docker-compose build app
 cmd docker-compose down
 cmd docker-compose up -d app

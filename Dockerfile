@@ -5,7 +5,7 @@ ARG APP_DIR=app
 ARG APP_NAME=crm
 ARG DJANGO_USER=crm
 ARG RUNTIME_PKGS="git bash nodejs npm libpq libjpeg openjpeg tiff freetype libffi pcre libressl libwebp lcms2 bzip2 libxml2 libxslt"
-ARG BUILD_PKGS="build-base postgresql-dev zlib-dev jpeg-dev openjpeg-dev tiff-dev freetype-dev libffi-dev pcre-dev libressl-dev libwebp-dev lcms2-dev bzip2-dev readline-dev sqlite-dev libxml2-dev libxslt-dev"
+ARG BUILD_PKGS="build-base rust cargo postgresql-dev zlib-dev jpeg-dev openjpeg-dev tiff-dev freetype-dev libffi-dev pcre-dev libressl-dev libwebp-dev lcms2-dev bzip2-dev readline-dev sqlite-dev libxml2-dev libxslt-dev"
 ARG PYVER=3.9.2
 
 ## build ##############################################
