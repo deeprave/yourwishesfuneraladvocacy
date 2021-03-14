@@ -19,13 +19,16 @@ ALLOWED_HOSTS = [
     'www.yourwishesfuneraladvocacy.com.au',
 ]
 
+# add template caching
 TEMPLATES[0]['OPTIONS']['loaders'] = [
     ('django.template.loaders.cached.Loader', TEMPLATE_LOADERS)
 ]
 
 # email handling
 
-if env.is_all_set('EMAIL_HOST', 'EMAIL_HOST_USER', 'EMAIL_HOST_PASSWORD'):
+if 'EMAIL_URL' in env:
+   vars().update(env.email_url())
+elif env.is_all_set('EMAIL_HOST', 'EMAIL_HOST_USER', 'EMAIL_HOST_PASSWORD'):
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_HOST = env.get('EMAIL_HOST', 'smtp.gmail.com')
     EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', True)
@@ -37,14 +40,9 @@ BASE_URL = 'https://yourwishesfuneraladvocacy.com.au'
 
 # alerts & monitoring
 
-sentry_sdk.init(
-    dsn="https://02681a846266431889b46a7515f035c7@o440352.ingest.sentry.io/5409078",
-    integrations=[DjangoIntegration()],
-    send_default_pii=True
-)
-
-
-try:
-    from .local import *
-except ImportError:
-    pass
+if 'SENTRY_DSN' in env:
+    sentry_sdk.init(
+        dsn=env['SENTRY_DSN'],
+        integrations=[DjangoIntegration()],
+        send_default_pii=True
+    )

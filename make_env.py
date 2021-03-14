@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Build a .env file based on a "template"
-Renders a .env for use within a container
+Build a .env file based on a template - renders a .env for use within a container
+without including unneeded vars used in development
 """
 import os
 import sys
@@ -51,10 +51,9 @@ def output_result(lines: list, outputfile: Path):
 
     def writelines(fp, lines):
         linecount = 0
-        for line in lines:
-            linecount += 1
-            print(f"{line}", file=fp)
-        print(f"{linecount} line(s) written", file=sys.stderr)
+        for linecount, line in enumerate(lines):
+            print(line, file=fp)
+        print(f"{outputfile}: {linecount+1} line(s) written", file=sys.stderr)
 
     if outputfile == '-':
         writelines(sys.stdout, lines)
@@ -64,16 +63,20 @@ def output_result(lines: list, outputfile: Path):
 
 
 if __name__ == '__main__':
+
     prog = Path(__file__).resolve(strict=True)
     parser = argparse.ArgumentParser(prog=prog.name, description=__doc__)
-    parser.add_argument('-e', '--envfile', action='store', default=prog.parent / '.env',
-                        help='source values to render from this file')
-    parser.add_argument('-t', '--template', action='store', default=prog.parent / 'env-template',
-                        help='"template" file to use to use')
-    parser.add_argument('-o', '--output', action='store', required=True,
-                        help='output to this file')
+    dotenv_default = '.env'
+    template_default = 'env-template'
+    output_default = 'docker.env'
+    parser.add_argument('-e', '--envfile', action='store', default=dotenv_default,
+                        help=f'source values to render from this file (default="{dotenv_default}")')
+    parser.add_argument('-t', '--template', action='store', default=template_default,
+                        help=f'template file to use to use (default="{template_default}"')
     parser.add_argument('-n', '--noenv', action='store_true', default=False,
-                        help='prevent loading current os.environ values')
+                        help='prevent loading current os.environ values (default=False)')
+    parser.add_argument('output', action='store', default=output_default,
+                        help=f'output to this file (default="{output_default}")')
     args = parser.parse_args()
 
     template = Path(args.template).resolve(strict=True)

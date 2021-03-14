@@ -1,9 +1,12 @@
-[[source]]
-url = "https://pypi.org/simple"
-verify_ssl = true
-name = "pypi"
+[tool.poetry]
+name = "ywfa"
+version = "2.1.0"
+description = "Your Wishes Funeral Advocacy"
+authors = ["David Nugent <davidn@uniquode.io>"]
+license = "MIT"
 
-[packages]
+[tool.poetry.dependencies]
+python = "^3.9"
 # wagtail
 wagtail = "~=2.11"
 wagtailmenus = "~=3.0"
@@ -12,7 +15,7 @@ Django = "~=3.1"
 asgiref = "~=3.3"
 brotli = "~=1.0"
 # django extras
-django-env = {git = "https://github.com/davidn-news/django-env.git"}
+django-env = {git = "https://github.com/davidn-news/django-env.git", rev="main"}
 django-extensions = "~=3.1"
 django-widget-tweaks = "~=1.4"
 django-crispy-forms = "~=1.10"
@@ -38,10 +41,20 @@ python-dateutil = "~=2.8"
 gunicorn = "*"
 whitenoise = "~=5.2"
 
-[dev-packages]
+[tool.poetry.dev-dependencies]
 pytest = "~=6.2"
 pytest-django = "~=4.1"
 django-debug-toolbar = "~=3.2"
+pytest-pythonpath = "^0.7.3"
 
-[requires]
-python_version = "3.9"
+[tool.pytest.ini_options]
+python_paths = ["app"]
+DJANGO_SETTINGS_MODULE = "ywfa.settings.environ.dev"
+filterwarnings = [
+  'ignore:.*ugettext_lazy\(\) is deprecated',
+  'ignore:.*providing_args argument is deprecated',
+]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

@@ -6,7 +6,6 @@ ARG APP_NAME=crm
 ARG DJANGO_USER=crm
 ARG RUNTIME_PKGS="git bash nodejs npm libpq libjpeg openjpeg tiff freetype libffi pcre libressl libwebp lcms2 bzip2 libxml2 libxslt"
 ARG BUILD_PKGS="build-base postgresql-dev zlib-dev jpeg-dev openjpeg-dev tiff-dev freetype-dev libffi-dev pcre-dev libressl-dev libwebp-dev lcms2-dev bzip2-dev readline-dev sqlite-dev libxml2-dev libxslt-dev"
-ARG PIPENV_VENV_IN_PROJECT=1
 ARG PYVER=3.9.2
 
 ## build ##############################################
@@ -21,38 +20,29 @@ ARG APP_NAME
 ARG DJANGO_USER
 ARG RUNTIME_PKGS
 ARG BUILD_PKGS
-ARG PIPENV_VENV_IN_PROJECT
 ARG PYVER
 
-ENV APP_ROOT=${APP_ROOT}
-ENV APP_NAME=${APP_NAME}
-ENV APP_DIR=${APP_DIR}
-ENV DJANGO_USER=${DJANGO_USER}
-ENV DJANGO_ROOT=${APP_ROOT}/${APP_NAME}
+ENV APP_ROOT=${APP_ROOT} APP_NAME=${APP_NAME} APP_DIR=${APP_DIR} PYVER=${PYVER}
+ENV DJANGO_USER=${DJANGO_USER} DJANGO_ROOT=${APP_ROOT}/${APP_NAME}
 ENV PYENV_ROOT=${DJANGO_ROOT}/.pyenv
 ENV PATH=${PYENV_ROOT}/shims:${PYENV_ROOT}/bin:${PATH}
-ENV PIPENV_VENV_IN_PROJECT=${PIPENV_VENV_IN_PROJECT}
-ENV PYVER=${PYVER}
 
 # permanent packages we need here
 RUN apk --update add ${BUILD_PKGS} ${RUNTIME_PKGS}
 
 RUN git clone https://github.com/yyuu/pyenv.git ${PYENV_ROOT}
 
-RUN adduser --disabled-password --home ${DJANGO_ROOT} ${DJANGO_USER}
+RUN echo setting up ${DJANGO_ROOT} as ${DJANGO_USER}
 RUN mkdir -p ${DJANGO_ROOT}
-RUN pyenv install ${PYVER}
-RUN pyenv global ${PYVER}
-RUN pip install -U pip setuptools wheel unicode pipenv
+RUN adduser --disabled-password --home ${DJANGO_ROOT} ${DJANGO_USER}
+RUN pyenv install ${PYVER} && pyenv global ${PYVER} && pip install -U pip setuptools wheel unicode poetry
 
 WORKDIR ${DJANGO_ROOT}/
 
-COPY Pipfile .
-COPY Pipfile.lock .
+COPY poetry.toml poetry.lock pyproject.toml ./
 
-ENV HOME=${DJANGO_ROOT}
-ENV LANG=${LANG} PIPENV_VENV_IN_PROJECT=${PIPENV_VENV_IN_PROJECT}
-RUN pipenv --python ${PYVER} install --deploy
+ENV HOME=${DJANGO_ROOT} LANG=${LANG}
+RUN poetry install --no-dev
 
 
 ## runtime ##############################################
@@ -65,18 +55,12 @@ ARG APP_NAME
 ARG DJANGO_USER
 ARG RUNTIME_PKGS
 ARG BUILD_PKGS
-ARG PIPENV_VENV_IN_PROJECT
 ARG PYVER
 
-ENV APP_ROOT=${APP_ROOT}
-ENV APP_NAME=${APP_NAME}
-ENV APP_DIR=${APP_DIR}
-ENV DJANGO_USER=${DJANGO_USER}
-ENV DJANGO_ROOT=${APP_ROOT}/${APP_NAME}
+ENV APP_ROOT=${APP_ROOT} APP_NAME=${APP_NAME} APP_DIR=${APP_DIR} PYVER=${PYVER} 
+ENV DJANGO_USER=${DJANGO_USER} DJANGO_ROOT=${APP_ROOT}/${APP_NAME}
 ENV PYENV_ROOT=${DJANGO_ROOT}/.pyenv
 ENV PATH=${PYENV_ROOT}/shims:${PYENV_ROOT}/bin:${PATH}
-ENV PIPENV_VENV_IN_PROJECT=${PIPENV_VENV_IN_PROJECT}
-ENV PYVER=${PYVER}
 ENV DJANGO_READ_DOT_ENV_FILE=true
 
 COPY --from=build-image ${DJANGO_ROOT} ${DJANGO_ROOT}
