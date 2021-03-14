@@ -1,0 +1,20 @@
+{
+ "Statement": [
+  {
+    "Effect": "Allow",
+    "Principal": {
+      "AWS": [
+        "*"
+      ]
+    },
+    "Action": [
+      "s3:GetObject"
+    ],
+    "Resource": [
+      "arn:aws:s3::ywfa-prod-5c297995-76b1-4a97-8dbe-5c9ac67d96f1/*"
+    ]
+  }
+ ]
+}
+
+
