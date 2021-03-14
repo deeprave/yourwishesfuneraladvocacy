@@ -228,7 +228,7 @@ sqlparse = ">=0.2.0"
 
 [[package]]
 name = "django-env"
-version = "0.8.0"
+version = "1.0.0"
 description = "12factor.net support for django"
 category = "main"
 optional = false
@@ -239,7 +239,7 @@ develop = false
 type = "git"
 url = "https://github.com/davidn-news/django-env.git"
 reference = "main"
-resolved_reference = "06090fe3d27f21ac56751414c1ccb5087452c4e2"
+resolved_reference = "5db60d1fa2e04ca1271294cc5206e2fa8de4217e"
 
 [[package]]
 name = "django-extensions"
@@ -666,7 +666,7 @@ botocore = ">=1.12.36,<2.0a.0"
 
 [[package]]
 name = "sentry-sdk"
-version = "0.20.3"
+version = "1.0.0"
 description = "Python client for Sentry (https://sentry.io)"
 category = "main"
 optional = false
@@ -877,7 +877,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "5098477ee9738e82f62f0c6c1e5221f94a02703db69782abc3e8cfc4d0799c34"
+content-hash = "f4de6c3333f63db993850d3c0c3ee0052c89ebea7c75d239e6947f4ba944ab35"
 
 [metadata.files]
 anyascii = [
@@ -1210,8 +1210,8 @@ s3transfer = [
     {file = "s3transfer-0.3.4.tar.gz", hash = "sha256:7fdddb4f22275cf1d32129e21f056337fd2a80b6ccef1664528145b72c49e6d2"},
 ]
 sentry-sdk = [
-    {file = "sentry-sdk-0.20.3.tar.gz", hash = "sha256:4ae8d1ced6c67f1c8ea51d82a16721c166c489b76876c9f2c202b8a50334b237"},
-    {file = "sentry_sdk-0.20.3-py2.py3-none-any.whl", hash = "sha256:e75c8c58932bda8cd293ea8e4b242527129e1caaec91433d21b8b2f20fee030b"},
+    {file = "sentry-sdk-1.0.0.tar.gz", hash = "sha256:71de00c9711926816f750bc0f57ef2abbcb1bfbdf5378c601df7ec978f44857a"},
+    {file = "sentry_sdk-1.0.0-py2.py3-none-any.whl", hash = "sha256:9221e985f425913204989d0e0e1cbb719e8b7fa10540f1bc509f660c06a34e66"},
 ]
 six = [
     {file = "six-1.15.0-py2.py3-none-any.whl", hash = "sha256:8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced"},

@@ -36,7 +36,7 @@ elif env.is_all_set('EMAIL_HOST', 'EMAIL_HOST_USER', 'EMAIL_HOST_PASSWORD'):
     EMAIL_HOST_USER = env['EMAIL_HOST_USER']
     EMAIL_HOST_PASSWORD = env['EMAIL_HOST_PASSWORD']
 
-BASE_URL = 'https://yourwishesfuneraladvocacy.com.au'
+BASE_URL = env.get('DJANGO_BASE_URL', 'https://yourwishesfuneraladvocacy.com.au')
 
 # alerts & monitoring
 
