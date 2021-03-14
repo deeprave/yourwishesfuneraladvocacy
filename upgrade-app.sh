@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 APP_NAME=ywfa
 
 cmd () {
@@ -13,7 +13,7 @@ cmd git fetch -atpf
 cmd git checkout master
 cmd git pull
 cmd ./make_env.py docker.env
-if [[ ! -f .latest -o $(find . -mtime +48h -name .latest) ]]; then
+if [[ ! -f .latest || $(find . -mtime +24 -name .latest) ]]; then
    docker tag ${APP_NAME}:latest ${APP_NAME}:previous
    cmd touch .latest
 fi 
