@@ -5,14 +5,18 @@ Wagtail project setup utility
 """
 import os
 from subprocess import check_call, CalledProcessError
+from shutil import which
 import sys
 import json
 import secrets
+from collections import defaultdict
 from datetime import datetime
 from string import Template
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from typing import Union, TextIO, Any
+
+exists = os.path.exists
 
 DOTENV = '.env'
 DOTENVTEMPLATE = '.env-template'
@@ -79,55 +83,107 @@ class MessageLog:
 class EnvManager:
 
     DEFAULTS = {
-        'COMPOSE_PROJECT_NAME': 'myapp',
-        'COMPOSE_FILE': 'docker-compose.yml',
-        'APP_NAME': '',
-        'APP_DIR': '',
-        'APP_ROOT': '',
-        'DBHOST': '127.0.0.1',
-        'DBPORT': '',
-        'DBROLE': '',
-        'DBNAME': '',
-        'DBUSER': '',
-        'DBPASS': '',
-        'POSTGRES_PASSWORD': '',
-        'RDHOST': '127.0.0.1',
-        'RDPORT': '',
-        'RDDB': '',
-        'DJANGO_REDIS_URL': 'redis://${RDHOST}:${RDPORT}/${RDB}',
-        'DATABASE_URL': 'postgres://${DBUSER}:${DBPASS}@${DBHOST}:${DBPORT}/${DBNAME}',
-        'DJANGO_SECRET_KEY': '',
-        'DJANGO_MODE': 'dev',
-        'BASE_URL': 'http://example.com',
-        'EXT_ROOT': '',
-        'EXT_STATIC': '',
-        'EXT_MEDIA': '',
-        'PURGE': 'Dockerfile,requirements.txt,.dockerignore'
+        'docker': {
+            'COMPOSE_PROJECT_NAME': 'myapp',
+            'COMPOSE_FILE': 'docker-compose.yml',
+        },
+        'app': {
+            'APP_NAME': '',
+            'APP_DIR': '',
+            'APP_ROOT': '',
+            'APP_PORT': 8000,
+        },
+        'django': {
+            'DJANGO_SECRET_KEY': None,
+            'DJANGO_MODE': 'dev',
+            'DJANGO_USER': 'crm',
+            'DJANGO_BASE_URL': 'https://example.com'
+        },
+        'database': {
+            'DBHOST': '127.0.0.1',
+            'DBPORT': 5432,
+            'DBROLE': '',
+            'DBNAME': '',
+            'DBUSER': '',
+            'DBPASS': '',
+            'POSTGRES_PASSWORD': '',
+            'DATABASE_URL': 'postgres://${DBUSER}:${DBPASS}@${DBHOST}:${DBPORT}/${DBNAME}'
+        },
+        'redis': {
+            'RDHOST': 'redis',
+            'RDPORT': 6379,
+            'RDB': 0,
+            'CACHE_URL': 'redis://${RDHOST}:${RDPORT}/${RDB}',
+        },
+        'email': {
+            'EMAIL_HOST_USER': 'user@example.com',
+            'EMAIL_HOST_PASSWORD': '',
+            'EMAIL_HOST': 'smtp.gmail.com',
+            'EMAIL_PORT': 587,
+            'EMAIL_URL': 'smtp+tls://${EMAIL_HOST_USER}:${EMAIL_HOST_PASSWORD}@${EMAIL_HOST}:${EMAIL_PORT}/',
+        },
+        'ext': {
+            'EXT_ROOT': '${APP_DIR}',
+            'EXT_STATIC': '${APP_DIR}/static',
+            'EXT_MEDIA': '${APP_DIR}/media',
+        },
+        'storage': {
+            'S3_DOMAIN': '',
+            'S3_REGION': '',
+            'S3_ACCESS_KEY': '',
+            'S3_SECRET_KEY': '',
+            'S3_BUCKET_NAME': '',
+            'S3_BUCKET_POLICY': '',
+        },
+        'stripe': {
+            'STRIPE_PUBLIC_KEY': '',
+            'STRIPE_PRIVATE_KEY': '',
+            'STRIPE_SIGNING_KEY': '',
+        },
+        'sentry': {
+            'SENTRY_DSN': "https://02681a846266431889b46a7515f035c7@o440352.ingest.sentry.io/5409078",
+        },
     }
 
-    def __init__(self, envfile: Union[str, Path]):
+    def __init__(self, env_file: Union[str, Path]):
         self._env = {}
-        for k, v in self.DEFAULTS.items():
-            self._env.setdefault(k, v)
+        for section, vardict in self.DEFAULTS.items():
+            if isinstance(vardict, dict):
+                for var, val in vardict.items():
+                    self._env.setdefault(var, self.quote(val))
+            else:
+                self._env.setdefault(section, self.quote(vardict))
         self.datestamp = True
         self.docker = False
         self.volumes = False
         self.force = False
         self._messages = MessageLog()
-        self.messages.info(f'initialising environment from {envfile}')
-        self.parse_env(envfile)
+        self.messages.info(f'initialising environment from {env_file}')
+        self.parse_env(env_file)
 
     @classmethod
     def default(cls, var) -> Any:
         return cls.DEFAULTS.get(var)
 
-    def parse_env(self, envfile: str) -> None:
+    @staticmethod
+    def unquote(line):
+        if line[0] in '"\'' and line[-1] == line[0]:
+            line = line[1:-1]
+        return line
+
+    @staticmethod
+    def quote(line):
+        if any(c in line for c in "~!@#$%^&*()-+=?<>,/"):
+            line = f'"{line}"'
+        return line
+
+    def parse_env(self, env_file: str) -> None:
         current = {}
-        with open(envfile, 'r') as f:
+        with open(env_file, 'r') as f:
             for index, line in enumerate(f):
 
                 def error(message):
-                    self.messages.info(f"{envfile}({index + 1}): {message}")
+                    self.messages.info(f"{env_file}({index + 1}): {message}")
 
                 line = line.strip()
                 # skip empty and comments
@@ -139,7 +195,7 @@ class EnvManager:
                         var, val = s
                         if var in current:
                             error(f'multiple definitions of {var}, overridden')
-                        current[var] = val
+                        current[var] = self.unquote(val)
         self._env.update(current)
 
     @property
@@ -177,7 +233,7 @@ class EnvManager:
                     if len(s) < 2:
                         self.messages.info(f"invalid define: {values[0]}")
                     else:
-                        self.setvar(s[0], s[1])
+                        self.setvar(s[0], self.unquote(s[1]))
 
     P_CHRS = '!#$%&{}*+-.0123456789:;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ^_`abcdefghijklmnopqrstyvwxyz{}'
 
@@ -191,7 +247,7 @@ class EnvManager:
         return secrets.token_urlsafe(18)
 
     def apply(self, args: Namespace):
-        self.messages.info(f'adjusting options from commandline')
+        self.messages.info('adjusting options from commandline')
         self.docker = args.docker
         self.volumes = args.volumes
         self.force = args.force
@@ -221,7 +277,7 @@ class EnvManager:
         if args.url:
             self.setvar('BASE_URL', args.url)
         elif not self.getvar('BASE_URL'):
-            self.setvar('BASE_URL', 'http://example.com')
+            self.setvar('BASE_URL', 'https://example.com')
 
         if args.secret or not self.getvar('DJANGO_SECRET_KEY'):
             self.setvar('DJANGO_SECRET_KEY', self.gen_secret_key())
@@ -299,17 +355,36 @@ class EnvManager:
     def render(self, destination: Union[None, str, bytes, Path] = DOTENV, env: dict = None) -> None:
         if isinstance(destination, (str, bytes, Path)):
             self.messages.info(f'rendering env to {destination}')
+
         with OutputTo(destination) as f:
             if self.datestamp:
                 print(f'# generated {datetime.now().isoformat()}', file=f)
             self.messages.prefix = None
             self.messages.info('┌────')
             self.messages.prefix = '|'
+
+            sectionref = {}
+            for section, vardict in self.DEFAULTS.items():
+                if isinstance(vardict, dict):
+                    for var, val in vardict.items():
+                        sectionref[var] = section
+                else:
+                    sectionref[vardict] = None
+
+            rendered = defaultdict(dict)
             for key, value in env.items():
-                what = f'{key}={value}'
-                print(what, file=f)
-                if f not in (sys.stdout, sys.stderr):
-                    self.messages.info(what, cache=True)
+                section = sectionref.get(key, None)
+                rendered[section][key] = value
+
+            for section, keys in rendered.items():
+                print(f"\n# {section}" if section else "\n#", file=f)
+
+                for key, value in keys.items():
+                    what = f'{key}={self.quote(value)}'
+                    print(what, file=f)
+                    if f not in (sys.stdout, sys.stderr):
+                        self.messages.info(what, cache=True)
+
             self.messages.flush()
             self.messages.prefix = None
             self.messages.info('└────')
@@ -318,18 +393,45 @@ class EnvManager:
 def install_dependancies(_: EnvManager):
     messages = MessageLog(prefix='+')
 
+    def pip_install():
+        messages.info(f'Updating pip')
+        yield 'pip', [sys.executable, '-m', 'pip', 'install', '-qU', 'pip', 'setuptools', 'wheel']
+        for requirements in ('requirements-dev.txt', 'requirements.txt'):
+            if exists(requirements):
+                yield 'pip', [sys.executable, '-m', 'pip', 'install', '-qr', requirements]
+
+    def pipenv_install():
+        pipenv = which('pipenv')
+        if pipenv is None:
+            ValueError('pipenv is not installed but is required for this installation')
+        os.environ['PIPENV_VENV_IN_PROJECT'] = '1'
+        yield 'pipenv', [pipenv, 'install']
+
+    def poetry_install():
+        poetry = which('poetry')
+        if poetry is None:
+            ValueError('poetru is not installed but is required for this installation')
+        yield 'poetry', [poetry, 'install']
+
+    # select installer, default to pip
+    installer = pip_install
+    if exists('Pipfile'):
+        installer = pipenv_install
+    elif exists('pyproject.toml'):
+        installer = poetry_install
+
     try:
-        # ensure latest are installed, then intall requirements
-        messages.info('Updating python module manager (pip)')
-        check_call([sys.executable, '-m', 'pip', 'install', '-qU', 'pip', 'setuptools', 'wheel'])
-        messages.info('Installing python dependencies')
-        check_call([sys.executable, '-m', 'pip', 'install', '-qr', 'requirements-dev.txt'])
-        messages.info('Done')
-
-    except CalledProcessError as cpe:
-        messages.error(f'pip failure: error {cpe.returncode}: {cpe.output}')
+        for method, args in installer():
+            try:
+                messages.info(f'Installing python dependencies ({method})')
+                check_call(args)
+                messages.info('Done')
+            except CalledProcessError as cpe:
+                messages.error(f'{method} failure: error {cpe.returncode}: {cpe.output}')
+                return False
+    except ValueError:
+        # early installer errors
         return False
-
     return True
 
 
@@ -339,7 +441,7 @@ def wagtail_deployment(env: EnvManager):
     app_dir, app_name = env.getvars('APP_DIR', 'APP_NAME')
     messages.info(f'Creating wagtail project "{app_name}" in dir "{app_dir}"')
     try:
-        if os.path.exists(app_dir):
+        if exists(app_dir):
             messages.error(f'wagtail project creation skipped - dir "{app_dir}" already exists')
         else:
             os.mkdir(app_dir)
@@ -350,7 +452,7 @@ def wagtail_deployment(env: EnvManager):
         if removelist:
             for filename in removelist:
                 path = os.path.join(app_dir, filename)
-                if os.path.exists(path):
+                if exists(path):
                     os.remove(path)
         messages.info('Done')
         return True
@@ -371,7 +473,7 @@ def wagtail_settings(env: EnvManager):
     settings_module = f'"{app_name}.settings." + os.environ.get("DJANGO_MODE", "dev")'
 
     def set_file_content(path: str, content: str, executable=False, force=False):
-        if os.path.exists(path) and not force:
+        if exists(path) and not force:
             messages.error(f'module {path} skipped, already exists')
         else:
             messages.info(f'creating {path}')
@@ -385,14 +487,11 @@ def wagtail_settings(env: EnvManager):
 DJANGO_SETTINGS_MODULE = {app_name}.settings.{django_mode}
 """, force=True)
 
-        set_file_content(os.path.join(app_dir, 'manage.py'), f"""#!/usr/bin/env python
+        set_file_content(os.path.join(app_dir, 'manage.py'), f"""#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import os
 import sys
-import dotenv
-
-dotenv.load_dotenv('../.env')
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", {settings_module})
@@ -404,9 +503,6 @@ if __name__ == "__main__":
         set_file_content(os.path.join(app_root, 'wsgi.py'), f"""# -*- coding: utf-8 -*-
 # WSGI config for {app_name} project
 import os
-import dotenv
-
-dotenv.load_dotenv('../.env')
 
 from django.core.wsgi import get_wsgi_application
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", {settings_module})
@@ -417,10 +513,7 @@ application = get_wsgi_application()
         set_file_content(os.path.join(app_root, 'asgi.py'), f"""# -*- coding: utf-8 -*-
 # ASGI config for {app_name} project
 import os
-import dotenv
 from django.core.asgi import get_asgi_application
-
-dotenv.load_dotenv('../.env')
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", {settings_module})
 
@@ -428,42 +521,29 @@ application = get_asgi_application()
 """, force=True)
 
         set_file_content(os.path.join(settings_dir, 'local.py'), f"""# -*- coding: utf-8 -*-
-import os
-import dj_database_url
+import django_env
+env = Env()
+if env.bool('DJANGO_READ_DOT_ENV_FILE', False):
+    env.read_env(search_path=Path.cwd(), parents=True) 
+
+# ImproperlyConfigured if not set
+SECRET_KEY = env.get('DJANGO_SECRET_KEY')
 
 # Override defaults
 
 CACHES = {{
-    "default" : {{
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": os.environ["DJANGO_REDIS_URL"],
-        "OPTIONS": {{
-            "CLIENT_CLASS": "django_redis.client.DefaultClient"
-        }}
-    }},
-    "sessions" : {{
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": os.environ["DJANGO_REDIS_URL"],
-        "OPTIONS": {{
-            "CLIENT_CLASS": "django_redis.client.DefaultClient"
-        }}
-    }}
+    "default": env.cache_url(default='redis://localhost:6329/0') 
 }}
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 
 DATABASES = {{
-    'default': dj_database_url.config('DJANGO_DATABASE_URL'),
+    "default": env.database_url(default=f'sqlite://{{BASE_PATH / 'db.sqlite3'}}'),
 }}
 
 WAGTAIL_SITE_NAME = '{app_name}'
-BASE_URL = '{base_url}'
-
-try:
-    from .secrets import *
-except ImportError:
-    pass
+BASE_URL = env.get('DJANGO_BASE_URL', '{base_url}')
 
 """)
 
@@ -487,7 +567,7 @@ if __name__ == '__main__':
     prog = os.path.basename(sys.argv[0])
     parser = ArgumentParser(prog=prog, description=__doc__)
 
-    envfile = DOTENV if os.path.exists(DOTENV) else DOTENVTEMPLATE
+    envfile = DOTENV if exists(DOTENV) else DOTENVTEMPLATE
 
     e = EnvManager(os.getenv('ENV') or envfile)
 
