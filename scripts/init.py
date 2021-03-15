@@ -173,7 +173,7 @@ class EnvManager:
 
     @staticmethod
     def quote(line):
-        if any(c in line for c in "~!@#$%^&*()-+=?<>,/"):
+        if any([c in line for c in "~!@#$%^&*()-+=?<>,/"]):
             line = f'"{line}"'
         return line
 
@@ -363,13 +363,33 @@ class EnvManager:
             self.messages.info('┌────')
             self.messages.prefix = '|'
 
+            section_mappings = {
+                'django': 'django',
+                'email': 'email',
+                'ext': 'ext',
+                'db': 'database',
+                'rd': 'cace',
+                'mc': 'cache',
+                'database': 'database',
+                's3': 'storage',
+                'stripe': 'stripe',
+                'sentry': 'sentry'
+            }
+
+            def key_to_section(key):
+                try:
+                    return section_mappings[key.lower()]
+                except KeyError:
+                    pass
+                return None
+
             sectionref = {}
             for section, vardict in self.DEFAULTS.items():
                 if isinstance(vardict, dict):
                     for var, val in vardict.items():
                         sectionref[var] = section
                 else:
-                    sectionref[vardict] = None
+                    sectionref[vardict] = key_to_section(vardict)
 
             rendered = defaultdict(dict)
             for key, value in env.items():

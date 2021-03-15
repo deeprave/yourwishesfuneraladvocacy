@@ -18,6 +18,7 @@ if [[ ! -f .latest || $(find . -mtime +24 -name .latest) ]]; then
    cmd touch .latest
 fi 
 cmd docker-compose build app
+rm -f docker.env
 cmd docker-compose down
 cmd docker-compose up -d app
 

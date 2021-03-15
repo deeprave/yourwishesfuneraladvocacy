@@ -181,8 +181,7 @@ class Order(models.Model):
         cart = kwargs.pop('cart', None)
         if creating and cart:
             # fill some additional values from cart
-            if cart.shipping:
-                self.shipping = cart.shipping_price
+            self.shipping = cart.shipping_price if cart.shipping else 0.0
             self.total_price = cart.total_price
             self.tax = self.total_price / (cart.tax_rate + 1) if cart.tax_rate else 0.0
         super().save(**kwargs)
