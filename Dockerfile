@@ -81,7 +81,7 @@ RUN chown -R ${DJANGO_USER}:${DJANGO_USER} ${DJANGO_ROOT}
 # 2. compiling sass to static css
 # 3. collectstatic to update static files
 
-COPY startapp.sh /
+COPY scripts/startapp.sh /
 
 USER ${DJANGO_USER}
 
