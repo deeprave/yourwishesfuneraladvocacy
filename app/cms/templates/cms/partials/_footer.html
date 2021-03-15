@@ -5,7 +5,7 @@
     <div class="row">
 
       <div class="col-md-3">
-        <h5 class="text-uppercase star text-md-left">Links</h5>
+        <h5 class="text-uppercase text-md-left">Links</h5>
           <nav>
             <ul class="nav mb-md-0">
               {% main_menu template="cms/partials/_links.html" levels=1 %}
@@ -15,7 +15,7 @@
 
       {% with settings.ywfa_settings.ContactSettings as contact %}
       <div class="col-md-4 mt-4 mt-md-0">
-        <h5 class="text-uppercase text-md-center star">Contact</h5>
+{#        <h5 class="text-uppercase text-md-center star">Contact</h5>#}
 
         {% if contact.contact_button_text and contact.contact_button_page %}
         <div class="text-center nowrap">
@@ -44,7 +44,7 @@
       {% endwith %}
 
       <div class="col-md-5 mt-4 mt-md-0">
-        <h5 class="text-uppercase text-center star">Social Media</h5>
+{#        <h5 class="text-uppercase text-center">Social Media</h5>#}
         {% with settings.ywfa_settings.SocialMediaSettings as social %}
         <ul class="text-center socicon">
           {% if social.facebook %}<li data-toggle="tooltip" data-placement="top" data-delay="0" title="Facebook">
