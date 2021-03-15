@@ -11,6 +11,7 @@ services:
         - APP_NAME=${APP_NAME}
         - APP_DIR=${APP_DIR}
         - DJANGO_USER=${DJANGO_USER}
+        - DJANGO_MODE=${DJANGO_MODE}
     volumes:
       - ${PWD}/static:${APP_ROOT}/${APP_NAME}/static
       - ${PWD}/media:${APP_ROOT}/${APP_NAME}/media
