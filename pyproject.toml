@@ -1,37 +1,40 @@
 [tool.poetry]
 name = "ywfa"
-version = "2.1.0"
+version = "2.3.0"
 description = "Your Wishes Funeral Advocacy"
 authors = ["David Nugent <davidn@uniquode.io>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "~=3.9"
+pip = "*"
+setuptools = "*"
+wheel = "*"
 # wagtail
-wagtail = "~=2.11"
+wagtail = "~=2.16"
 wagtailmenus = "~=3.0"
 # django base
 Django = "~=3.1"
 asgiref = "~=3.3"
 brotli = "~=1.0"
 # django extras
-django-env = {git = "https://github.com/davidn-news/django-env.git", rev="main"}
+django-settings-env = "*"
 django-extensions = "~=3.1"
 django-widget-tweaks = "~=1.4"
 django-crispy-forms = "~=1.10"
-stripe = "~=2.55"
+stripe = "~=2.76"
 sentry-sdk = "~=1.0"
 # storages
 django-storages = "~=1.11"
 boto3 = "~=1.17"
 # db
-psycopg2 = "~=2.8"
+psycopg2-binary = "~=2.8"
 # cache
 django-redis = "~=4.12"
 # frontend
-django-npm = "~=1.0.0"
-libsass = "~=0.20.1"
-django-sass = "~=1.0.0"
+django-npm = "~=1.0"
+libsass = "~=0.21"
+django-sass = "~=1.1.0"
 django-compressor = "~=2.4"
 calmjs = "~=3.4.1"
 csscompressor = "~=0.9.5"
@@ -39,7 +42,7 @@ csscompressor = "~=0.9.5"
 python-dateutil = "~=2.8"
 # web server
 gunicorn = "*"
-whitenoise = "~=5.2"
+whitenoise = "~=5.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "~=6.2"
