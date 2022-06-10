@@ -3,7 +3,7 @@ version: '3.5'
 services:
 
   app:
-    image: ${APP_NAME}:latest
+    image: ${APP_REPOSITORY}${APP_NAME}:${APP_TAG}
     build:
       context: .
       args:
