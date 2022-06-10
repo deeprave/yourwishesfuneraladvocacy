@@ -9,7 +9,7 @@ import re
 from string import Template
 from typing import Union
 from pathlib import Path
-from django_env.dot_env import load_env
+from envex.dot_env import load_env
 
 
 def read_env(envfile: Union[str, Path], search=None, parents=False, useenv=False):
