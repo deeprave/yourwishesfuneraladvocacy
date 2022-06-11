@@ -5,7 +5,7 @@ from pathlib import Path
 from django.contrib import messages
 from django.core.exceptions import ImproperlyConfigured
 # noinspection PyPackageRequirements
-from django_env import Env
+from django_settings_env import Env
 
 # noinspection PyUnresolvedReferences
 from .logger import *
