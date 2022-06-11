@@ -1,10 +1,6 @@
 # variables used to build container .env files used in containers
-APP_NAME
-APP_DIR
-APP_ROOT
 DJANGO_SECRET_KEY
 DJANGO_BASE_URL
-DJANGO_USER
 DJANGO_DEBUG
 CACHE_URL
 DATABASE_URL
