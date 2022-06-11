@@ -6,7 +6,7 @@ __pycache__
 node_modules/
 .*_history
 .*cache/
-.env
+.env*
 .s3cfg
 /studio/
 /backups/
