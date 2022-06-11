@@ -8,16 +8,17 @@ from sentry_sdk.integrations.django import DjangoIntegration
 
 DEBUG = False
 
-ALLOWED_HOSTS = [
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', [
     'localhost',
     '127.0.0.1',
     '::1',
-    '172.105.169.83',
+    '194.195.120.73',
+    '2400:8907::f03c:93ff:fee7:1080',
     'ywfa.com.au',
     'www.ywfa.com.au',
     'yourwishesfuneraladvocacy.com.au',
     'www.yourwishesfuneraladvocacy.com.au',
-]
+])
 
 # add template caching
 TEMPLATES[0]['OPTIONS']['loaders'] = [
@@ -40,7 +41,7 @@ BASE_URL = env.get('DJANGO_BASE_URL', 'https://yourwishesfuneraladvocacy.com.au'
 
 # alerts & monitoring
 
-if 'SENTRY_DSN' in env:
+if 'SENTRY_DSN' in env and env('SENTRY_DSN'):
     sentry_sdk.init(
         dsn=env['SENTRY_DSN'],
         integrations=[DjangoIntegration()],
