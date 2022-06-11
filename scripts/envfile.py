@@ -194,23 +194,12 @@ if __name__ == '__main__':
     build_parser.add_argument('output', action='store', default=output_default,
                               help=f'output to this file (default="{output_default}")')
 
-    # realpath
-    real_parser = subparsers.add_parser('realpath', help='get real (or relative) paths to targets')
-
-    real_parser.add_argument('-r', '--relative_to', action='store', default=None,
-                             help='return paths relative to a start path')
-    real_parser.add_argument('-d', '--dir', action='store_true', default=False,
-                             help='return directory for provided files')
-    real_parser.add_argument('paths', action='store', nargs='+',
-                             help='resolve real or relative paths')
-
     argv = parser.parse_args()
     # print(argv)
 
     commands = {
         'env': env_command,
         'build': build_command,
-        'realpath': realpath_command,
     }
     try:
         commands[argv.command](argv)
