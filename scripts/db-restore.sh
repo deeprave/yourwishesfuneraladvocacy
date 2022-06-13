@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-[ -f ./.env ] && source ./.env || { echo ".env does not exist!" && exit 1; }
+: ${DOTENV:=./.env}
+[ -f ./.env ] && source ${DOTENV} || { echo "${DOTENV} does not exist!" && exit 1; }
 [[ ! -z $DBHOST ]] && SELECT_DATABASE=${SELECT_DATABASE:-"-h ${DBHOST}"}
 
 RESTORE_SQL=backups/restore.sql

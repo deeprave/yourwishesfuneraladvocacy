@@ -1,4 +1,7 @@
 #!/bin/bash
+: ${DOTENV:=./.env}
+[ -f ./.env ] && source ${DOTENV} || { echo "${DOTENV} does not exist!" && exit 1; }
+
 APP_NAME=ywfa
 
 cmd () {

@@ -1,5 +1,6 @@
-#!/bin/sh
-[ -f ./.env ] && source ./.env || { echo ".env does not exist!" && exit 1; }
+#!/bin/bash
+: ${DOTENV:=./.env}
+[ -f ./.env ] && source ${DOTENV} || { echo "${DOTENV} does not exist!" && exit 1; }
 
 function usage {
   msg="$*"
