@@ -14,7 +14,7 @@ wheel = "*"
 wagtail = "~=2.16"
 wagtailmenus = "~=3.0"
 # django base
-Django = "~=3.1"
+Django = "~=3.2"
 asgiref = "~=3.3"
 brotli = "~=1.0"
 # django extras
